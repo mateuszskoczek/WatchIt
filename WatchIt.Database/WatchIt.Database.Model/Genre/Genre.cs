@@ -19,6 +19,15 @@ namespace WatchIt.Database.Model.Genre
 
 
 
+        #region NAVIGATION
+
+        public ICollection<GenreMedia> GenreMedia { get; set; }
+        public ICollection<Media.Media> Media { get; set; }
+
+        #endregion
+
+
+
         #region PUBLIC METHODS
 
         static void IEntity<Genre>.Build(EntityTypeBuilder<Genre> builder)
@@ -35,6 +44,11 @@ namespace WatchIt.Database.Model.Genre
 
             builder.Property(x => x.Description)
                    .HasMaxLength(1000);
+
+            // Navigation
+            builder.HasMany(x => x.Media)
+                   .WithMany(x => x.Genres)
+                   .UsingEntity<GenreMedia>();
         }
 
         static IEnumerable<Genre> IEntity<Genre>.InsertData() => new List<Genre>

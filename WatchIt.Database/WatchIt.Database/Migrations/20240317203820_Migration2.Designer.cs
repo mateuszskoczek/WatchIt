@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WatchIt.Database;
@@ -11,9 +12,11 @@ using WatchIt.Database;
 namespace WatchIt.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240317203820_Migration2")]
+    partial class Migration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,7 +184,10 @@ namespace WatchIt.Database.Migrations
             modelBuilder.Entity("WatchIt.Database.Model.Media.Media", b =>
                 {
                     b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
@@ -214,25 +220,6 @@ namespace WatchIt.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("Media");
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaMovie", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<decimal?>("Budget")
-                        .HasColumnType("money");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.ToTable("MediaMovies");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaPhotoImage", b =>
@@ -308,80 +295,6 @@ namespace WatchIt.Database.Migrations
                     b.ToTable("MediaPosterImages");
                 });
 
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeries", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("HasEnded")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.ToTable("MediaSeries");
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesEpisode", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsSpecial")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<Guid>("MediaSeriesSeasonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<short>("Number")
-                        .HasColumnType("smallint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("MediaSeriesSeasonId");
-
-                    b.ToTable("MediaSeriesEpisodes");
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesSeason", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<long>("MediaSeriesId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<short>("Number")
-                        .HasColumnType("smallint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("MediaSeriesId");
-
-                    b.ToTable("MediaSeriesSeasons");
-                });
-
             modelBuilder.Entity("WatchIt.Database.Model.Account.Account", b =>
                 {
                     b.HasOne("WatchIt.Database.Model.Media.MediaPhotoImage", "BackgroundPicture")
@@ -418,18 +331,6 @@ namespace WatchIt.Database.Migrations
 
             modelBuilder.Entity("WatchIt.Database.Model.Media.Media", b =>
                 {
-                    b.HasOne("WatchIt.Database.Model.Media.MediaMovie", null)
-                        .WithOne("Media")
-                        .HasForeignKey("WatchIt.Database.Model.Media.Media", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WatchIt.Database.Model.Media.MediaSeries", null)
-                        .WithOne("Media")
-                        .HasForeignKey("WatchIt.Database.Model.Media.Media", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WatchIt.Database.Model.Media.MediaPosterImage", "MediaPosterImage")
                         .WithOne("Media")
                         .HasForeignKey("WatchIt.Database.Model.Media.Media", "MediaPosterImageId");
@@ -446,28 +347,6 @@ namespace WatchIt.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Media");
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesEpisode", b =>
-                {
-                    b.HasOne("WatchIt.Database.Model.Media.MediaSeriesSeason", "MediaSeriesSeason")
-                        .WithMany("MediaSeriesEpisodes")
-                        .HasForeignKey("MediaSeriesSeasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MediaSeriesSeason");
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesSeason", b =>
-                {
-                    b.HasOne("WatchIt.Database.Model.Media.MediaSeries", "MediaSeries")
-                        .WithMany("MediaSeriesSeasons")
-                        .HasForeignKey("MediaSeriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MediaSeries");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Account.AccountProfilePicture", b =>
@@ -488,29 +367,10 @@ namespace WatchIt.Database.Migrations
                     b.Navigation("MediaPhotoImages");
                 });
 
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaMovie", b =>
-                {
-                    b.Navigation("Media")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaPosterImage", b =>
                 {
                     b.Navigation("Media")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeries", b =>
-                {
-                    b.Navigation("Media")
-                        .IsRequired();
-
-                    b.Navigation("MediaSeriesSeasons");
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesSeason", b =>
-                {
-                    b.Navigation("MediaSeriesEpisodes");
                 });
 #pragma warning restore 612, 618
         }

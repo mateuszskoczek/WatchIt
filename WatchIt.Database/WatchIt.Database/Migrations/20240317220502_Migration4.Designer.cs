@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WatchIt.Database;
@@ -11,9 +12,11 @@ using WatchIt.Database;
 namespace WatchIt.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240317220502_Migration4")]
+    partial class Migration4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -327,41 +330,14 @@ namespace WatchIt.Database.Migrations
                     b.ToTable("MediaSeries");
                 });
 
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesEpisode", b =>
+            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesSeason", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsSpecial")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<Guid>("MediaSeriesSeasonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<short>("Number")
-                        .HasColumnType("smallint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("MediaSeriesSeasonId");
-
-                    b.ToTable("MediaSeriesEpisodes");
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesSeason", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("boolean");
 
                     b.Property<long>("MediaSeriesId")
                         .HasColumnType("bigint");
@@ -374,12 +350,9 @@ namespace WatchIt.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("MediaSeriesId");
 
-                    b.ToTable("MediaSeriesSeasons");
+                    b.ToTable("MediaSeriesSeason");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Account.Account", b =>
@@ -448,17 +421,6 @@ namespace WatchIt.Database.Migrations
                     b.Navigation("Media");
                 });
 
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesEpisode", b =>
-                {
-                    b.HasOne("WatchIt.Database.Model.Media.MediaSeriesSeason", "MediaSeriesSeason")
-                        .WithMany("MediaSeriesEpisodes")
-                        .HasForeignKey("MediaSeriesSeasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MediaSeriesSeason");
-                });
-
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesSeason", b =>
                 {
                     b.HasOne("WatchIt.Database.Model.Media.MediaSeries", "MediaSeries")
@@ -506,11 +468,6 @@ namespace WatchIt.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("MediaSeriesSeasons");
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesSeason", b =>
-                {
-                    b.Navigation("MediaSeriesEpisodes");
                 });
 #pragma warning restore 612, 618
         }

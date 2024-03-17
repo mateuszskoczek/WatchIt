@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WatchIt.Database.Model.Media;
 
 namespace WatchIt.Database.Model.Account
 {
@@ -20,17 +21,14 @@ namespace WatchIt.Database.Model.Account
         public string Username { get; set; }
         public string Email { get; set; }
         public string Description { get; set; }
-        public Guid AccountProfilePictureId { get; set; }
-
-        // BackgroundPicture key to MovieImages
-        // public Guid BackgroundPicture { get; set; }
-
+        public Guid? ProfilePictureId { get; set; }
+        public Guid? BackgroundPictureId { get; set; }
         public byte[] Password { get; set; }
         public string LeftSalt { get; set; }
         public string RightSalt { get; set; }
         public bool IsAdmin { get; set; } = false;
-        public DateTimeOffset CreationDate { get; set; }
-        public DateTimeOffset LastActive { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime LastActive { get; set; }
 
         #endregion
 
@@ -38,7 +36,8 @@ namespace WatchIt.Database.Model.Account
 
         #region NAVIGATION
 
-        public AccountProfilePicture AccountProfilePicture { get; set; }
+        public AccountProfilePicture? ProfilePicture { get; set; }
+        public MediaPhotoImage? BackgroundPicture { get; set; }
 
         #endregion
 
@@ -65,10 +64,15 @@ namespace WatchIt.Database.Model.Account
             builder.Property(x => x.Description)
                    .HasMaxLength(1000);
 
-            builder.HasOne(x => x.AccountProfilePicture)
+            builder.HasOne(x => x.ProfilePicture)
                    .WithOne(x => x.Account)
-                   .HasForeignKey<Account>(e => e.AccountProfilePictureId);
-            builder.Property(x => x.AccountProfilePictureId);
+                   .HasForeignKey<Account>(e => e.ProfilePictureId);
+            builder.Property(x => x.ProfilePictureId);
+
+            builder.HasOne(x => x.BackgroundPicture)
+                   .WithMany()
+                   .HasForeignKey(x => x.BackgroundPictureId);
+            builder.Property(x => x.BackgroundPictureId);
 
             builder.Property(x => x.Password)
                    .HasMaxLength(1000)

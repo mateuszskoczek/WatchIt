@@ -2,15 +2,13 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WatchIt.Database.Model.Account
+namespace WatchIt.Database.Model.Media
 {
-    public class AccountProfilePicture : IEntity<AccountProfilePicture>
+    public class MediaPosterImage : IEntity<MediaPosterImage>
     {
         #region PROPERTIES
 
@@ -25,7 +23,7 @@ namespace WatchIt.Database.Model.Account
 
         #region NAVIGATION
 
-        public Account Account { get; set; }
+        public Media Media { get; set; }
 
         #endregion
 
@@ -33,7 +31,7 @@ namespace WatchIt.Database.Model.Account
 
         #region PUBLIC METHODS
 
-        static void IEntity<AccountProfilePicture>.Build(EntityTypeBuilder<AccountProfilePicture> builder)
+        static void IEntity<MediaPosterImage>.Build(EntityTypeBuilder<MediaPosterImage> builder)
         {
             builder.HasKey(x => x.Id);
             builder.HasIndex(x => x.Id)

@@ -2,22 +2,24 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WatchIt.Database.Model.Account
+namespace WatchIt.Database.Model.Media
 {
-    public class AccountProfilePicture : IEntity<AccountProfilePicture>
+    public class MediaPhotoImage : IEntity<MediaPhotoImage>
     {
         #region PROPERTIES
 
         public Guid Id { get; set; }
+        public long MediaId { get; set; }
         public byte[] Image { get; set; }
         public string MimeType { get; set; }
         public DateTime UploadDate { get; set; }
+        public bool IsMediaBackground { get; set; }
+        public bool IsUniversalBackground { get; set; }
 
         #endregion
 
@@ -25,7 +27,7 @@ namespace WatchIt.Database.Model.Account
 
         #region NAVIGATION
 
-        public Account Account { get; set; }
+        public Media Media { get; set; }
 
         #endregion
 
@@ -33,12 +35,19 @@ namespace WatchIt.Database.Model.Account
 
         #region PUBLIC METHODS
 
-        static void IEntity<AccountProfilePicture>.Build(EntityTypeBuilder<AccountProfilePicture> builder)
+        static void IEntity<MediaPhotoImage>.Build(EntityTypeBuilder<MediaPhotoImage> builder)
         {
             builder.HasKey(x => x.Id);
             builder.HasIndex(x => x.Id)
                    .IsUnique();
             builder.Property(x => x.Id)
+                   .IsRequired();
+
+            builder.HasOne(x => x.Media)
+                   .WithMany(x => x.MediaPhotoImages)
+                   .HasForeignKey(x => x.MediaId)
+                   .IsRequired();
+            builder.Property(x => x.MediaId)
                    .IsRequired();
 
             builder.Property(x => x.Image)
@@ -52,6 +61,14 @@ namespace WatchIt.Database.Model.Account
             builder.Property(x => x.UploadDate)
                    .IsRequired()
                    .HasDefaultValueSql("now()");
+
+            builder.Property(x => x.IsMediaBackground)
+                   .IsRequired()
+                   .HasDefaultValue(false);
+
+            builder.Property(x => x.IsUniversalBackground)
+                   .IsRequired()
+                   .HasDefaultValue(false);
         }
 
         #endregion
