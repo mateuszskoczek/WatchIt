@@ -13,6 +13,7 @@ namespace WatchIt.Database.Model
         #region METHODS
 
         static abstract void Build(EntityTypeBuilder<T> builder);
+        static virtual IEnumerable<T> InsertData() => Array.Empty<T>();
 
         #endregion
     }

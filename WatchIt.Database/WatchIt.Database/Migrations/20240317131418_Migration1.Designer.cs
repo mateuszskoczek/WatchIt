@@ -12,7 +12,7 @@ using WatchIt.Database;
 namespace WatchIt.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240317125055_Migration1")]
+    [Migration("20240317131418_Migration1")]
     partial class Migration1
     {
         /// <inheritdoc />
@@ -117,6 +117,31 @@ namespace WatchIt.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("AccountProfilePictures");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Genre.Genre", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Account.Account", b =>

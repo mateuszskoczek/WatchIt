@@ -13,7 +13,11 @@ namespace WatchIt.Database.Model
         #region PUBLIC METHODS
 
         public static void Build<T>(ModelBuilder builder) where T : class, IEntity<T> => Build<T>(builder.Entity<T>());
-        public static void Build<T>(EntityTypeBuilder<T> builder) where T : class, IEntity<T> => T.Build(builder);
+        public static void Build<T>(EntityTypeBuilder<T> builder) where T : class, IEntity<T>
+        {
+            T.Build(builder);
+            builder.HasData(T.InsertData());
+        }
 
         #endregion
     }

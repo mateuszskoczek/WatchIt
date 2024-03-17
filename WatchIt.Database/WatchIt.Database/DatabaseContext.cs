@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WatchIt.Database.Model;
 using WatchIt.Database.Model.Account;
+using WatchIt.Database.Model.Genre;
 
 namespace WatchIt.Database
 {
@@ -28,6 +29,9 @@ namespace WatchIt.Database
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountProfilePicture> AccountProfilePictures { get; set; }
 
+        // Genre
+        public virtual DbSet<Genre> Genres { get; set; }
+
         #endregion
 
 
@@ -41,6 +45,9 @@ namespace WatchIt.Database
             // Account
             EntityBuilder.Build<Account>(modelBuilder);
             EntityBuilder.Build<AccountProfilePicture>(modelBuilder);
+
+            // Genre
+            EntityBuilder.Build<Genre>(modelBuilder);
         }
 
         #endregion
