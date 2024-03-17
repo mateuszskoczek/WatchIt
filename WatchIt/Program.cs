@@ -1,18 +1,37 @@
+using Microsoft.EntityFrameworkCore;
+using WatchIt.Database;
 using WatchIt.Website;
 
 namespace WatchIt
 {
     public class Program
     {
+        #region FIELDS
+
+        protected static WebApplicationBuilder _builder;
+
+        #endregion
+
+
+
+        #region PUBLIC METHODS
+
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            _builder = WebApplication.CreateBuilder(args);
+
+            // Logging
+            _builder.Logging.ClearProviders();
+            _builder.Logging.AddConsole();
+
+            // Database
+            _builder.Services.AddDbContext<DatabaseContext>(x => x.UseNpgsql(_builder.Configuration.GetConnectionString("Default")), ServiceLifetime.Singleton);
 
             // Add services to the container.
-            builder.Services.AddRazorComponents()
+            _builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
-            var app = builder.Build();
+            var app = _builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -28,9 +47,11 @@ namespace WatchIt
             app.UseAntiforgery();
 
             app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode();
+               .AddInteractiveServerRenderMode();
 
             app.Run();
         }
+
+        #endregion
     }
 }
