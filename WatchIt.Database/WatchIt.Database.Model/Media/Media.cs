@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WatchIt.Database.Model.Account;
 using WatchIt.Database.Model.Common;
+using WatchIt.Database.Model.Person;
 
 namespace WatchIt.Database.Model.Media
 {
@@ -28,11 +29,18 @@ namespace WatchIt.Database.Model.Media
         #region NAVIGATION
 
         public MediaPosterImage? MediaPosterImage { get; set; }
+
         public IEnumerable<MediaPhotoImage> MediaPhotoImages { get; set; }
+
         public IEnumerable<MediaGenre> MediaGenres { get; set; }
-        public IEnumerable<MediaProductionCountry> MediaProductionCountries { get; set; }
         public IEnumerable<Genre> Genres { get; set; }
+
+        public IEnumerable<MediaProductionCountry> MediaProductionCountries { get; set; }
         public IEnumerable<Country> ProductionCountries { get; set; }
+
+        public IEnumerable<PersonActorRole> PersonActorRoles { get; set; }
+
+        public IEnumerable<PersonCreatorRole> PersonCreatorRoles { get; set; }
 
         #endregion
 
