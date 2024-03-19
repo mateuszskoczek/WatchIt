@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WatchIt.Database.Model.Account;
-using WatchIt.Database.Model.Genre;
+using WatchIt.Database.Model.Common;
 
 namespace WatchIt.Database.Model.Media
 {
@@ -28,9 +28,11 @@ namespace WatchIt.Database.Model.Media
         #region NAVIGATION
 
         public MediaPosterImage? MediaPosterImage { get; set; }
-        public ICollection<MediaPhotoImage> MediaPhotoImages { get; set; }
-        public ICollection<GenreMedia> GenreMedia { get; set; }
-        public ICollection<Genre.Genre> Genres { get; set; }
+        public IEnumerable<MediaPhotoImage> MediaPhotoImages { get; set; }
+        public IEnumerable<MediaGenre> MediaGenres { get; set; }
+        public IEnumerable<MediaProductionCountry> MediaProductionCountries { get; set; }
+        public IEnumerable<Genre> Genres { get; set; }
+        public IEnumerable<Country> ProductionCountries { get; set; }
 
         #endregion
 
@@ -68,7 +70,10 @@ namespace WatchIt.Database.Model.Media
             // Navigation
             builder.HasMany(x => x.Genres)
                    .WithMany(x => x.Media)
-                   .UsingEntity<GenreMedia>();
+                   .UsingEntity<MediaGenre>();
+            builder.HasMany(x => x.ProductionCountries)
+                   .WithMany(x => x.MediaProduction)
+                   .UsingEntity<MediaProductionCountry>();
         }
 
         #endregion

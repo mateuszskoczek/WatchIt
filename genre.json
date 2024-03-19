@@ -1,0 +1,18 @@
+[
+  {
+    "Id": 1,
+    "Name": "Comedy"
+  },
+  {
+    "Id": 2,
+    "Name": "Thriller"
+  },
+  {
+    "Id": 3,
+    "Name": "Horror"
+  },
+  {
+    "Id": 4,
+    "Name": "Action"
+  }
+]

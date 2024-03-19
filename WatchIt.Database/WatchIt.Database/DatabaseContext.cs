@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WatchIt.Database.Model;
 using WatchIt.Database.Model.Account;
-using WatchIt.Database.Model.Genre;
+using WatchIt.Database.Model.Common;
 using WatchIt.Database.Model.Media;
 
 namespace WatchIt.Database
@@ -26,13 +26,13 @@ namespace WatchIt.Database
 
         #region PROPERTIES
 
+        // Common
+        public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<Genre> Genres { get; set; }
+
         // Account
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountProfilePicture> AccountProfilePictures { get; set; }
-
-        // Genre
-        public virtual DbSet<Genre> Genres { get; set; }
-        public virtual DbSet<GenreMedia> GenresMedia { get; set; }
 
         // Media
         public virtual DbSet<Media> Media { get; set; }
@@ -42,6 +42,8 @@ namespace WatchIt.Database
         public virtual DbSet<MediaSeriesEpisode> MediaSeriesEpisodes { get; set; }
         public virtual DbSet<MediaPosterImage> MediaPosterImages { get; set; }
         public virtual DbSet<MediaPhotoImage> MediaPhotoImages { get; set; }
+        public virtual DbSet<MediaGenre> MediaGenres { get; set; }
+        public virtual DbSet<MediaProductionCountry> MediaProductionCountrys { get; set; }
 
         #endregion
 
@@ -53,6 +55,10 @@ namespace WatchIt.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Common
+            EntityBuilder.Build<Country>(modelBuilder);
+            EntityBuilder.Build<Genre>(modelBuilder);
+
             // Account
             EntityBuilder.Build<Account>(modelBuilder);
             EntityBuilder.Build<AccountProfilePicture>(modelBuilder);
@@ -65,10 +71,8 @@ namespace WatchIt.Database
             EntityBuilder.Build<MediaSeriesEpisode>(modelBuilder);
             EntityBuilder.Build<MediaPosterImage>(modelBuilder);
             EntityBuilder.Build<MediaPhotoImage>(modelBuilder);
-
-            // Genre
-            EntityBuilder.Build<Genre>(modelBuilder);
-            EntityBuilder.Build<GenreMedia>(modelBuilder);
+            EntityBuilder.Build<MediaGenre>(modelBuilder);
+            EntityBuilder.Build<MediaProductionCountry>(modelBuilder);
         }
 
         #endregion

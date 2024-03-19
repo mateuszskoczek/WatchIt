@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WatchIt.Database.DataSeeding\WatchIt.Database.DataSeeding.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -121,7 +121,40 @@ namespace WatchIt.Database.Migrations
                     b.ToTable("AccountProfilePictures");
                 });
 
-            modelBuilder.Entity("WatchIt.Database.Model.Genre.Genre", b =>
+            modelBuilder.Entity("WatchIt.Database.Model.Common.Country", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("Countries");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = (short)1,
+                            Name = "Afghanistan"
+                        },
+                        new
+                        {
+                            Id = (short)2,
+                            Name = "Albania"
+                        });
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Common.Genre", b =>
                 {
                     b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
@@ -160,22 +193,17 @@ namespace WatchIt.Database.Migrations
                         {
                             Id = (short)3,
                             Name = "Horror"
+                        },
+                        new
+                        {
+                            Id = (short)4,
+                            Name = "Action"
+                        },
+                        new
+                        {
+                            Id = (short)5,
+                            Name = "Drama"
                         });
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Genre.GenreMedia", b =>
-                {
-                    b.Property<short>("GenreId")
-                        .HasColumnType("smallint");
-
-                    b.Property<long>("MediaId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("GenreId", "MediaId");
-
-                    b.HasIndex("MediaId");
-
-                    b.ToTable("GenresMedia");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Media.Media", b =>
@@ -214,6 +242,21 @@ namespace WatchIt.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("Media");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaGenre", b =>
+                {
+                    b.Property<short>("GenreId")
+                        .HasColumnType("smallint");
+
+                    b.Property<long>("MediaId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("GenreId", "MediaId");
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("MediaGenres");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaMovie", b =>
@@ -308,6 +351,21 @@ namespace WatchIt.Database.Migrations
                     b.ToTable("MediaPosterImages");
                 });
 
+            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaProductionCountry", b =>
+                {
+                    b.Property<short>("CountryId")
+                        .HasColumnType("smallint");
+
+                    b.Property<long>("MediaId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CountryId", "MediaId");
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("MediaProductionCountrys");
+                });
+
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeries", b =>
                 {
                     b.Property<long>("Id")
@@ -397,25 +455,6 @@ namespace WatchIt.Database.Migrations
                     b.Navigation("ProfilePicture");
                 });
 
-            modelBuilder.Entity("WatchIt.Database.Model.Genre.GenreMedia", b =>
-                {
-                    b.HasOne("WatchIt.Database.Model.Genre.Genre", "Genre")
-                        .WithMany("GenreMedia")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WatchIt.Database.Model.Media.Media", "Media")
-                        .WithMany("GenreMedia")
-                        .HasForeignKey("MediaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Genre");
-
-                    b.Navigation("Media");
-                });
-
             modelBuilder.Entity("WatchIt.Database.Model.Media.Media", b =>
                 {
                     b.HasOne("WatchIt.Database.Model.Media.MediaMovie", null)
@@ -437,6 +476,25 @@ namespace WatchIt.Database.Migrations
                     b.Navigation("MediaPosterImage");
                 });
 
+            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaGenre", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Common.Genre", "Genre")
+                        .WithMany("MediaGenres")
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchIt.Database.Model.Media.Media", "Media")
+                        .WithMany("MediaGenres")
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Genre");
+
+                    b.Navigation("Media");
+                });
+
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaPhotoImage", b =>
                 {
                     b.HasOne("WatchIt.Database.Model.Media.Media", "Media")
@@ -444,6 +502,25 @@ namespace WatchIt.Database.Migrations
                         .HasForeignKey("MediaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Media");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaProductionCountry", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Common.Country", "Country")
+                        .WithMany("MediaProductionCountries")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchIt.Database.Model.Media.Media", "Media")
+                        .WithMany("MediaProductionCountries")
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
 
                     b.Navigation("Media");
                 });
@@ -476,16 +553,23 @@ namespace WatchIt.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WatchIt.Database.Model.Genre.Genre", b =>
+            modelBuilder.Entity("WatchIt.Database.Model.Common.Country", b =>
                 {
-                    b.Navigation("GenreMedia");
+                    b.Navigation("MediaProductionCountries");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Common.Genre", b =>
+                {
+                    b.Navigation("MediaGenres");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Media.Media", b =>
                 {
-                    b.Navigation("GenreMedia");
+                    b.Navigation("MediaGenres");
 
                     b.Navigation("MediaPhotoImages");
+
+                    b.Navigation("MediaProductionCountries");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaMovie", b =>

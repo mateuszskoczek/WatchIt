@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WatchIt.Database.Model.Media;
+using WatchIt.Database.Model.Common;
 
-namespace WatchIt.Database.Model.Genre
+namespace WatchIt.Database.Model.Media
 {
-    public class GenreMedia : IEntity<GenreMedia>
+    public class MediaProductionCountry : IEntity<MediaProductionCountry>
     {
         #region PROPERTIES
 
         public long MediaId { get; set; }
-        public short GenreId { get; set; }
+        public short CountryId { get; set; }
 
         #endregion
 
@@ -21,8 +21,8 @@ namespace WatchIt.Database.Model.Genre
 
         #region NAVIGATION
 
-        public Media.Media Media { get; set; }
-        public Genre Genre { get; set; }
+        public Media Media { get; set; }
+        public Country Country { get; set; }
 
         #endregion
 
@@ -30,20 +30,20 @@ namespace WatchIt.Database.Model.Genre
 
         #region PUBLIC METHODS
 
-        static void IEntity<GenreMedia>.Build(EntityTypeBuilder<GenreMedia> builder)
+        static void IEntity<MediaProductionCountry>.Build(EntityTypeBuilder<MediaProductionCountry> builder)
         {
             builder.HasOne(x => x.Media)
-                   .WithMany(x => x.GenreMedia)
+                   .WithMany(x => x.MediaProductionCountries)
                    .HasForeignKey(x => x.MediaId)
                    .IsRequired();
             builder.Property(x => x.MediaId)
                    .IsRequired();
 
-            builder.HasOne(x => x.Genre)
-                   .WithMany(x => x.GenreMedia)
-                   .HasForeignKey(x => x.GenreId)
+            builder.HasOne(x => x.Country)
+                   .WithMany(x => x.MediaProductionCountries)
+                   .HasForeignKey(x => x.CountryId)
                    .IsRequired();
-            builder.Property(x => x.GenreId)
+            builder.Property(x => x.CountryId)
                    .IsRequired();
         }
 

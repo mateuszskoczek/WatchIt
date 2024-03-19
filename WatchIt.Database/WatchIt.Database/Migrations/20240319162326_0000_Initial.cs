@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace WatchIt.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration1 : Migration
+    public partial class _0000_Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,6 +29,19 @@ namespace WatchIt.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Countries",
+                columns: table => new
+                {
+                    Id = table.Column<short>(type: "smallint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Genres",
                 columns: table => new
                 {
@@ -40,6 +53,19 @@ namespace WatchIt.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Genres", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MediaMovies",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Budget = table.Column<decimal>(type: "money", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MediaMovies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,11 +83,23 @@ namespace WatchIt.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Media",
+                name: "MediaSeries",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    HasEnded = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MediaSeries", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Media",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false),
                     Title = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     OriginalTitle = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
                     Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
@@ -73,14 +111,46 @@ namespace WatchIt.Database.Migrations
                 {
                     table.PrimaryKey("PK_Media", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Media_MediaMovies_Id",
+                        column: x => x.Id,
+                        principalTable: "MediaMovies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Media_MediaPosterImages_MediaPosterImageId",
                         column: x => x.MediaPosterImageId,
                         principalTable: "MediaPosterImages",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Media_MediaSeries_Id",
+                        column: x => x.Id,
+                        principalTable: "MediaSeries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GenreMedia",
+                name: "MediaSeriesSeasons",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    MediaSeriesId = table.Column<long>(type: "bigint", nullable: false),
+                    Number = table.Column<short>(type: "smallint", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MediaSeriesSeasons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MediaSeriesSeasons_MediaSeries_MediaSeriesId",
+                        column: x => x.MediaSeriesId,
+                        principalTable: "MediaSeries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MediaGenres",
                 columns: table => new
                 {
                     MediaId = table.Column<long>(type: "bigint", nullable: false),
@@ -88,15 +158,15 @@ namespace WatchIt.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GenreMedia", x => new { x.GenreId, x.MediaId });
+                    table.PrimaryKey("PK_MediaGenres", x => new { x.GenreId, x.MediaId });
                     table.ForeignKey(
-                        name: "FK_GenreMedia_Genres_GenreId",
+                        name: "FK_MediaGenres_Genres_GenreId",
                         column: x => x.GenreId,
                         principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GenreMedia_Media_MediaId",
+                        name: "FK_MediaGenres_Media_MediaId",
                         column: x => x.MediaId,
                         principalTable: "Media",
                         principalColumn: "Id",
@@ -122,6 +192,51 @@ namespace WatchIt.Database.Migrations
                         name: "FK_MediaPhotoImages_Media_MediaId",
                         column: x => x.MediaId,
                         principalTable: "Media",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MediaProductionCountrys",
+                columns: table => new
+                {
+                    MediaId = table.Column<long>(type: "bigint", nullable: false),
+                    CountryId = table.Column<short>(type: "smallint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MediaProductionCountrys", x => new { x.CountryId, x.MediaId });
+                    table.ForeignKey(
+                        name: "FK_MediaProductionCountrys_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MediaProductionCountrys_Media_MediaId",
+                        column: x => x.MediaId,
+                        principalTable: "Media",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MediaSeriesEpisodes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    MediaSeriesSeasonId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Number = table.Column<short>(type: "smallint", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    IsSpecial = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MediaSeriesEpisodes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MediaSeriesEpisodes_MediaSeriesSeasons_MediaSeriesSeasonId",
+                        column: x => x.MediaSeriesSeasonId,
+                        principalTable: "MediaSeriesSeasons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -160,13 +275,24 @@ namespace WatchIt.Database.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Countries",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { (short)1, "Afghanistan" },
+                    { (short)2, "Albania" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Genres",
                 columns: new[] { "Id", "Description", "Name" },
                 values: new object[,]
                 {
                     { (short)1, null, "Comedy" },
                     { (short)2, null, "Thriller" },
-                    { (short)3, null, "Horror" }
+                    { (short)3, null, "Horror" },
+                    { (short)4, null, "Action" },
+                    { (short)5, null, "Drama" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -193,9 +319,10 @@ namespace WatchIt.Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_GenreMedia_MediaId",
-                table: "GenreMedia",
-                column: "MediaId");
+                name: "IX_Countries_Id",
+                table: "Countries",
+                column: "Id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Genres_Id",
@@ -216,6 +343,17 @@ namespace WatchIt.Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_MediaGenres_MediaId",
+                table: "MediaGenres",
+                column: "MediaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaMovies_Id",
+                table: "MediaMovies",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MediaPhotoImages_Id",
                 table: "MediaPhotoImages",
                 column: "Id",
@@ -231,6 +369,39 @@ namespace WatchIt.Database.Migrations
                 table: "MediaPosterImages",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaProductionCountrys_MediaId",
+                table: "MediaProductionCountrys",
+                column: "MediaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaSeries_Id",
+                table: "MediaSeries",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaSeriesEpisodes_Id",
+                table: "MediaSeriesEpisodes",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaSeriesEpisodes_MediaSeriesSeasonId",
+                table: "MediaSeriesEpisodes",
+                column: "MediaSeriesSeasonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaSeriesSeasons_Id",
+                table: "MediaSeriesSeasons",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaSeriesSeasons_MediaSeriesId",
+                table: "MediaSeriesSeasons",
+                column: "MediaSeriesId");
         }
 
         /// <inheritdoc />
@@ -240,7 +411,13 @@ namespace WatchIt.Database.Migrations
                 name: "Accounts");
 
             migrationBuilder.DropTable(
-                name: "GenreMedia");
+                name: "MediaGenres");
+
+            migrationBuilder.DropTable(
+                name: "MediaProductionCountrys");
+
+            migrationBuilder.DropTable(
+                name: "MediaSeriesEpisodes");
 
             migrationBuilder.DropTable(
                 name: "AccountProfilePictures");
@@ -252,10 +429,22 @@ namespace WatchIt.Database.Migrations
                 name: "Genres");
 
             migrationBuilder.DropTable(
+                name: "Countries");
+
+            migrationBuilder.DropTable(
+                name: "MediaSeriesSeasons");
+
+            migrationBuilder.DropTable(
                 name: "Media");
 
             migrationBuilder.DropTable(
+                name: "MediaMovies");
+
+            migrationBuilder.DropTable(
                 name: "MediaPosterImages");
+
+            migrationBuilder.DropTable(
+                name: "MediaSeries");
         }
     }
 }

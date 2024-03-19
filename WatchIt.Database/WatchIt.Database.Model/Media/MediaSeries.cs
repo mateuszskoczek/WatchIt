@@ -21,7 +21,7 @@ namespace WatchIt.Database.Model.Media
         #region NAVIGATION
 
         public Media Media { get; set; }
-        public ICollection<MediaSeriesSeason> MediaSeriesSeasons { get; set; }
+        public IEnumerable<MediaSeriesSeason> MediaSeriesSeasons { get; set; }
 
         #endregion
 

@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WatchIt.Database.DataSeeding;
+using WatchIt.Database.Model.Media;
 
-namespace WatchIt.Database.Model.Genre
+namespace WatchIt.Database.Model.Common
 {
     public class Genre : IEntity<Genre>
     {
@@ -21,8 +24,8 @@ namespace WatchIt.Database.Model.Genre
 
         #region NAVIGATION
 
-        public ICollection<GenreMedia> GenreMedia { get; set; }
-        public ICollection<Media.Media> Media { get; set; }
+        public IEnumerable<MediaGenre> MediaGenres { get; set; }
+        public IEnumerable<Media.Media> Media { get; set; }
 
         #endregion
 
@@ -48,15 +51,10 @@ namespace WatchIt.Database.Model.Genre
             // Navigation
             builder.HasMany(x => x.Media)
                    .WithMany(x => x.Genres)
-                   .UsingEntity<GenreMedia>();
+                   .UsingEntity<MediaGenre>();
         }
 
-        static IEnumerable<Genre> IEntity<Genre>.InsertData() => new List<Genre>
-        {
-            new Genre { Id = 1, Name = "Comedy" },
-            new Genre { Id = 2, Name = "Thriller" },
-            new Genre { Id = 3, Name = "Horror" },
-        };
+        static IEnumerable<Genre> IEntity<Genre>.InsertData() => DataReader.Read<Genre>();
 
         #endregion
     }
