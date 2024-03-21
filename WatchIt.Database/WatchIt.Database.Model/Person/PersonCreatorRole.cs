@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WatchIt.Database.Model.Rating;
 
 namespace WatchIt.Database.Model.Person
 {
@@ -25,6 +26,7 @@ namespace WatchIt.Database.Model.Person
         public Person Person { get; set; }
         public Media.Media Media { get; set; }
         public PersonCreatorRoleType PersonCreatorRoleType { get; set; }
+        public IEnumerable<RatingPersonCreatorRole> RatingPersonCreatorRole { get; set; }
 
         #endregion
 

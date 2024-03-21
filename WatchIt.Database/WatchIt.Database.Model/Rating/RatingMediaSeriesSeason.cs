@@ -1,23 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WatchIt.Database.Model.Rating;
+using WatchIt.Database.Model.Media;
+using WatchIt.Database.Model.Person;
 
-namespace WatchIt.Database.Model.Media
+namespace WatchIt.Database.Model.Rating
 {
-    public class MediaSeriesEpisode : IEntity<MediaSeriesEpisode>
+    public class RatingMediaSeriesSeason : IEntity<RatingMediaSeriesSeason>
     {
         #region PROPERTIES
 
         public Guid Id { get; set; }
         public Guid MediaSeriesSeasonId { get; set; }
-        public short Number { get; set; }
-        public string? Name { get; set; }
-        public bool IsSpecial { get; set; }
+        public long AccountId { get; set; }
+        public short Rating { get; set; }
 
         #endregion
 
@@ -26,7 +25,7 @@ namespace WatchIt.Database.Model.Media
         #region NAVIGATION
 
         public MediaSeriesSeason MediaSeriesSeason { get; set; }
-        public IEnumerable<RatingMediaSeriesEpisode> RatingMediaSeriesEpisode { get; set; }
+        public Account.Account Account { get; set; }
 
         #endregion
 
@@ -34,7 +33,7 @@ namespace WatchIt.Database.Model.Media
 
         #region PUBLIC METHODS
 
-        static void IEntity<MediaSeriesEpisode>.Build(EntityTypeBuilder<MediaSeriesEpisode> builder)
+        static void IEntity<RatingMediaSeriesSeason>.Build(EntityTypeBuilder<RatingMediaSeriesSeason> builder)
         {
             builder.HasKey(x => x.Id);
             builder.HasIndex(x => x.Id)
@@ -43,20 +42,21 @@ namespace WatchIt.Database.Model.Media
                    .IsRequired();
 
             builder.HasOne(x => x.MediaSeriesSeason)
-                   .WithMany(x => x.MediaSeriesEpisodes)
+                   .WithMany(x => x.RatingMediaSeriesSeason)
                    .HasForeignKey(x => x.MediaSeriesSeasonId)
                    .IsRequired();
             builder.Property(x => x.MediaSeriesSeasonId)
                    .IsRequired();
 
-            builder.Property(x => x.Number)
+            builder.HasOne(x => x.Account)
+                   .WithMany(x => x.RatingMediaSeriesSeason)
+                   .HasForeignKey(x => x.AccountId)
+                   .IsRequired();
+            builder.Property(x => x.AccountId)
                    .IsRequired();
 
-            builder.Property(x => x.Name);
-
-            builder.Property(x => x.IsSpecial)
-                   .IsRequired()
-                   .HasDefaultValue(false);
+            builder.Property(x => x.Rating)
+                   .IsRequired();
         }
 
         #endregion

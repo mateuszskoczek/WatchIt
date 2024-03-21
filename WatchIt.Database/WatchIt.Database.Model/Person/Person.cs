@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WatchIt.Database.Model.Account;
+using WatchIt.Database.Model.Common;
+using WatchIt.Database.Model.ViewCount;
 
 namespace WatchIt.Database.Model.Person
 {
@@ -18,6 +20,7 @@ namespace WatchIt.Database.Model.Person
         public string? Description { get; set; }
         public DateOnly? BirthDate { get; set; }
         public DateOnly? DeathDate { get; set; }
+        public short GenderId { get; set; }
         public Guid? PersonPhotoId { get; set; }
 
         #endregion
@@ -26,9 +29,11 @@ namespace WatchIt.Database.Model.Person
 
         #region NAVIGATION
 
+        public Gender Gender { get; set; }
         public PersonPhotoImage? PersonPhoto { get; set; }
         public IEnumerable<PersonActorRole> PersonActorRoles { get; set; }
         public IEnumerable<PersonCreatorRole> PersonCreatorRoles { get; set; }
+        public IEnumerable<ViewCountPerson> ViewCountsPerson { get; set; }
 
         #endregion
 
@@ -57,6 +62,13 @@ namespace WatchIt.Database.Model.Person
             builder.Property(x => x.BirthDate);
 
             builder.Property(x => x.DeathDate);
+
+            builder.HasOne(x => x.Gender)
+                   .WithMany()
+                   .HasForeignKey(x => x.GenderId)
+                   .IsRequired();
+            builder.Property(x => x.GenderId)
+                   .IsRequired();
 
             builder.HasOne(x => x.PersonPhoto)
                    .WithOne(x => x.Person)

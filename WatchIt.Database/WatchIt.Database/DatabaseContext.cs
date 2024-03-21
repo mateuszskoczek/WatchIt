@@ -10,6 +10,8 @@ using WatchIt.Database.Model.Account;
 using WatchIt.Database.Model.Common;
 using WatchIt.Database.Model.Media;
 using WatchIt.Database.Model.Person;
+using WatchIt.Database.Model.Rating;
+using WatchIt.Database.Model.ViewCount;
 
 namespace WatchIt.Database
 {
@@ -30,6 +32,7 @@ namespace WatchIt.Database
         // Common
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<Genre> Genres { get; set; }
+        public virtual DbSet<Gender> Genders { get; set; }
 
         // Account
         public virtual DbSet<Account> Accounts { get; set; }
@@ -54,6 +57,18 @@ namespace WatchIt.Database
         public virtual DbSet<PersonCreatorRole> PersonCreatorRoles { get; set; }
         public virtual DbSet<PersonCreatorRoleType> PersonCreatorRoleTypes { get; set; }
 
+        // Rating
+        public virtual DbSet<RatingMedia> RatingsMedia { get; set; }
+        public virtual DbSet<RatingPersonActorRole> RatingsPersonActorRole { get; set; }
+        public virtual DbSet<RatingPersonActorRole> RatingsPersonCreatorRole { get; set; }
+        public virtual DbSet<RatingMediaSeriesSeason> RatingsMediaSeriesSeason { get; set; }
+        public virtual DbSet<RatingMediaSeriesEpisode> RatingsMediaSeriesEpisode { get; set; }
+
+        // ViewCount
+        public virtual DbSet<ViewCountPerson> ViewCountsPerson { get; set; }
+        public virtual DbSet<ViewCountMedia> ViewCountsMedia { get; set; }
+
+
         #endregion
 
 
@@ -67,6 +82,7 @@ namespace WatchIt.Database
             // Common
             EntityBuilder.Build<Country>(modelBuilder);
             EntityBuilder.Build<Genre>(modelBuilder);
+            EntityBuilder.Build<Gender>(modelBuilder);
 
             // Account
             EntityBuilder.Build<Account>(modelBuilder);
@@ -90,6 +106,17 @@ namespace WatchIt.Database
             EntityBuilder.Build<PersonActorRoleType>(modelBuilder);
             EntityBuilder.Build<PersonCreatorRole>(modelBuilder);
             EntityBuilder.Build<PersonCreatorRoleType>(modelBuilder);
+
+            // Rating
+            EntityBuilder.Build<RatingMedia>(modelBuilder);
+            EntityBuilder.Build<RatingPersonActorRole>(modelBuilder);
+            EntityBuilder.Build<RatingPersonCreatorRole>(modelBuilder);
+            EntityBuilder.Build<RatingMediaSeriesSeason>(modelBuilder);
+            EntityBuilder.Build<RatingMediaSeriesEpisode>(modelBuilder);
+
+            // ViewCounts
+            EntityBuilder.Build<ViewCountMedia>(modelBuilder);
+            EntityBuilder.Build<ViewCountPerson>(modelBuilder);
         }
 
         #endregion

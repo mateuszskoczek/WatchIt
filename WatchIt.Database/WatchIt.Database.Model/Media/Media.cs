@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using WatchIt.Database.Model.Account;
 using WatchIt.Database.Model.Common;
 using WatchIt.Database.Model.Person;
+using WatchIt.Database.Model.Rating;
+using WatchIt.Database.Model.ViewCount;
 
 namespace WatchIt.Database.Model.Media
 {
@@ -41,6 +43,10 @@ namespace WatchIt.Database.Model.Media
         public IEnumerable<PersonActorRole> PersonActorRoles { get; set; }
 
         public IEnumerable<PersonCreatorRole> PersonCreatorRoles { get; set; }
+
+        public IEnumerable<RatingMedia> RatingMedia { get; set; }
+
+        public IEnumerable<ViewCountMedia> ViewCountsMedia { get; set; }
 
         #endregion
 

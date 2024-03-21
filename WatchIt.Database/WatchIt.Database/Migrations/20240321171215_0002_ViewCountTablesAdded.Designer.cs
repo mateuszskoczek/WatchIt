@@ -12,8 +12,8 @@ using WatchIt.Database;
 namespace WatchIt.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240319225625_0001_PersonTableAdded")]
-    partial class _0001_PersonTableAdded
+    [Migration("20240321171215_0002_ViewCountTablesAdded")]
+    partial class _0002_ViewCountTablesAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,9 @@ namespace WatchIt.Database.Migrations
                         .HasMaxLength(320)
                         .HasColumnType("character varying(320)");
 
+                    b.Property<short>("GenderId")
+                        .HasColumnType("smallint");
+
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("boolean");
 
@@ -85,6 +88,8 @@ namespace WatchIt.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BackgroundPictureId");
+
+                    b.HasIndex("GenderId");
 
                     b.HasIndex("Id")
                         .IsUnique();
@@ -154,6 +159,38 @@ namespace WatchIt.Database.Migrations
                         {
                             Id = (short)2,
                             Name = "Albania"
+                        });
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Common.Gender", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("Genders");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = (short)1,
+                            Name = "Male"
+                        },
+                        new
+                        {
+                            Id = (short)2,
+                            Name = "Female"
                         });
                 });
 
@@ -465,6 +502,9 @@ namespace WatchIt.Database.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<short>("GenderId")
+                        .HasColumnType("smallint");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -475,6 +515,8 @@ namespace WatchIt.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GenderId");
+
                     b.HasIndex("Id")
                         .IsUnique();
 
@@ -482,6 +524,144 @@ namespace WatchIt.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("Persons");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Person.PersonActorRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("MediaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<short>("PersonActorRoleTypeId")
+                        .HasColumnType("smallint");
+
+                    b.Property<long>("PersonId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("MediaId");
+
+                    b.HasIndex("PersonActorRoleTypeId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("PersonActorRoles");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Person.PersonActorRoleType", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("PersonActorRoleTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = (short)1,
+                            Name = "Actor"
+                        },
+                        new
+                        {
+                            Id = (short)2,
+                            Name = "Supporting actor"
+                        },
+                        new
+                        {
+                            Id = (short)3,
+                            Name = "Voice actor"
+                        });
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Person.PersonCreatorRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("MediaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<short>("PersonCreatorRoleTypeId")
+                        .HasColumnType("smallint");
+
+                    b.Property<long>("PersonId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("MediaId");
+
+                    b.HasIndex("PersonCreatorRoleTypeId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("PersonCreatorRoles");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Person.PersonCreatorRoleType", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("PersonCreatorRoleTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = (short)1,
+                            Name = "Director"
+                        },
+                        new
+                        {
+                            Id = (short)2,
+                            Name = "Producer"
+                        },
+                        new
+                        {
+                            Id = (short)3,
+                            Name = "Screenwriter"
+                        });
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Person.PersonPhotoImage", b =>
@@ -513,17 +693,218 @@ namespace WatchIt.Database.Migrations
                     b.ToTable("PersonPhotoImages");
                 });
 
+            modelBuilder.Entity("WatchIt.Database.Model.Rating.RatingMedia", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("AccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("MediaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<short>("Rating")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("RatingsMedia");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Rating.RatingMediaSeriesEpisode", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("AccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("MediaSeriesEpisodeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<short>("Rating")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("MediaSeriesEpisodeId");
+
+                    b.ToTable("RatingsMediaSeriesEpisode");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Rating.RatingMediaSeriesSeason", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("AccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("MediaSeriesSeasonId")
+                        .HasColumnType("uuid");
+
+                    b.Property<short>("Rating")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("MediaSeriesSeasonId");
+
+                    b.ToTable("RatingsMediaSeriesSeason");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Rating.RatingPersonActorRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("AccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("PersonActorRoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<short>("Rating")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("PersonActorRoleId");
+
+                    b.ToTable("RatingsPersonActorRole", (string)null);
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Rating.RatingPersonCreatorRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("AccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("PersonCreatorRoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<short>("Rating")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("PersonCreatorRoleId");
+
+                    b.ToTable("RatingsPersonCreatorRole", (string)null);
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.ViewCount.ViewCountMedia", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("date")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<long>("MediaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ViewCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(0L);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("MediaId");
+
+                    b.ToTable("ViewCountsMedia", (string)null);
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.ViewCount.ViewCountPerson", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("date")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<long>("PersonId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ViewCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(0L);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("ViewCountsPerson", (string)null);
+                });
+
             modelBuilder.Entity("WatchIt.Database.Model.Account.Account", b =>
                 {
                     b.HasOne("WatchIt.Database.Model.Media.MediaPhotoImage", "BackgroundPicture")
                         .WithMany()
                         .HasForeignKey("BackgroundPictureId");
 
+                    b.HasOne("WatchIt.Database.Model.Common.Gender", "Gender")
+                        .WithMany()
+                        .HasForeignKey("GenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WatchIt.Database.Model.Account.AccountProfilePicture", "ProfilePicture")
                         .WithOne("Account")
                         .HasForeignKey("WatchIt.Database.Model.Account.Account", "ProfilePictureId");
 
                     b.Navigation("BackgroundPicture");
+
+                    b.Navigation("Gender");
 
                     b.Navigation("ProfilePicture");
                 });
@@ -622,11 +1003,203 @@ namespace WatchIt.Database.Migrations
 
             modelBuilder.Entity("WatchIt.Database.Model.Person.Person", b =>
                 {
+                    b.HasOne("WatchIt.Database.Model.Common.Gender", "Gender")
+                        .WithMany()
+                        .HasForeignKey("GenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WatchIt.Database.Model.Person.PersonPhotoImage", "PersonPhoto")
                         .WithOne("Person")
                         .HasForeignKey("WatchIt.Database.Model.Person.Person", "PersonPhotoId");
 
+                    b.Navigation("Gender");
+
                     b.Navigation("PersonPhoto");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Person.PersonActorRole", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Media.Media", "Media")
+                        .WithMany("PersonActorRoles")
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchIt.Database.Model.Person.PersonActorRoleType", "PersonActorRoleType")
+                        .WithMany()
+                        .HasForeignKey("PersonActorRoleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchIt.Database.Model.Person.Person", "Person")
+                        .WithMany("PersonActorRoles")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Media");
+
+                    b.Navigation("Person");
+
+                    b.Navigation("PersonActorRoleType");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Person.PersonCreatorRole", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Media.Media", "Media")
+                        .WithMany("PersonCreatorRoles")
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchIt.Database.Model.Person.PersonCreatorRoleType", "PersonCreatorRoleType")
+                        .WithMany()
+                        .HasForeignKey("PersonCreatorRoleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchIt.Database.Model.Person.Person", "Person")
+                        .WithMany("PersonCreatorRoles")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Media");
+
+                    b.Navigation("Person");
+
+                    b.Navigation("PersonCreatorRoleType");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Rating.RatingMedia", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Account.Account", "Account")
+                        .WithMany("RatingMedia")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchIt.Database.Model.Media.Media", "Media")
+                        .WithMany("RatingMedia")
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Media");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Rating.RatingMediaSeriesEpisode", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Account.Account", "Account")
+                        .WithMany("RatingMediaSeriesEpisode")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchIt.Database.Model.Media.MediaSeriesEpisode", "MediaSeriesEpisode")
+                        .WithMany("RatingMediaSeriesEpisode")
+                        .HasForeignKey("MediaSeriesEpisodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("MediaSeriesEpisode");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Rating.RatingMediaSeriesSeason", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Account.Account", "Account")
+                        .WithMany("RatingMediaSeriesSeason")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchIt.Database.Model.Media.MediaSeriesSeason", "MediaSeriesSeason")
+                        .WithMany("RatingMediaSeriesSeason")
+                        .HasForeignKey("MediaSeriesSeasonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("MediaSeriesSeason");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Rating.RatingPersonActorRole", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Account.Account", "Account")
+                        .WithMany("RatingPersonActorRole")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchIt.Database.Model.Person.PersonActorRole", "PersonActorRole")
+                        .WithMany("RatingPersonActorRole")
+                        .HasForeignKey("PersonActorRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("PersonActorRole");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Rating.RatingPersonCreatorRole", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Account.Account", "Account")
+                        .WithMany("RatingPersonCreatorRole")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WatchIt.Database.Model.Person.PersonCreatorRole", "PersonCreatorRole")
+                        .WithMany("RatingPersonCreatorRole")
+                        .HasForeignKey("PersonCreatorRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("PersonCreatorRole");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.ViewCount.ViewCountMedia", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Media.Media", "Media")
+                        .WithMany("ViewCountsMedia")
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Media");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.ViewCount.ViewCountPerson", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Person.Person", "Person")
+                        .WithMany("ViewCountsPerson")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Account.Account", b =>
+                {
+                    b.Navigation("RatingMedia");
+
+                    b.Navigation("RatingMediaSeriesEpisode");
+
+                    b.Navigation("RatingMediaSeriesSeason");
+
+                    b.Navigation("RatingPersonActorRole");
+
+                    b.Navigation("RatingPersonCreatorRole");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Account.AccountProfilePicture", b =>
@@ -652,6 +1225,14 @@ namespace WatchIt.Database.Migrations
                     b.Navigation("MediaPhotoImages");
 
                     b.Navigation("MediaProductionCountries");
+
+                    b.Navigation("PersonActorRoles");
+
+                    b.Navigation("PersonCreatorRoles");
+
+                    b.Navigation("RatingMedia");
+
+                    b.Navigation("ViewCountsMedia");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaMovie", b =>
@@ -674,9 +1255,35 @@ namespace WatchIt.Database.Migrations
                     b.Navigation("MediaSeriesSeasons");
                 });
 
+            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesEpisode", b =>
+                {
+                    b.Navigation("RatingMediaSeriesEpisode");
+                });
+
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeriesSeason", b =>
                 {
                     b.Navigation("MediaSeriesEpisodes");
+
+                    b.Navigation("RatingMediaSeriesSeason");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Person.Person", b =>
+                {
+                    b.Navigation("PersonActorRoles");
+
+                    b.Navigation("PersonCreatorRoles");
+
+                    b.Navigation("ViewCountsPerson");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Person.PersonActorRole", b =>
+                {
+                    b.Navigation("RatingPersonActorRole");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Person.PersonCreatorRole", b =>
+                {
+                    b.Navigation("RatingPersonCreatorRole");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Person.PersonPhotoImage", b =>

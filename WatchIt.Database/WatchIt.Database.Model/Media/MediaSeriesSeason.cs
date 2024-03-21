@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WatchIt.Database.Model.Rating;
 
 namespace WatchIt.Database.Model.Media
 {
@@ -25,6 +26,7 @@ namespace WatchIt.Database.Model.Media
 
         public MediaSeries MediaSeries { get; set; }
         public IEnumerable<MediaSeriesEpisode> MediaSeriesEpisodes { get; set; }
+        public IEnumerable<RatingMediaSeriesSeason> RatingMediaSeriesSeason { get; set; }
 
         #endregion
 

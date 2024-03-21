@@ -9,7 +9,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WatchIt.Database.Model.Common;
 using WatchIt.Database.Model.Media;
+using WatchIt.Database.Model.Rating;
 
 namespace WatchIt.Database.Model.Account
 {
@@ -21,6 +23,7 @@ namespace WatchIt.Database.Model.Account
         public string Username { get; set; }
         public string Email { get; set; }
         public string Description { get; set; }
+        public short GenderId { get; set; }
         public Guid? ProfilePictureId { get; set; }
         public Guid? BackgroundPictureId { get; set; }
         public byte[] Password { get; set; }
@@ -36,8 +39,15 @@ namespace WatchIt.Database.Model.Account
 
         #region NAVIGATION
 
+        public Gender Gender { get; set; }
         public AccountProfilePicture? ProfilePicture { get; set; }
         public MediaPhotoImage? BackgroundPicture { get; set; }
+
+        public IEnumerable<RatingMedia> RatingMedia { get; set; }
+        public IEnumerable<RatingPersonActorRole> RatingPersonActorRole { get; set; }
+        public IEnumerable<RatingPersonCreatorRole> RatingPersonCreatorRole { get; set; }
+        public IEnumerable<RatingMediaSeriesSeason> RatingMediaSeriesSeason { get; set; }
+        public IEnumerable<RatingMediaSeriesEpisode> RatingMediaSeriesEpisode { get; set; }
 
         #endregion
 
@@ -63,6 +73,13 @@ namespace WatchIt.Database.Model.Account
 
             builder.Property(x => x.Description)
                    .HasMaxLength(1000);
+
+            builder.HasOne(x => x.Gender)
+                   .WithMany()
+                   .HasForeignKey(x => x.GenderId)
+                   .IsRequired();
+            builder.Property(x => x.GenderId)
+                   .IsRequired();
 
             builder.HasOne(x => x.ProfilePicture)
                    .WithOne(x => x.Account)
