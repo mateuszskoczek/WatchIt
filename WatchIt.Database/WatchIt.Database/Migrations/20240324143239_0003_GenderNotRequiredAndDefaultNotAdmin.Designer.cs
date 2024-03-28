@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WatchIt.Database;
@@ -11,9 +12,11 @@ using WatchIt.Database;
 namespace WatchIt.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240324143239_0003_GenderNotRequiredAndDefaultNotAdmin")]
+    partial class _0003_GenderNotRequiredAndDefaultNotAdmin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,6 +42,7 @@ namespace WatchIt.Database.Migrations
                         .HasDefaultValueSql("now()");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
@@ -125,31 +129,6 @@ namespace WatchIt.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("AccountProfilePictures");
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Account.AccountRefreshToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<long>("AccountId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsExtendable")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.ToTable("AccountRefreshTokens");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Common.Country", b =>
@@ -930,17 +909,6 @@ namespace WatchIt.Database.Migrations
                     b.Navigation("ProfilePicture");
                 });
 
-            modelBuilder.Entity("WatchIt.Database.Model.Account.AccountRefreshToken", b =>
-                {
-                    b.HasOne("WatchIt.Database.Model.Account.Account", "Account")
-                        .WithMany("AccountRefreshTokens")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
             modelBuilder.Entity("WatchIt.Database.Model.Media.Media", b =>
                 {
                     b.HasOne("WatchIt.Database.Model.Media.MediaMovie", null)
@@ -1223,8 +1191,6 @@ namespace WatchIt.Database.Migrations
 
             modelBuilder.Entity("WatchIt.Database.Model.Account.Account", b =>
                 {
-                    b.Navigation("AccountRefreshTokens");
-
                     b.Navigation("RatingMedia");
 
                     b.Navigation("RatingMediaSeriesEpisode");

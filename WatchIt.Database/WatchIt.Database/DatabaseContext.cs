@@ -37,6 +37,7 @@ namespace WatchIt.Database
         // Account
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountProfilePicture> AccountProfilePictures { get; set; }
+        public virtual DbSet<AccountRefreshToken> AccountRefreshTokens { get; set; }
 
         // Media
         public virtual DbSet<Media> Media { get; set; }
@@ -87,6 +88,7 @@ namespace WatchIt.Database
             // Account
             EntityBuilder.Build<Account>(modelBuilder);
             EntityBuilder.Build<AccountProfilePicture>(modelBuilder);
+            EntityBuilder.Build<AccountRefreshToken>(modelBuilder);
 
             // Media
             EntityBuilder.Build<Media>(modelBuilder);

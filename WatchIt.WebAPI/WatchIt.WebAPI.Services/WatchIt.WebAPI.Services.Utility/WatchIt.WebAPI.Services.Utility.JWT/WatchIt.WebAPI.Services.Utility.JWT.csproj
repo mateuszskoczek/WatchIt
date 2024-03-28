@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.1.2" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.1.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\WatchIt.Database\WatchIt.Database.Model\WatchIt.Database.Model.csproj" />
+    <ProjectReference Include="..\..\..\..\WatchIt.Database\WatchIt.Database\WatchIt.Database.csproj" />
+    <ProjectReference Include="..\WatchIt.WebAPI.Services.Utility.Configuration\WatchIt.WebAPI.Services.Utility.Configuration.csproj" />
+  </ItemGroup>
+
+</Project>

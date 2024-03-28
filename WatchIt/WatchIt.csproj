@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.9.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
       <PrivateAssets>all</PrivateAssets>
@@ -26,7 +31,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WatchIt.Database\WatchIt.Database.DataSeeding\WatchIt.Database.DataSeeding.csproj" />
+    <ProjectReference Include="..\WatchIt.Database\WatchIt.Database.Model\WatchIt.Database.Model.csproj" />
     <ProjectReference Include="..\WatchIt.Database\WatchIt.Database\WatchIt.Database.csproj" />
+    <ProjectReference Include="..\WatchIt.Shared\WatchIt.Shared.Models\WatchIt.Shared.Models.csproj" />
+    <ProjectReference Include="..\WatchIt.WebAPI\WatchIt.WebAPI.Controllers\WatchIt.WebAPI.Controllers.csproj" />
+    <ProjectReference Include="..\WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.csproj" />
+    <ProjectReference Include="..\WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Utility\WatchIt.WebAPI.Services.Utility.Configuration\WatchIt.WebAPI.Services.Utility.Configuration.csproj" />
+    <ProjectReference Include="..\WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Utility\WatchIt.WebAPI.Services.Utility.JWT\WatchIt.WebAPI.Services.Utility.JWT.csproj" />
+    <ProjectReference Include="..\WatchIt.WebAPI\WatchIt.WebAPI.Validators\WatchIt.WebAPI.Validators.csproj" />
   </ItemGroup>
 
 </Project>

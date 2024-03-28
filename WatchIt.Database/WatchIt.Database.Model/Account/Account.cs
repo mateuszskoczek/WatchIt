@@ -22,8 +22,8 @@ namespace WatchIt.Database.Model.Account
         public long Id { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
-        public string Description { get; set; }
-        public short GenderId { get; set; }
+        public string? Description { get; set; }
+        public short? GenderId { get; set; }
         public Guid? ProfilePictureId { get; set; }
         public Guid? BackgroundPictureId { get; set; }
         public byte[] Password { get; set; }
@@ -48,6 +48,8 @@ namespace WatchIt.Database.Model.Account
         public IEnumerable<RatingPersonCreatorRole> RatingPersonCreatorRole { get; set; }
         public IEnumerable<RatingMediaSeriesSeason> RatingMediaSeriesSeason { get; set; }
         public IEnumerable<RatingMediaSeriesEpisode> RatingMediaSeriesEpisode { get; set; }
+
+        public IEnumerable<AccountRefreshToken> AccountRefreshTokens { get; set; }
 
         #endregion
 
@@ -76,10 +78,8 @@ namespace WatchIt.Database.Model.Account
 
             builder.HasOne(x => x.Gender)
                    .WithMany()
-                   .HasForeignKey(x => x.GenderId)
-                   .IsRequired();
-            builder.Property(x => x.GenderId)
-                   .IsRequired();
+                   .HasForeignKey(x => x.GenderId);
+            builder.Property(x => x.GenderId);
 
             builder.HasOne(x => x.ProfilePicture)
                    .WithOne(x => x.Account)
@@ -104,7 +104,8 @@ namespace WatchIt.Database.Model.Account
                    .IsRequired();
 
             builder.Property(x => x.IsAdmin)
-                   .IsRequired();
+                   .IsRequired()
+                   .HasDefaultValue(false);
 
             builder.Property(x => x.CreationDate)
                    .IsRequired()
