@@ -1,18 +1,36 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using WatchIt.Database;
 
-namespace WatchIt.WebAPI.Services.Utility.User
+namespace WatchIt.WebAPI.Services.Utility.User;
+
+public class UserService(DatabaseContext database, IHttpContextAccessor accessor) : IUserService
 {
-    public class UserService(IHttpContextAccessor accessor)
+    #region PUBLIC METHODS
+
+    public ClaimsPrincipal GetRawUser()
     {
-        #region PUBLIC METHODS
-
-
-
-        #endregion
+        if (accessor.HttpContext is null)
+        {
+            throw new NullReferenceException();
+        }
+        return accessor.HttpContext.User;
     }
+
+    public UserValidator GetValidator()
+    {
+        ClaimsPrincipal rawUser = GetRawUser();
+        return new UserValidator(database, rawUser);
+    }
+
+    public Guid GetJti()
+    {
+        ClaimsPrincipal user = GetRawUser();
+        Claim jtiClaim = user.FindFirst(JwtRegisteredClaimNames.Jti)!;
+        Guid guid = Guid.Parse(jtiClaim.Value);
+        return guid;
+    }
+    
+    #endregion
 }

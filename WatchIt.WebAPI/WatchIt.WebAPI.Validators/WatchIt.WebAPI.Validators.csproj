@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.9.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\WatchIt.Common\WatchIt.Common.Model\WatchIt.Common.Model.csproj" />
+      <ProjectReference Include="..\..\WatchIt.Database\WatchIt.Database\WatchIt.Database.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\WatchIt.Database\WatchIt.Database\WatchIt.Database.csproj" />
-    <ProjectReference Include="..\..\WatchIt.Shared\WatchIt.Shared.Models\WatchIt.Shared.Models.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="11.9.0" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
+    </ItemGroup>
 
 </Project>
