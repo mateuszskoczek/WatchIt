@@ -33,12 +33,8 @@ public class MediaPhotoImageConfiguration : IEntityTypeConfiguration<MediaPhotoI
                .IsRequired()
                .HasDefaultValueSql("now()");
 
-        builder.Property(x => x.IsMediaBackground)
-               .IsRequired()
-               .HasDefaultValue(false);
-
-        builder.Property(x => x.IsUniversalBackground)
-               .IsRequired()
-               .HasDefaultValue(false);
+        builder.HasOne(x => x.MediaPhotoImageBackground)
+               .WithOne(x => x.MediaPhotoImage)
+               .HasForeignKey<MediaPhotoImageBackground>();
     }
 }

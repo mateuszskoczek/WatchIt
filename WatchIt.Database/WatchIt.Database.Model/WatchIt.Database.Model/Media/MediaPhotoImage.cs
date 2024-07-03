@@ -9,8 +9,6 @@ public class MediaPhotoImage
     public required byte[] Image { get; set; }
     public required string MimeType { get; set; }
     public DateTime UploadDate { get; set; }
-    public bool IsMediaBackground { get; set; }
-    public bool IsUniversalBackground { get; set; }
 
     #endregion
 
@@ -19,6 +17,7 @@ public class MediaPhotoImage
     #region NAVIGATION
 
     public virtual Media Media { get; set; } = null!;
+    public virtual MediaPhotoImageBackground? MediaPhotoImageBackground { get; set; }
 
     #endregion
 }

@@ -6,7 +6,7 @@ public class MovieRequest : Movie
 {
     #region PUBLIC METHODS
 
-    public Media CreateMedia() => new Media
+    public Database.Model.Media.Media CreateMedia() => new Database.Model.Media.Media
     {
         Title = Title,
         OriginalTitle = OriginalTitle,
@@ -21,7 +21,7 @@ public class MovieRequest : Movie
         Budget = Budget,
     };
 
-    public void UpdateMedia(Media media)
+    public void UpdateMedia(Database.Model.Media.Media media)
     {
         media.Title = Title;
         media.OriginalTitle = OriginalTitle;

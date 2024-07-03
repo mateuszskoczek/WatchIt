@@ -17,7 +17,7 @@ namespace WatchIt.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -108,9 +108,9 @@ namespace WatchIt.Database.Migrations
                             Email = "root@watch.it",
                             IsAdmin = true,
                             LastActive = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LeftSalt = "qE]Q^g%tU\"6Uu^GfE:V:",
-                            Password = new byte[] { 165, 250, 135, 31, 187, 161, 15, 246, 18, 232, 64, 25, 37, 173, 91, 111, 140, 177, 183, 84, 254, 177, 15, 235, 119, 219, 29, 169, 32, 108, 187, 121, 204, 51, 213, 28, 141, 89, 91, 226, 0, 23, 7, 91, 139, 230, 151, 104, 62, 91, 59, 6, 207, 26, 200, 141, 104, 5, 151, 201, 243, 163, 28, 248 },
-                            RightSalt = "T7j)~.#%~ZtOFUZFK,K+",
+                            LeftSalt = "@(0PF{b6Ot?HO*:yF5`L",
+                            Password = new byte[] { 254, 122, 19, 59, 187, 100, 174, 87, 55, 108, 14, 10, 123, 186, 129, 243, 145, 136, 152, 220, 72, 170, 196, 93, 54, 88, 192, 115, 128, 76, 133, 9, 181, 99, 181, 8, 102, 123, 197, 251, 85, 167, 146, 28, 116, 249, 118, 87, 146, 8, 194, 238, 127, 19, 33, 28, 14, 222, 218, 170, 74, 40, 223, 232 },
+                            RightSalt = "=pt,3T0#CfC1[}Zfp{/u",
                             Username = "root"
                         });
                 });
@@ -250,7 +250,8 @@ namespace WatchIt.Database.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -375,16 +376,6 @@ namespace WatchIt.Database.Migrations
                         .HasMaxLength(-1)
                         .HasColumnType("bytea");
 
-                    b.Property<bool>("IsMediaBackground")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("IsUniversalBackground")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
                     b.Property<long>("MediaId")
                         .HasColumnType("bigint");
 
@@ -406,6 +397,34 @@ namespace WatchIt.Database.Migrations
                     b.HasIndex("MediaId");
 
                     b.ToTable("MediaPhotoImages");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaPhotoImageBackground", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<byte[]>("FirstGradientColor")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("bytea");
+
+                    b.Property<bool>("IsUniversalBackground")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<byte[]>("SecondGradientColor")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("bytea");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("MediaPhotoImageBackgrounds");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaPosterImage", b =>
@@ -449,7 +468,7 @@ namespace WatchIt.Database.Migrations
 
                     b.HasIndex("MediaId");
 
-                    b.ToTable("MediaProductionCountrys");
+                    b.ToTable("MediaProductionCountries");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaSeries", b =>
@@ -1013,6 +1032,17 @@ namespace WatchIt.Database.Migrations
                     b.Navigation("Media");
                 });
 
+            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaPhotoImageBackground", b =>
+                {
+                    b.HasOne("WatchIt.Database.Model.Media.MediaPhotoImage", "MediaPhotoImage")
+                        .WithOne("MediaPhotoImageBackground")
+                        .HasForeignKey("WatchIt.Database.Model.Media.MediaPhotoImageBackground", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MediaPhotoImage");
+                });
+
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaProductionCountry", b =>
                 {
                     b.HasOne("WatchIt.Database.Model.Common.Country", "Country")
@@ -1297,6 +1327,11 @@ namespace WatchIt.Database.Migrations
                     b.Navigation("RatingMedia");
 
                     b.Navigation("ViewCountsMedia");
+                });
+
+            modelBuilder.Entity("WatchIt.Database.Model.Media.MediaPhotoImage", b =>
+                {
+                    b.Navigation("MediaPhotoImageBackground");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Media.MediaPosterImage", b =>

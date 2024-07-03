@@ -36,33 +36,11 @@ public class MoviesController(IMoviesControllerService moviesControllerService) 
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> Put([FromRoute]long id, [FromBody]MovieRequest body) => await moviesControllerService.Put(id, body);
-    
+
     [HttpDelete("{id}")]
     [Authorize]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> Delete([FromRoute]long id) => await moviesControllerService.Delete(id);
-    
-    [HttpGet("{id}/genres")]
-    [AllowAnonymous]
-    [ProducesResponseType(typeof(IEnumerable<GenreResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetGenres([FromRoute]long id) => await moviesControllerService.GetGenres(id);
-    
-    [HttpPost("{id}/genres/{genre_id}")]
-    [Authorize]
-    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PostGenre([FromRoute]long id, [FromRoute(Name = "genre_id")]short genreId) => await moviesControllerService.PostGenre(id, genreId);
-    
-    [HttpDelete("{id}/genres/{genre_id}")]
-    [Authorize]
-    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> DeleteGenre([FromRoute]long id, [FromRoute(Name = "genre_id")]short genreId) => await moviesControllerService.DeleteGenre(id, genreId);
+    public async Task<ActionResult> Delete([FromRoute] long id) => await moviesControllerService.Delete(id);
 }

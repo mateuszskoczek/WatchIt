@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using WatchIt.Database;
 using WatchIt.WebAPI.Services.Controllers.Accounts;
 using WatchIt.WebAPI.Services.Controllers.Genres;
+using WatchIt.WebAPI.Services.Controllers.Media;
 using WatchIt.WebAPI.Services.Controllers.Movies;
 using WatchIt.WebAPI.Services.Utility.Configuration;
 using WatchIt.WebAPI.Services.Utility.Tokens;
@@ -141,6 +142,7 @@ public static class Program
         builder.Services.AddSingleton<IAccountsControllerService, AccountsControllerService>();
         builder.Services.AddSingleton<IGenresControllerService, GenresControllerService>();
         builder.Services.AddSingleton<IMoviesControllerService, MoviesControllerService>();
+        builder.Services.AddSingleton<IMediaControllerService, MediaControllerService>();
         
         return builder;
     }

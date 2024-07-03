@@ -1,18 +1,20 @@
-using WatchIt.Website.Components;
+using WatchIt.Common.Services.HttpClient;
+using WatchIt.Website.Services.Utility.Configuration;
+using WatchIt.Website.Services.WebAPI.Accounts;
+using WatchIt.Website.Services.WebAPI.Media;
 
 namespace WatchIt.Website;
 
-public class Program
+public static class Program
 {
+    #region PUBLIC METHODS
+    
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        // Add services to the container.
-        builder.Services.AddRazorComponents()
-               .AddInteractiveServerComponents();
-
-        var app = builder.Build();
+        WebApplication app = WebApplication.CreateBuilder(args)
+                                           .SetupServices()
+                                           .SetupApplication()
+                                           .Build();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -32,4 +34,34 @@ public class Program
 
         app.Run();
     }
+    
+    #endregion
+    
+    
+    
+    #region PRIVATE METHODS
+
+    private static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddHttpClient();
+        
+        // Utility
+        builder.Services.AddSingleton<IHttpClientService, HttpClientService>();
+        builder.Services.AddSingleton<IConfigurationService, ConfigurationService>();
+        
+        // WebAPI
+        builder.Services.AddSingleton<IAccountsWebAPIService, AccountsWebAPIService>();
+        builder.Services.AddSingleton<IMediaWebAPIService, MediaWebAPIService>();
+        
+        return builder;
+    }
+    
+    private static WebApplicationBuilder SetupApplication(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddRazorComponents()
+                        .AddInteractiveServerComponents();
+        return builder;
+    }
+    
+    #endregion
 }
