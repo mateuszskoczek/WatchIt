@@ -1,11 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Movies;
 using WatchIt.Database;
 using WatchIt.Database.Model.Media;
 using WatchIt.WebAPI.Services.Controllers.Common;
 using WatchIt.WebAPI.Services.Utility.User;
-using Genre = WatchIt.Database.Model.Common.Genre;
 
 namespace WatchIt.WebAPI.Services.Controllers.Movies;
 
@@ -105,63 +103,6 @@ public class MoviesControllerService(DatabaseContext database, IUserService user
         database.ViewCountsMedia.RemoveRange(item.Media.ViewCountsMedia);
         database.Media.Attach(item.Media);
         database.Media.Remove(item.Media);
-        await database.SaveChangesAsync();
-        
-        return RequestResult.Ok();
-    }
-
-    public async Task<RequestResult> GetGenres(long movieId)
-    {
-        MediaMovie? item = await database.MediaMovies.FirstOrDefaultAsync(x => x.Id == movieId);
-        if (item is null)
-        {
-            return RequestResult.NotFound();
-        }
-
-        IEnumerable<GenreResponse> genres = item.Media.MediaGenres.Select(x => new GenreResponse(x.Genre));
-        return RequestResult.Ok(genres);
-    }
-
-    public async Task<RequestResult> PostGenre(long movieId, short genreId)
-    {
-        UserValidator validator = userService.GetValidator().MustBeAdmin();
-        if (!validator.IsValid)
-        {
-            return RequestResult.Forbidden();
-        }
-        
-        MediaMovie? movieItem = await database.MediaMovies.FirstOrDefaultAsync(x => x.Id == movieId);
-        Genre? genreItem = await database.Genres.FirstOrDefaultAsync(x => x.Id == genreId);
-        if (movieItem is null || genreItem is null)
-        {
-            return RequestResult.NotFound();
-        }
-
-        await database.MediaGenres.AddAsync(new MediaGenre
-        {
-            GenreId = genreId,
-            MediaId = movieId,
-        });
-        
-        return RequestResult.Ok();
-    }
-    
-    public async Task<RequestResult> DeleteGenre(long movieId, short genreId)
-    {
-        UserValidator validator = userService.GetValidator().MustBeAdmin();
-        if (!validator.IsValid)
-        {
-            return RequestResult.Forbidden();
-        }
-        
-        MediaGenre? item = await database.MediaGenres.FirstOrDefaultAsync(x => x.MediaId == movieId && x.GenreId == genreId);
-        if (item is null)
-        {
-            return RequestResult.NotFound();
-        }
-
-        database.MediaGenres.Attach(item);
-        database.MediaGenres.Remove(item);
         await database.SaveChangesAsync();
         
         return RequestResult.Ok();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WatchIt.Common.Query;
 
 namespace WatchIt.Common.Model.Movies;
 

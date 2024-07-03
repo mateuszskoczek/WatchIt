@@ -51,6 +51,7 @@ public class DatabaseContext : DbContext
     public virtual DbSet<MediaSeriesEpisode> MediaSeriesEpisodes { get; set; }
     public virtual DbSet<MediaPosterImage> MediaPosterImages { get; set; }
     public virtual DbSet<MediaPhotoImage> MediaPhotoImages { get; set; }
+    public virtual DbSet<MediaPhotoImageBackground> MediaPhotoImageBackgrounds { get; set; }
     public virtual DbSet<MediaGenre> MediaGenres { get; set; }
     public virtual DbSet<MediaProductionCountry> MediaProductionCountries { get; set; }
 
