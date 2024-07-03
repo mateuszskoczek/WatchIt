@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\WatchIt.Common\WatchIt.Common.Services\WatchIt.Common.Services.HttpClient\WatchIt.Common.Services.HttpClient.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.Utility\WatchIt.Website.Services.Utility.Configuration\WatchIt.Website.Services.Utility.Configuration.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Accounts\WatchIt.Website.Services.WebAPI.Accounts.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Media\WatchIt.Website.Services.WebAPI.Media.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Components\Layout\EmptyLayout.razor" />
+      <_ContentIncludedByDefault Remove="Components\Layout\MainLayout.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Counter.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Error.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Home.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Weather.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Layout\MainLayout.razor" />
+      <AdditionalFiles Include="Pages\Home.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Components\" />
+      <Folder Include="wwwroot\assets\" />
+    </ItemGroup>
+
+</Project>

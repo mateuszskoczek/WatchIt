@@ -1,1 +1,1 @@
-# JustWatchIt
+# WatchIt
