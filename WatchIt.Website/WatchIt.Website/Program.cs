@@ -1,7 +1,13 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Components.Authorization;
 using WatchIt.Common.Services.HttpClient;
+using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.Utility.Configuration;
+using WatchIt.Website.Services.Utility.Tokens;
 using WatchIt.Website.Services.WebAPI.Accounts;
 using WatchIt.Website.Services.WebAPI.Media;
+using WatchIt.Website.Services.WebAPI.Movies;
 
 namespace WatchIt.Website;
 
@@ -13,6 +19,7 @@ public static class Program
     {
         WebApplication app = WebApplication.CreateBuilder(args)
                                            .SetupServices()
+                                           .SetupAuthentication()
                                            .SetupApplication()
                                            .Build();
 
@@ -40,18 +47,29 @@ public static class Program
     
     
     #region PRIVATE METHODS
-
+    
     private static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddHttpClient();
+        builder.Services.AddSingleton<HttpClient>();
         
         // Utility
         builder.Services.AddSingleton<IHttpClientService, HttpClientService>();
         builder.Services.AddSingleton<IConfigurationService, ConfigurationService>();
+        builder.Services.AddScoped<ITokensService, TokensService>();
+        builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         
         // WebAPI
-        builder.Services.AddSingleton<IAccountsWebAPIService, AccountsWebAPIService>();
+        builder.Services.AddScoped<IAccountsWebAPIService, AccountsWebAPIService>();
         builder.Services.AddSingleton<IMediaWebAPIService, MediaWebAPIService>();
+        builder.Services.AddSingleton<IMoviesWebAPIService, MoviesWebAPIService>();
+        
+        return builder;
+    }
+    
+    private static WebApplicationBuilder SetupAuthentication(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthorizationCore();
+        builder.Services.AddScoped<AuthenticationStateProvider, JWTAuthenticationStateProvider>();
         
         return builder;
     }

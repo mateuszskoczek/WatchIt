@@ -18,6 +18,15 @@ public class UserService(DatabaseContext database, IHttpContextAccessor accessor
         return accessor.HttpContext.User;
     }
 
+    public string? GetRawToken()
+    {
+        if (accessor.HttpContext is null)
+        {
+            throw new NullReferenceException();
+        }
+        return accessor.HttpContext.Request.Headers.Authorization;
+    }
+
     public UserValidator GetValidator()
     {
         ClaimsPrincipal rawUser = GetRawUser();

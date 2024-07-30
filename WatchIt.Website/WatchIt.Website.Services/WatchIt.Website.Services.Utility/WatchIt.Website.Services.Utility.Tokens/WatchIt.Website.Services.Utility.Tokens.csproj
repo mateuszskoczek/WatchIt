@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>WatchIt.Website.Services.Utility.Token</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\WatchIt.Common\WatchIt.Common.Model\WatchIt.Common.Model.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services.Utility.Configuration\WatchIt.Website.Services.Utility.Configuration.csproj" />
+    </ItemGroup>
+
+</Project>

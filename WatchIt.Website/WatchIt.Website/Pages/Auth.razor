@@ -1,4 +1,11 @@
 ﻿@page "/auth"
+@using System.Text
+@using WatchIt.Common.Model.Accounts
+@using WatchIt.Common.Model.Media
+@using WatchIt.Website.Services.Utility.Authentication
+@using WatchIt.Website.Services.Utility.Tokens
+@using WatchIt.Website.Services.WebAPI.Accounts
+@using WatchIt.Website.Services.WebAPI.Media
 @layout EmptyLayout
 
 <PageTitle>WatchIt - @(_authType == AuthType.SignIn ? "Sign in" : "Sign up")</PageTitle>
@@ -6,38 +13,129 @@
 
 
 
-
-<div class="h-100 d-flex align-items-center justify-content-center">
-    <div class="d-inline-flex flex-column justify-content-center panel rounded-3">
-        <a class="logo" href="/">
-            WatchIt
-        </a>
-        @if (_authType == AuthType.SignIn)
-        {
-            
-        }
+@if (_loaded)
+{
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="d-inline-flex flex-column justify-content-center panel panel-header rounded-3">
+            <a class="logo" href="/">
+                WatchIt
+            </a>
+            <div>
+                @if (_authType == AuthType.SignIn)
+                {
+                    <form method="post" @onsubmit="Login" @formname="login">
+                        <AntiforgeryToken/>
+                        <div>
+                            <label>
+                                Username or email:
+                                <InputText @bind-Value="_loginModel!.UsernameOrEmail"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Password:
+                                <InputText type="password" @bind-Value="_loginModel!.Password"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <InputCheckbox @bind-Value="_loginModel!.RememberMe"></InputCheckbox>
+                                Remember me
+                            </label>
+                        </div>
+                        <div>
+                            <button type="submit">Sign in</button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" @onsubmit="Register" @formname="register">
+                        <AntiforgeryToken/>
+                        <div>
+                            <label>
+                                Username:
+                                <InputText @bind-Value="_registerModel!.Username"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Email:
+                                <InputText @bind-Value="_registerModel!.Email"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Password:
+                                <InputText type="password" @bind-Value="_registerModel!.Password"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Confirm password:
+                                <InputText type="password" @bind-Value="_passwordConfirmation"/>
+                            </label>
+                        </div>
+                        <div>
+                            <button type="submit">Sign up</button>
+                        </div>
+                    </form>
+                }
+            </div>
+            @if (_errors is not null)
+            {
+                <div class="text-danger">
+                    @foreach (string error in _errors)
+                    {
+                        @error
+                        <br/>
+                    }
+                </div>
+            }
+            <div>
+                <label>
+                    <input type="radio" checked="@(() => _authType == AuthType.SignIn)" name="auth" @onchange="@(() => _authType = AuthType.SignIn)" />
+                    Sign in
+                </label>
+                <label>
+                    <input type="radio" checked="@(() => _authType == AuthType.SignUp)" name="auth" @onchange="@(() => _authType = AuthType.SignUp)" />
+                    Sign up
+                </label>
+            </div>
+        </div>
     </div>
-</div>
+    
+    
+    
+    <style>
+        body {
+            background: url('@(_background)') no-repeat center center fixed;
+        }
+    
+        .logo {
+            background-image: linear-gradient(45deg, @_firstGradientColor, @_secondGradientColor);
+        }
+    </style>
+}
 
 
 
 
 
-<style>
-    body {
-        background: url('@(_background)') no-repeat center center fixed;
-    }
+@code 
+{
+    #region SERVICES
 
-    .logo {
-        background-image: linear-gradient(45deg, @_firstGradientColor, @_secondGradientColor);
-    }
-</style>
+    [Inject] public ILogger<Auth> Logger { get; set; } = default!;
+    [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
+    [Inject] public ITokensService TokensService { get; set; } = default!;
+    [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
+    [Inject] public IAccountsWebAPIService AccountsWebAPIService { get; set; } = default!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
 
-
-
-
-
-@code {
+    #endregion
+    
+    
     
     #region ENUMS
 
@@ -52,11 +150,29 @@
     
     
     #region FIELDS
+    
+    private bool _loaded = false;
 
     private AuthType _authType = AuthType.SignIn;
     private string _background = "assets/background_temp.jpg";
     private string _firstGradientColor = "#c6721c";
     private string _secondGradientColor = "#85200c";
+
+    private AuthenticateRequest _loginModel = new AuthenticateRequest
+    {
+        UsernameOrEmail = null,
+        Password = null
+    };
+
+    private RegisterRequest _registerModel = new RegisterRequest
+    {
+        Username = null,
+        Email = null,
+        Password = null
+    };
+    private string _passwordConfirmation;
+
+    private IEnumerable<string> _errors;
 
     #endregion
 
@@ -64,9 +180,70 @@
     
     #region METHODS
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        return base.OnInitializedAsync();
+        if (await AuthenticationService.GetAuthenticationStatusAsync())
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        
+        Action<MediaPhotoResponse> backgroundSuccess = (data) =>
+        {
+            string imageBase64 = Convert.ToBase64String(data.Image);
+            string firstColor = BitConverter.ToString(data.Background.FirstGradientColor)
+                                            .Replace("-", string.Empty);
+            string secondColor = BitConverter.ToString(data.Background.SecondGradientColor)
+                                             .Replace("-", string.Empty);
+            
+            _background = $"data:{data.MimeType};base64,{imageBase64}";
+            _firstGradientColor = $"#{firstColor}";
+            _secondGradientColor = $"#{secondColor}";
+        };
+        await MediaWebAPIService.GetPhotoRandomBackground(backgroundSuccess);
+        
+        _loaded = true;
+    }
+
+    private async Task Login()
+    {
+        await AccountsWebAPIService.Authenticate(_loginModel, LoginSuccess, LoginBadRequest, LoginUnauthorized);
+        
+        async void LoginSuccess(AuthenticateResponse data)
+        {
+            await TokensService.SaveAuthenticationData(data);
+            NavigationManager.NavigateTo("/");
+        }
+        
+        void LoginBadRequest(IDictionary<string, string[]> data)
+        {
+            _errors = data.SelectMany(x => x.Value).Select(x => $"• {x}");
+        }
+        
+        void LoginUnauthorized()
+        {
+            _errors = [ "Incorrect account data" ];
+        }
+    }
+    
+    private async Task Register()
+    {
+        if (_registerModel.Password != _passwordConfirmation)
+        {
+            _errors = [ "Password fields don't match" ];
+            return;
+        }
+        
+        await AccountsWebAPIService.Register(_registerModel, RegisterSuccess, RegisterBadRequest);
+
+        void RegisterSuccess(RegisterResponse data)
+        {
+            _authType = AuthType.SignIn;
+        }
+
+        void RegisterBadRequest(IDictionary<string, string[]> data)
+        {
+            _errors = data.SelectMany(x => x.Value).Select(x => $"• {x}");
+        }
     }
 
     #endregion

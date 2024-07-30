@@ -6,4 +6,6 @@ public class Accounts
     public string Register { get; set; }
     public string Authenticate { get; set; }
     public string AuthenticateRefresh { get; set; }
+    public string Logout { get; set; }
+    public string GetProfilePicture { get; set; }
 }

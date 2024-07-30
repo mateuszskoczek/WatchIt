@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using WatchIt.Database.Model.Media;
 
 namespace WatchIt.Common.Model.Movies;
@@ -7,6 +8,7 @@ public class MovieResponse : Movie
 {
     #region PROPERTIES
 
+    [JsonPropertyName("id")]
     public long Id { get; set; }
 
     #endregion
@@ -15,6 +17,9 @@ public class MovieResponse : Movie
     
     #region CONSTRUCTORS
 
+    [JsonConstructor]
+    public MovieResponse() {}
+    
     [SetsRequiredMembers]
     public MovieResponse(MediaMovie mediaMovie)
     {

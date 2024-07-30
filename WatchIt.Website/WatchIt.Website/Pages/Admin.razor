@@ -1,0 +1,56 @@
+﻿@page "/admin"
+
+<PageTitle>WatchIt administrator panel</PageTitle>
+
+@if (_loaded)
+{
+    <div class="container-fluid">
+        @if (_authenticated)
+        {
+            <div class="row">
+                <div class="col rounded-3 panel panel-regular m-1">
+                    <h2>Add new data</h2>
+                </div>
+            </div>
+            <div class="row">
+                <a class="col rounded-3 panel panel-regular m-1" href="/movies/new">
+                    <p class="text-center text-decorations-none">New movie</p>
+                </a>
+                
+                <div class="col rounded-3 panel panel-regular m-1">
+                    <p class="text-center">New TV series</p>
+                </div>
+                <div class="col rounded-3 panel panel-regular m-1">
+                    <p class="text-center">New TV series</p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <NoPermissionComponent/>
+        }
+    </div>
+}
+
+
+@code {
+    [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
+    
+    private bool _loaded = false;
+    private bool _authenticated = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            User? user = await AuthenticationService.GetUserAsync();
+            if (user is not null && user.IsAdmin)
+            {
+                _authenticated = true;
+            }
+            _loaded = true;
+            StateHasChanged();
+        }
+    }
+
+}

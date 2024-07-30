@@ -66,7 +66,7 @@ public class MoviesControllerService(DatabaseContext database, IUserService user
         data.UpdateMedia(item.Media);
         await database.SaveChangesAsync();
         
-        return RequestResult.Ok();
+        return RequestResult.NoContent();
     }
     
     public async Task<RequestResult> Delete(long id)
@@ -105,7 +105,7 @@ public class MoviesControllerService(DatabaseContext database, IUserService user
         database.Media.Remove(item.Media);
         await database.SaveChangesAsync();
         
-        return RequestResult.Ok();
+        return RequestResult.NoContent();
     }
 
     #endregion

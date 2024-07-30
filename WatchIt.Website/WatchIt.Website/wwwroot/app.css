@@ -1,33 +1,31 @@
-@font-face {
-    font-family: Belanosima;
-    src: url(fonts/Belanosima-Regular.ttf) format('truetype');
-}
-
-@font-face {
-    font-family: Belanosima;
-    src: url(fonts/Belanosima-Bold.ttf) format('truetype');
-    font-weight: bold;
-}
-
 body, html {
     background-color: transparent;
     height: 100%;
     margin: 0; 
     padding: 0;
+    
+    color: lightgray;
+    font-family: "PT Sans";
 }
 
 .logo {
-    font-family: Belanosima;
+    font-family: "Belanosima";
     text-decoration: none;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-.panel {
+.panel-header {
     background-color: rgba(0, 0, 0, 0.8);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.panel-regular {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.panel {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(25px);
-    z-index: 1000;
 }
 
 .main-button {
@@ -77,4 +75,9 @@ body, html {
 
 .main-button:hover::before {
     -webkit-mask:none;
+}
+
+.dropdown-menu-left {
+    right: auto;
+    left: 0;
 }
