@@ -114,6 +114,76 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         return Task.FromResult<RequestResult>(RequestResult.Ok(data));
     }
 
+    public async Task<RequestResult> GetPoster(long id)
+    {
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == id);
+        if (media is null)
+        {
+            return RequestResult.BadRequest();
+        }
+
+        MediaPosterImage? poster = media.MediaPosterImage;
+        if (poster is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        MediaPosterResponse data = new MediaPosterResponse(poster);
+        return RequestResult.Ok(data);
+    }
+
+    public async Task<RequestResult> PutPoster(long id, MediaPosterRequest data)
+    {
+        UserValidator validator = userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == id);
+        if (media is null)
+        {
+            return RequestResult.BadRequest();
+        }
+
+        if (media.MediaPosterImage is null)
+        {
+            MediaPosterImage image = data.CreateMediaPosterImage();
+            await database.MediaPosterImages.AddAsync(image);
+            await database.SaveChangesAsync();
+
+            media.MediaPosterImageId = image.Id;
+        }
+        else
+        {
+            data.UpdateMediaPosterImage(media.MediaPosterImage);
+        }
+        
+        await database.SaveChangesAsync();
+
+        return RequestResult.Ok();
+    }
+
+    public async Task<RequestResult> DeletePoster(long id)
+    {
+        UserValidator validator = userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (media?.MediaPosterImage != null)
+        {
+            database.MediaPosterImages.Attach(media.MediaPosterImage);
+            database.MediaPosterImages.Remove(media.MediaPosterImage);
+            await database.SaveChangesAsync();
+        }
+
+        return RequestResult.NoContent();
+    }
+
     public async Task<RequestResult> PostPhoto(MediaPhotoRequest data)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();

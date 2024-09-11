@@ -7,7 +7,7 @@ public class HttpResponse
 {
     #region FIELDS
 
-    private HttpResponseMessage _message;
+    private readonly HttpResponseMessage _message;
     
     private Action? _2XXAction;
     private Action? _400Action;
@@ -32,37 +32,37 @@ public class HttpResponse
     
     #region PUBLIC METHODS
 
-    public HttpResponse RegisterActionFor2XXSuccess(Action action)
+    public HttpResponse RegisterActionFor2XXSuccess(Action? action)
     {
         _2XXAction = action;
         return this;
     }
     
-    public HttpResponse RegisterActionFor2XXSuccess<T>(Action<T> action)
+    public HttpResponse RegisterActionFor2XXSuccess<T>(Action<T>? action)
     {
         _2XXAction = () => Invoke(action);
         return this;
     }
 
-    public HttpResponse RegisterActionFor400BadRequest(Action<IDictionary<string, string[]>> action)
+    public HttpResponse RegisterActionFor400BadRequest(Action<IDictionary<string, string[]>>? action)
     {
         _400Action = () => Invoke(action);
         return this;
     }
 
-    public HttpResponse RegisterActionFor401Unauthorized(Action action)
+    public HttpResponse RegisterActionFor401Unauthorized(Action? action)
     {
         _401Action = action;
         return this;
     }
 
-    public HttpResponse RegisterActionFor403Forbidden(Action action)
+    public HttpResponse RegisterActionFor403Forbidden(Action? action)
     {
         _403Action = action;
         return this;
     }
     
-    public HttpResponse RegisterActionFor404NotFound(Action action)
+    public HttpResponse RegisterActionFor404NotFound(Action? action)
     {
         _404Action = action;
         return this;
@@ -86,21 +86,21 @@ public class HttpResponse
     
     #region PRIVATE METHODS
 
-    private async void Invoke<T>(Action<T> action)
+    private async void Invoke<T>(Action<T>? action)
     {
         Stream streamData = await _message.Content.ReadAsStreamAsync();
         T? data = await JsonSerializer.DeserializeAsync<T>(streamData);
-        action.Invoke(data!);
+        action?.Invoke(data!);
     }
 
-    private async void Invoke(Action<IDictionary<string, string[]>> action)
+    private async void Invoke(Action<IDictionary<string, string[]>>? action)
     {
         Stream streamData = await _message.Content.ReadAsStreamAsync();
         ValidationProblemDetails? data = await JsonSerializer.DeserializeAsync<ValidationProblemDetails>(streamData, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
         });
-        action.Invoke(data!.Errors);
+        action?.Invoke(data!.Errors);
     }
     
     #endregion

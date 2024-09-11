@@ -12,6 +12,9 @@ public interface IMediaControllerService
     Task<RequestResult> GetPhotos(MediaPhotoQueryParameters query);
     Task<RequestResult> GetRandomBackgroundPhoto();
     Task<RequestResult> GetMediaRandomBackgroundPhoto(long id);
+    Task<RequestResult> GetPoster(long id);
+    Task<RequestResult> PutPoster(long id, MediaPosterRequest data);
+    Task<RequestResult> DeletePoster(long id);
     Task<RequestResult> PostPhoto(MediaPhotoRequest data);
     Task<RequestResult> PutPhoto(Guid photoId, MediaPhotoRequest data);
     Task<RequestResult> DeletePhoto(Guid photoId);

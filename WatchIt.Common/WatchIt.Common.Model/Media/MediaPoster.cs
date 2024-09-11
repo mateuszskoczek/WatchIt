@@ -2,7 +2,7 @@
 
 namespace WatchIt.Common.Model.Media;
 
-public class MediaPosterImage
+public abstract class MediaPoster
 {
     [JsonPropertyName("image")]
     public required byte[] Image { get; set; }

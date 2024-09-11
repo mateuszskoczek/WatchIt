@@ -4,9 +4,10 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using WatchIt.Common.Model.Accounts;
+using WatchIt.Website.Services.Utility.Tokens;
 using WatchIt.Website.Services.WebAPI.Accounts;
 
-namespace WatchIt.Website.Services.Utility.Tokens;
+namespace WatchIt.Website.Services.Utility.Authentication;
 
 public class JWTAuthenticationStateProvider : AuthenticationStateProvider
 {
@@ -111,13 +112,20 @@ public class JWTAuthenticationStateProvider : AuthenticationStateProvider
     
     private async Task<string?> Refresh(string refreshToken)
     {
-        AuthenticateResponse response = null;
+        AuthenticateResponse? response = null;
         
         await _accountsService.AuthenticateRefresh((data) => response = data);
+
+        if (response is not null)
+        {
+            await _tokensService.SaveAuthenticationData(response);
+        }
+        else
+        {
+            await _tokensService.RemoveAuthenticationData();
+        }
         
-        await _tokensService.SaveAuthenticationData(response);
-        
-        return response.AccessToken;
+        return response?.AccessToken;
     }
     
     private static IEnumerable<Claim> GetClaimsFromToken(string token)

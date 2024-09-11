@@ -24,6 +24,7 @@ public class MediaPhotoRequest : MediaPhoto
         item.MediaId = MediaId;
         item.Image = Image;
         item.MimeType = MimeType;
+        item.UploadDate = DateTime.Now;
     }
 
     public void UpdateMediaPhotoImageBackground(MediaPhotoImageBackground item)
