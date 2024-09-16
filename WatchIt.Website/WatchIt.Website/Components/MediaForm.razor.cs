@@ -1,12 +1,23 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using WatchIt.Common.Model.Media;
+using WatchIt.Website.Services.WebAPI.Media;
 
 namespace WatchIt.Website.Components;
 
 public partial class MediaForm : ComponentBase
 {
+    #region SERVICES
+
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
+    
+    #endregion
+    
+    
+    
     #region PROPERTIES
     
     [Parameter] public Media Data { get; set; }
@@ -33,6 +44,21 @@ public partial class MediaForm : ComponentBase
 
     #region PRIVATE METHODS
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await MediaWebAPIService.GetPoster(Id.Value, (data) =>
+            {
+                _actualPosterBase64 = Encoding.UTF8.GetString(data.Image);
+                _actualPosterMediaType = data.MimeType;
+                _posterBase64 = _actualPosterBase64;
+                _posterMediaType = _actualPosterMediaType;
+            });
+            StateHasChanged();
+        }
+    }
+
     private async Task LoadPoster(InputFileChangeEventArgs args)
     {
         if (args.File.ContentType.StartsWith("image"))
@@ -53,7 +79,41 @@ public partial class MediaForm : ComponentBase
     
     private async Task SavePoster()
     {
-        throw new NotImplementedException();
+        void SuccessAction()
+        {
+            _actualPosterBase64 = _posterBase64;
+            _actualPosterMediaType = _posterMediaType;
+            _posterChanged = false;
+        }
+
+        MediaPosterRequest data = new MediaPosterRequest
+        {
+            Image = Encoding.UTF8.GetBytes(_posterBase64),
+            MimeType = _posterMediaType
+        };
+
+        await MediaWebAPIService.PutPoster(Id.Value, data, SuccessAction);
+    }
+
+    private async Task DeletePoster()
+    {
+        void SuccessAction()
+        {
+            _actualPosterBase64 = null;
+            _actualPosterMediaType = null;
+            _posterChanged = false;
+            _posterBase64 = null;
+            _posterMediaType = null;
+        }
+
+        await MediaWebAPIService.DeletePoster(Id.Value, SuccessAction);
+    }
+    
+    private void CancelPoster()
+    {
+        _posterBase64 = _actualPosterBase64;
+        _posterMediaType = _actualPosterMediaType;
+        _posterChanged = false;
     }
 
     #endregion

@@ -1,11 +1,24 @@
 ﻿<div class="row">
-    <div class="col-auto rounded-3 panel panel-regular m-1">
-        <img class="rounded-2 m-2 mt-3 shadow" src="@(_posterBase64 is not null ? $"data:{_posterMediaType};base64,{_posterBase64}" : "assets/poster.png")" alt="poster" width="300" height="500"/>
+    <div class="col-auto rounded-3 panel panel-regular m-1 p-3">
+        <img class="rounded-2 shadow mb-1" src="@(_posterBase64 is not null ? $"data:{_posterMediaType};base64,{_posterBase64}" : "assets/poster.png")" alt="poster" width="300" height="500"/>
         <br/>
-        <InputFile id="posterInput" class="m-2 form-control" OnChange="LoadPoster" disabled=@(!Id.HasValue) autocomplete="off"/>
+        <InputFile id="posterInput" class="form-control my-1" OnChange="LoadPoster" disabled=@(!Id.HasValue) autocomplete="off"/>
+        
         @if (_posterChanged)
         {
-            <button id="posterButton" type="button" class="btn btn-secondary m-2 mb-3 form-control" @onclick="SavePoster" disabled=@(!Id.HasValue) autocomplete="off">Save poster</button>
+            <div id="posterButtons" class="container-fluid mt-2">
+                <div class="row">
+                    <button type="button" class="col btn btn-secondary me-1" @onclick="SavePoster" disabled=@(!Id.HasValue) autocomplete="off">Save poster</button>
+                    <button type="button" class="col btn btn-danger ms-1" @onclick="CancelPoster" disabled=@(!Id.HasValue) autocomplete="off">Drop changes</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            if (!string.IsNullOrWhiteSpace(_actualPosterBase64))
+            {
+                <button id="posterButtons" type="button" class="btn btn-danger form-control mt-1" @onclick="DeletePoster" disabled=@(!Id.HasValue) autocomplete="off">Delete poster</button>
+            }
         }
     </div>
     <div class="col rounded-3 panel panel-regular m-1 p-3">
@@ -61,7 +74,7 @@
 </div>
 
 <style>
-    #posterInput, #posterButton {
+    #posterInput, #posterButtons {
         width: 300px;
     }
 </style>

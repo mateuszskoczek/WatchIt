@@ -66,7 +66,7 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
     {
         string url = GetUrl(EndpointsConfiguration.Media.PutPoster, mediaId);
         
-        HttpRequest request = new HttpRequest(HttpMethodType.Get, url)
+        HttpRequest request = new HttpRequest(HttpMethodType.Put, url)
         {
             Body = data
         };

@@ -108,8 +108,18 @@
     
     
     <style>
+        html {
+            height: 100%;
+        }
+
         body {
-            background: url('@(_background)') no-repeat center center fixed;
+            background-image: url('@_background');
+
+            height: 100%;
+
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
     
         .logo {
