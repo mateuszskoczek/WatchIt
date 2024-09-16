@@ -8,4 +8,6 @@ public interface IAccountsControllerService
     Task<RequestResult> Register(RegisterRequest data);
     Task<RequestResult> Authenticate(AuthenticateRequest data);
     Task<RequestResult> AuthenticateRefresh();
+    Task<RequestResult> Logout();
+    Task<RequestResult> GetAccountProfilePicture(long id);
 }

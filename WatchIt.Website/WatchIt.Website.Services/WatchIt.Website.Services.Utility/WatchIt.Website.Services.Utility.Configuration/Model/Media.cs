@@ -7,6 +7,9 @@ public class Media
     public string PostGenre { get; set; }
     public string DeleteGenre { get; set; }
     public string GetPhotoMediaRandomBackground { get; set; }
+    public string GetPoster { get; set; }
+    public string PutPoster { get; set; }
+    public string DeletePoster { get; set; }
     public string GetPhoto { get; set; }
     public string GetPhotos { get; set; }
     public string GetPhotoRandomBackground { get; set; }

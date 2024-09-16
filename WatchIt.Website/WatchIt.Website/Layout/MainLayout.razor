@@ -1,48 +1,74 @@
-﻿@using System.Diagnostics
-@using System.Text
-@using WatchIt.Common.Model.Media
-@using WatchIt.Website.Services.WebAPI.Media
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
-@if (loaded)
+@if (_loaded)
 {
     <div class="container-xl">
-        <div class="row align-items-center m-2 rounded-3 header panel">
-            <div class="col-sm-4">
+        <div class="row align-items-center m-1 my-2 rounded-3 header panel panel-header z-3">
+            <div class="col-2">
                 <a class="logo" href="/">
                     WatchIt
                 </a>
             </div>
-            <div class="col-sm-4">
+            <div class="col">
                 <p>Menu</p>
             </div>
-            <div class="col-sm-4">
+            <div class="col-auto">
                 <div class="d-flex flex-row-reverse">
-                    @if (signedIn)
+                    @if (_user is null)
                     {
-                        <p>test</p>
+                        <a class="main-button" href="/auth">Sign in</a>
                     }
                     else
                     {
-                        <a class="main-button" href="/auth">Sign in or up</a>
+                        <div class="dropdown z-3">
+                            <a class="dropdown-toggle align-items-center text-decoration-none d-flex" id="dropdownUser" aria-expanded="false" @onclick="() => _userMenuIsActive = !_userMenuIsActive">
+                                <img class="rounded-circle" alt="avatar" height="30" src="@(_userProfilePicture)"/>
+                                <div class="text-decoration-none mx-2 text-white">@(_user.Username)</div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right text-small z-3" id="user-menu" aria-labelledby="dropdownUser">
+                                <li>
+                                    @if (_user.IsAdmin)
+                                    {
+                                        <a class="dropdown-item" href="/admin">Administrator panel</a>
+                                    }
+                                    <div class="dropdown-menu-separator"></div>
+                                    <a class="dropdown-item text-danger" @onclick="UserMenuLogOut">Log out</a>
+                                </li>
+                            </ul>
+                        </div>
                     }
                 </div>
             </div>
         </div>
-        <div class="row body-content">
-            <div class="col-sm-12">
+        <div class="row">
+            <div class="col z-0">
                 @Body
             </div>
         </div>
     </div>
 
     <style>
+        html {
+            height: 100%;
+        }
+        
         body {
-            background: url('@background') no-repeat center center fixed;
+            background-image: url('@_background');
+            
+            height: 100%;
+
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
         
         .logo, .main-button {
-            background-image: linear-gradient(45deg, @firstGradientColor, @secondGradientColor);
+            background-image: linear-gradient(45deg, @_firstGradientColor, @_secondGradientColor);
+        }
+        
+        #user-menu {
+            display: @(_userMenuIsActive ? "block" : "none");
+            position: fixed;
         }
     </style>
 }
@@ -55,6 +81,10 @@
     #region SERVICES
 
     [Inject] public ILogger<MainLayout> Logger { get; set; } = default!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] public ITokensService TokensService { get; set; } = default!;
+    [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
+    [Inject] public IAccountsWebAPIService AccountsWebAPIService { get; set; } = default!;
     [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
 
     #endregion
@@ -63,12 +93,15 @@
 
     #region FIELDS
 
-    private bool loaded = false;
+    private bool _loaded = false;
     
-    private string background = "assets/background_temp.jpg";
-    private string firstGradientColor = "#c6721c";
-    private string secondGradientColor = "#85200c";
-    private bool signedIn = false;
+    private string _background = "assets/background_temp.jpg";
+    private string _firstGradientColor = "#c6721c";
+    private string _secondGradientColor = "#85200c";
+    
+    private User? _user = null;
+    private string _userProfilePicture = "assets/user_placeholder.png";
+    private bool _userMenuIsActive = false;
 
     #endregion
 
@@ -76,7 +109,29 @@
 
     #region METHODS
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            List<Task> bgTasks = new List<Task>();
+            
+            bgTasks.Add(GetBackground());
+            
+            await GetAuthenticatedUser();
+            
+            if (_user is not null)
+            {
+                bgTasks.Add(GetProfilePicture());
+            }
+
+            await Task.WhenAll(bgTasks);
+            
+            _loaded = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task GetBackground()
     {
         Action<MediaPhotoResponse> backgroundSuccess = (data) =>
         {
@@ -86,13 +141,33 @@
             string secondColor = BitConverter.ToString(data.Background.SecondGradientColor)
                                              .Replace("-", string.Empty);
             
-            background = $"data:{data.MimeType};base64,{imageBase64}";
-            firstGradientColor = $"#{firstColor}";
-            secondGradientColor = $"#{secondColor}";
+            _background = $"data:{data.MimeType};base64,{imageBase64}";
+            _firstGradientColor = $"#{firstColor}";
+            _secondGradientColor = $"#{secondColor}";
         };
-        await MediaWebAPIService.GetPhotoRandomBackground(backgroundSuccess, null);
-        
-        loaded = true;
+        await MediaWebAPIService.GetPhotoRandomBackground(backgroundSuccess);
+    }
+
+    private async Task GetAuthenticatedUser()
+    {
+        _user = await AuthenticationService.GetUserAsync();
+    }
+
+    private async Task GetProfilePicture()
+    {
+        Action<AccountProfilePictureResponse> successAction = (data) =>
+        {
+            string imageBase64 = Convert.ToBase64String(data.Image);
+            _userProfilePicture = $"data:{data.MimeType};base64,{imageBase64}";
+        };
+        await AccountsWebAPIService.GetAccountProfilePicture(_user.Id, successAction);
+    }
+
+    private async Task UserMenuLogOut()
+    {
+        await AuthenticationService.LogoutAsync();
+        await TokensService.RemoveAuthenticationData();
+        NavigationManager.Refresh(true);
     }
 
     #endregion

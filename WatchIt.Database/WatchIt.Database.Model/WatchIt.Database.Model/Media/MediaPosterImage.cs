@@ -7,7 +7,7 @@ public class MediaPosterImage
     public Guid Id { get; set; }
     public required byte[] Image { get; set; }
     public required string MimeType { get; set; }
-    public required DateTime UploadDate { get; set; }
+    public DateTime UploadDate { get; set; }
 
     #endregion
 

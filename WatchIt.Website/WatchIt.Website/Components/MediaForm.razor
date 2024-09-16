@@ -1,0 +1,80 @@
+﻿<div class="row">
+    <div class="col-auto rounded-3 panel panel-regular m-1 p-3">
+        <img class="rounded-2 shadow mb-1" src="@(_posterBase64 is not null ? $"data:{_posterMediaType};base64,{_posterBase64}" : "assets/poster.png")" alt="poster" width="300" height="500"/>
+        <br/>
+        <InputFile id="posterInput" class="form-control my-1" OnChange="LoadPoster" disabled=@(!Id.HasValue) autocomplete="off"/>
+        
+        @if (_posterChanged)
+        {
+            <div id="posterButtons" class="container-fluid mt-2">
+                <div class="row">
+                    <button type="button" class="col btn btn-secondary me-1" @onclick="SavePoster" disabled=@(!Id.HasValue) autocomplete="off">Save poster</button>
+                    <button type="button" class="col btn btn-danger ms-1" @onclick="CancelPoster" disabled=@(!Id.HasValue) autocomplete="off">Drop changes</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            if (!string.IsNullOrWhiteSpace(_actualPosterBase64))
+            {
+                <button id="posterButtons" type="button" class="btn btn-danger form-control mt-1" @onclick="DeletePoster" disabled=@(!Id.HasValue) autocomplete="off">Delete poster</button>
+            }
+        }
+    </div>
+    <div class="col rounded-3 panel panel-regular m-1 p-3">
+        <EditForm Model="Data" FormName="MediaInfo">
+            <AntiforgeryToken/>
+            <div class="form-group row my-1">
+                <label for="title" class="col-2 col-form-label">Title*</label>
+                <div class="col-10">
+                    <InputText id="title" class="form-control" @bind-Value="Data!.Title"/>
+                </div>
+            </div>
+            <div class="form-group row my-1">
+                <label for="originalTitle" class="col-2 col-form-label">Original title</label>
+                <div class="col-10">
+                    <InputText id="originalTitle" class="form-control" @bind-Value="Data!.OriginalTitle"/>
+                </div>
+            </div>
+            <div class="form-group row my-1">
+                <label for="description" class="col-2 col-form-label">Description</label>
+                <div class="col-10">
+                    <InputTextArea id="description" class="form-control" rows="14" @bind-Value="Data!.Description"/>
+                </div>
+            </div>
+            <div class="form-group row my-1">
+                <label for="releaseDate" class="col-2 col-form-label">Release date</label>
+                <div class="col-10">
+                    <InputDate TValue="DateOnly?" id="releaseDate" class="form-control" @bind-Value="Data!.ReleaseDate"/>
+                </div>
+            </div>
+            <div class="form-group row my-1">
+                <label for="length" class="col-2 col-form-label">Length</label>
+                <div class="col-10">
+                    <InputNumber TValue="short?" id="length" class="form-control" @bind-Value="Data!.Length"/>
+                </div>
+            </div>
+            <div class="row my-1 mt-3">
+                <div class="col d-flex align-items-center">
+                    @if (SaveDataErrors is not null && SaveDataErrors.Any())
+                    {
+                        <p class="text-danger m-0">@(SaveDataErrors.ElementAt(0))</p>
+                    }
+                    else if (!string.IsNullOrWhiteSpace(SaveDataInfo))
+                    {
+                        <p class="text-success m-0">@(SaveDataInfo)</p>
+                    }
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-secondary" @onclick="SaveDataAction">Save data</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<style>
+    #posterInput, #posterButtons {
+        width: 300px;
+    }
+</style>

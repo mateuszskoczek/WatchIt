@@ -8,7 +8,4 @@ public class Movies
     public string Post { get; set; }
     public string Put { get; set; }
     public string Delete { get; set; }
-    public string GetGenres { get; set; }
-    public string PostGenre { get; set; }
-    public string DeleteGenre { get; set; }
 }
