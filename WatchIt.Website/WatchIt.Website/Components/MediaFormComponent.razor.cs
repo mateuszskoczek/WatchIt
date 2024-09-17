@@ -7,7 +7,7 @@ using WatchIt.Website.Services.WebAPI.Media;
 
 namespace WatchIt.Website.Components;
 
-public partial class MediaForm : ComponentBase
+public partial class MediaFormComponent : ComponentBase
 {
     #region SERVICES
 
