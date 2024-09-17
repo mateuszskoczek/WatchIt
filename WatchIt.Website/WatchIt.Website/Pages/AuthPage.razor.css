@@ -1,6 +1,12 @@
-﻿body {
-    background-size: cover;
+﻿/* TAGS */
+
+html {
+    height: 100%;
 }
+
+
+
+/* CLASSES */
 
 .logo {
     font-size: 60px;

@@ -113,8 +113,13 @@ public class JWTAuthenticationStateProvider : AuthenticationStateProvider
     private async Task<string?> Refresh(string refreshToken)
     {
         AuthenticateResponse? response = null;
+
+        void SetResponse(AuthenticateResponse data)
+        {
+            response = data;
+        }
         
-        await _accountsService.AuthenticateRefresh((data) => response = data);
+        await _accountsService.AuthenticateRefresh(SetResponse);
 
         if (response is not null)
         {
@@ -151,8 +156,9 @@ public class JWTAuthenticationStateProvider : AuthenticationStateProvider
     
     public static DateTime ConvertFromUnixTimestamp(int timestamp)
     {
-        DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-        return origin.AddSeconds(timestamp);
+        DateTime date = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        date = date.AddSeconds(timestamp);
+        return date;
     }
     
     #endregion

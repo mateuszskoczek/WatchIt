@@ -13,7 +13,7 @@
                     <h2>@(Id is null ? "Create new movie" : $"Edit movie \"{_movieInfo.Title}\"")</h2>
                 </div>
             </div>
-            <MediaForm Data=@(_movieData) SaveDataAction=SaveData Id=@(Id) SaveDataErrors=@(_movieDataErrors) SaveDataInfo=@(_movieDataInfo)/>
+            <MediaFormComponent Data=@(_movieData) SaveDataAction=SaveData Id=@(Id) SaveDataErrors=@(_movieDataErrors) SaveDataInfo=@(_movieDataInfo)/>
         }
         else
         {

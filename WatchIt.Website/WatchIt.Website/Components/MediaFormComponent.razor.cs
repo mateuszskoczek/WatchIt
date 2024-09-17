@@ -37,6 +37,7 @@ public partial class MediaFormComponent : ComponentBase
     private bool _posterChanged = false;
     private string? _posterBase64 = null;
     private string? _posterMediaType = null;
+    private bool _posterLoading = false;
     
     #endregion
 
@@ -84,6 +85,7 @@ public partial class MediaFormComponent : ComponentBase
             _actualPosterBase64 = _posterBase64;
             _actualPosterMediaType = _posterMediaType;
             _posterChanged = false;
+            _posterLoading = false;
         }
 
         MediaPosterRequest data = new MediaPosterRequest
@@ -92,6 +94,7 @@ public partial class MediaFormComponent : ComponentBase
             MimeType = _posterMediaType
         };
 
+        _posterLoading = true;
         await MediaWebAPIService.PutPoster(Id.Value, data, SuccessAction);
     }
 
@@ -104,8 +107,10 @@ public partial class MediaFormComponent : ComponentBase
             _posterChanged = false;
             _posterBase64 = null;
             _posterMediaType = null;
+            _posterLoading = false;
         }
 
+        _posterLoading = true;
         await MediaWebAPIService.DeletePoster(Id.Value, SuccessAction);
     }
     
