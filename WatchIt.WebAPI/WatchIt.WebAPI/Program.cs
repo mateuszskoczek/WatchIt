@@ -121,7 +121,7 @@ public static class Program
     
     private static WebApplicationBuilder SetupDatabase(this WebApplicationBuilder builder)
     {
-        builder.Services.AddDbContext<DatabaseContext>(x => x.UseLazyLoadingProxies().UseNpgsql(builder.Configuration.GetConnectionString("Default")), ServiceLifetime.Singleton);
+        builder.Services.AddDbContext<DatabaseContext>(x => x.UseLazyLoadingProxies().UseNpgsql(builder.Configuration.GetConnectionString("Default")), ServiceLifetime.Transient);
         return builder;
     }
 
@@ -134,15 +134,15 @@ public static class Program
     private static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
     {
         // Utility
-        builder.Services.AddSingleton<IConfigurationService, ConfigurationService>();
-        builder.Services.AddSingleton<ITokensService, TokensService>();
-        builder.Services.AddSingleton<IUserService, UserService>();
+        builder.Services.AddTransient<IConfigurationService, ConfigurationService>();
+        builder.Services.AddTransient<ITokensService, TokensService>();
+        builder.Services.AddTransient<IUserService, UserService>();
         
         // Controller
-        builder.Services.AddSingleton<IAccountsControllerService, AccountsControllerService>();
-        builder.Services.AddSingleton<IGenresControllerService, GenresControllerService>();
-        builder.Services.AddSingleton<IMoviesControllerService, MoviesControllerService>();
-        builder.Services.AddSingleton<IMediaControllerService, MediaControllerService>();
+        builder.Services.AddTransient<IAccountsControllerService, AccountsControllerService>();
+        builder.Services.AddTransient<IGenresControllerService, GenresControllerService>();
+        builder.Services.AddTransient<IMoviesControllerService, MoviesControllerService>();
+        builder.Services.AddTransient<IMediaControllerService, MediaControllerService>();
         
         return builder;
     }

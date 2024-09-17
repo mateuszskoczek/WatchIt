@@ -4,21 +4,35 @@
         <br/>
         <InputFile id="posterInput" class="form-control my-1" OnChange="LoadPoster" disabled=@(!Id.HasValue) autocomplete="off"/>
         
-        @if (_posterChanged)
+        @if (_posterChanged || !string.IsNullOrWhiteSpace(_actualPosterBase64))
         {
-            <div id="posterButtons" class="container-fluid mt-2">
-                <div class="row">
-                    <button type="button" class="col btn btn-secondary me-1" @onclick="SavePoster" disabled=@(!Id.HasValue) autocomplete="off">Save poster</button>
-                    <button type="button" class="col btn btn-danger ms-1" @onclick="CancelPoster" disabled=@(!Id.HasValue) autocomplete="off">Drop changes</button>
+            <div id="posterButtons" class="container-fluid mt-2 p-0">
+                <div class="row gx-1">
+                    @if (_posterChanged)
+                    {
+                        <div class="col">
+                            <button type="button" class="btn btn-secondary btn-block btn-stretch-x" @onclick="SavePoster" disabled=@(!Id.HasValue || _posterLoading) autocomplete="off">Save poster</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="CancelPoster" disabled=@(!Id.HasValue || _posterLoading) autocomplete="off">Drop changes</button>
+                        </div>
+                    }
+                    else if (!string.IsNullOrWhiteSpace(_actualPosterBase64))
+                    {
+                        <div class="col">
+                            <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="DeletePoster" disabled=@(!Id.HasValue || _posterLoading) autocomplete="off">Delete poster</button>
+                        </div>
+                    }
+                    @if (_posterLoading)
+                    {
+                        <div class="col-auto">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="spinner-border" role="status"></div>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
-        }
-        else
-        {
-            if (!string.IsNullOrWhiteSpace(_actualPosterBase64))
-            {
-                <button id="posterButtons" type="button" class="btn btn-danger form-control mt-1" @onclick="DeletePoster" disabled=@(!Id.HasValue) autocomplete="off">Delete poster</button>
-            }
         }
     </div>
     <div class="col rounded-3 panel panel-regular m-1 p-3">
@@ -72,6 +86,8 @@
         </EditForm>
     </div>
 </div>
+
+
 
 <style>
     #posterInput, #posterButtons {

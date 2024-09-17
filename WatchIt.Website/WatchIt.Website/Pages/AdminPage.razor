@@ -31,26 +31,3 @@
         }
     </div>
 }
-
-
-@code {
-    [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
-    
-    private bool _loaded = false;
-    private bool _authenticated = false;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            User? user = await AuthenticationService.GetUserAsync();
-            if (user is not null && user.IsAdmin)
-            {
-                _authenticated = true;
-            }
-            _loaded = true;
-            StateHasChanged();
-        }
-    }
-
-}
