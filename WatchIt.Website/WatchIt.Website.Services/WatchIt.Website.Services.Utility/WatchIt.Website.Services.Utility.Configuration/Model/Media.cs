@@ -3,6 +3,7 @@
 public class Media
 {
     public string Base { get; set; }
+    public string Get { get; set; }
     public string GetGenres { get; set; }
     public string PostGenre { get; set; }
     public string DeleteGenre { get; set; }

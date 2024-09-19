@@ -15,6 +15,10 @@ body, html {
     -webkit-text-fill-color: transparent;
 }
 
+.mt-9 {
+    margin-top: 9rem !important;
+}
+
 .panel-header {
     background-color: rgba(0, 0, 0, 0.8);
 }

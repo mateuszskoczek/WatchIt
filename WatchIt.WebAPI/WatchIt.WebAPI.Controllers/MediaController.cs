@@ -12,6 +12,12 @@ namespace WatchIt.WebAPI.Controllers;
 [Route("media")]
 public class MediaController(IMediaControllerService mediaControllerService)
 {
+    [HttpGet("{id}")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(MediaResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetMedia([FromRoute] long id) => await mediaControllerService.GetMedia(id);
+    
     [HttpGet("{id}/genres")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(IEnumerable<GenreResponse>), StatusCodes.Status200OK)]

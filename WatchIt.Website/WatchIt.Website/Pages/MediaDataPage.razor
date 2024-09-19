@@ -1,0 +1,45 @@
+﻿@page "/media/{id:long}"
+@using System.Text
+
+@layout MainLayout
+
+
+<div class="container-fluid p-1 gy-2 gx-2">
+    @if (_loaded)
+    {
+        if (string.IsNullOrWhiteSpace(_error))
+        {
+            <div class="row mt-9">
+                <div class="col-auto">
+                    <img class="rounded-2 shadow" src="@(_poster is not null ? $"data:{_poster.MimeType};base64,{Encoding.UTF8.GetString(_poster.Image)}" : "assets/poster.png")" alt="poster" width="200" height="333"/>
+                </div>
+                <div class="col">
+                    <div class="d-flex h-100">
+                        <h1 class="align-self-end font-weight-bold">@_media.Title</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="rounded-3 panel panel-regular">
+                        Test
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col rounded-3 panel panel-regular m-1">
+                    <div>
+                        <h2 class="text-danger">@_error</h2>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <LoadingPageComponent/>
+    }
+</div>

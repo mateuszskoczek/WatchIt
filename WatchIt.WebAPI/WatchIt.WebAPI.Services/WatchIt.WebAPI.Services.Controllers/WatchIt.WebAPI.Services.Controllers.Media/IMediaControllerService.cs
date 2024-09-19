@@ -5,6 +5,7 @@ namespace WatchIt.WebAPI.Services.Controllers.Media;
 
 public interface IMediaControllerService
 {
+    Task<RequestResult> GetMedia(long mediaId);
     Task<RequestResult> GetGenres(long mediaId);
     Task<RequestResult> PostGenre(long mediaId, short genreId);
     Task<RequestResult> DeleteGenre(long mediaId, short genreId);

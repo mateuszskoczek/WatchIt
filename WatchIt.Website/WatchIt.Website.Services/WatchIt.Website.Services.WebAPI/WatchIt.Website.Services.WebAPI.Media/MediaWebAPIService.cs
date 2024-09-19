@@ -10,6 +10,18 @@ namespace WatchIt.Website.Services.WebAPI.Media;
 public class MediaWebAPIService(IHttpClientService httpClientService, IConfigurationService configurationService) : BaseWebAPIService(configurationService), IMediaWebAPIService
 {
     #region PUBLIC METHODS
+
+    public async Task Get(long mediaId, Action<MediaResponse> successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.Get, mediaId);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
     
     public async Task GetGenres(long mediaId, Action<IEnumerable<GenreResponse>>? successAction = null, Action? notFoundAction = null)
     {

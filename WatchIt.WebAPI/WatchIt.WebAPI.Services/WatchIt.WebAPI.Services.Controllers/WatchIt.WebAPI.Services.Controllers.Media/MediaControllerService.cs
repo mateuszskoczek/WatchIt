@@ -13,15 +13,30 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
 {
     #region PUBLIC METHODS
 
-    public async Task<RequestResult> GetGenres(long mediaId)
+    public async Task<RequestResult> GetMedia(long mediaId)
     {
-        MediaMovie? item = await database.MediaMovies.FirstOrDefaultAsync(x => x.Id == mediaId);
+        Database.Model.Media.Media? item = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
         if (item is null)
         {
             return RequestResult.NotFound();
         }
 
-        IEnumerable<GenreResponse> genres = item.Media.MediaGenres.Select(x => new GenreResponse(x.Genre));
+        MediaMovie? movie = await database.MediaMovies.FirstOrDefaultAsync(x => x.Id == mediaId);
+
+        MediaResponse mediaResponse = new MediaResponse(item, movie is not null ? MediaType.Movie : MediaType.Series);
+
+        return RequestResult.Ok(mediaResponse);
+    }
+    
+    public async Task<RequestResult> GetGenres(long mediaId)
+    {
+        Database.Model.Media.Media? item = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
+        if (item is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        IEnumerable<GenreResponse> genres = item.MediaGenres.Select(x => new GenreResponse(x.Genre));
         return RequestResult.Ok(genres);
     }
 
