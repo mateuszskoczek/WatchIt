@@ -1,5 +1,7 @@
 ﻿@page "/media/{id:long}"
 @using System.Text
+@using Microsoft.IdentityModel.Tokens
+@using WatchIt.Common.Model.Genres
 
 @layout MainLayout
 
@@ -15,14 +17,96 @@
                 </div>
                 <div class="col">
                     <div class="d-flex h-100">
-                        <h1 class="align-self-end font-weight-bold">@_media.Title</h1>
+                        <div class="container-fluid px-0 align-self-end">
+                            <div class="row">
+                                <div class="col">
+                                    <h1 class="align-self-end title-shadow">
+                                        <strong>@_media.Title</strong>
+                                    </h1>
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(_media.Description))
+                            {
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="description-shadow">
+                                            @_media.Description
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row mt-2">
+            <div class="row mt-3 gx-3">
                 <div class="col">
-                    <div class="rounded-3 panel panel-regular">
-                        Test
+                    <div class="rounded-3 panel panel-regular p-4 h-100">
+                        <div class="container-fluid px-0">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="d-flex flex-wrap gap-3">
+                                        @if (!string.IsNullOrWhiteSpace(_media.OriginalTitle))
+                                        {
+                                            <div class="metadata-pill">
+                                                <strong>Original title:</strong> @_media.OriginalTitle
+                                            </div>
+                                        }
+                                        @if (_media.ReleaseDate is not null)
+                                        {
+                                            <div class="metadata-pill">
+                                                <strong>Release date:</strong> @_media.ReleaseDate.ToString()
+                                            </div>
+                                        }
+                                        @if (_media.Length is not null)
+                                        {
+                                            <div class="metadata-pill">
+                                                <strong>Length:</strong> @TimeSpan.FromMinutes(_media.Length.Value).ToString(@"hh\:mm")
+                                            </div>
+                                        }
+                                        @if (_movie?.Budget is not null)
+                                        {
+                                            <div class="metadata-pill">
+                                                <strong>Budget:</strong> @(Math.Round(_movie.Budget.Value))$
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <h4><strong>Genres:</strong></h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="d-flex flex-wrap gap-3">
+                                        @if (_genres.IsNullOrEmpty())
+                                        {
+                                            <div>
+                                                No genres assigned.
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            foreach (GenreResponse genre in _genres)
+                                            {
+                                                <a class="text-decoration-none text-light" href="/genre/@genre.Id">
+                                                    <div class="metadata-pill">
+                                                        @genre.Name
+                                                    </div>
+                                                </a>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="rounded-3 panel panel-yellow p-2 h-100">
+                        Oceny tutaj będą
                     </div>
                 </div>
             </div>
@@ -43,3 +127,18 @@
         <LoadingPageComponent/>
     }
 </div>
+
+
+
+@if (_background is not null)
+{
+    <style>
+        body {
+            background-image: url('@($"data:{_background.MimeType};base64,{Convert.ToBase64String(_background.Image)}")') !important;
+        }
+
+        .logo, .main-button {
+            background-image: linear-gradient(45deg, @($"#{BitConverter.ToString(_background.Background.FirstGradientColor).Replace("-", string.Empty)}"), @($"#{BitConverter.ToString(_background.Background.SecondGradientColor).Replace("-", string.Empty)}")) !important;
+        }
+    </style>
+}

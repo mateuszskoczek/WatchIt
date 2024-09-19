@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
+using WatchIt.Common.Model.Movies;
 using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
@@ -34,6 +36,9 @@ public partial class MediaDataPage : ComponentBase
     private string? _error;
 
     private MediaResponse? _media;
+    private MovieResponse? _movie;
+    private IEnumerable<GenreResponse> _genres;
+    private MediaPhotoResponse? _background;
     private MediaPosterResponse? _poster;
     private User? _user;
 
@@ -51,13 +56,28 @@ public partial class MediaDataPage : ComponentBase
 
             if (_error is null)
             {
-                Task<User?> userTask = AuthenticationService.GetUserAsync();
+                Task backgroundTask = MediaWebAPIService.GetPhotoMediaRandomBackground(Id, data => _background = data);
                 Task posterTask = MediaWebAPIService.GetPoster(Id, data => _poster = data);
+                Task<User?> userTask = AuthenticationService.GetUserAsync();
+                Task genresTask = MediaWebAPIService.GetGenres(Id, data => _genres = data);
+                Task specificMediaTask;
+                if (_media.Type == MediaType.Movie)
+                {
+                    specificMediaTask = MoviesWebAPIService.Get(Id, data => _movie = data);
+                }
+                else
+                {
+                    // TODO: download tv series info
+                    specificMediaTask = null;
+                }
 
                 await Task.WhenAll(
                 [
-                    userTask, 
-                    posterTask
+                    userTask,
+                    specificMediaTask,
+                    genresTask,
+                    backgroundTask,
+                    posterTask,
                 ]);
 
                 _user = await userTask;

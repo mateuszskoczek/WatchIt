@@ -15,6 +15,9 @@ public class GenreResponse : Genre
     
     
     #region CONSTRUCTORS
+
+    [JsonConstructor]
+    public GenreResponse() {}
     
     [SetsRequiredMembers]
     public GenreResponse(Database.Model.Common.Genre genre)

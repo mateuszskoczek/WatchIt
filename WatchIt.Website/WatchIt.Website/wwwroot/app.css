@@ -27,6 +27,10 @@ body, html {
     background-color: rgba(0, 0, 0, 0.6);
 }
 
+.panel-yellow {
+    background-color: rgba(255, 184, 58, 0.6);
+}
+
 .panel {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(25px);

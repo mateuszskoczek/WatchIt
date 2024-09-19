@@ -49,6 +49,18 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
                 .ExecuteAction();
     }
 
+    public async Task GetPhotoMediaRandomBackground(long mediaId, Action<MediaPhotoResponse>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.GetPhotoMediaRandomBackground, mediaId);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+
     public async Task GetPhotoRandomBackground(Action<MediaPhotoResponse>? successAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Media.GetPhotoRandomBackground);
@@ -57,8 +69,8 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
         
         HttpResponse response = await httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
-            .RegisterActionFor404NotFound(notFoundAction)
-            .ExecuteAction();
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
     }
     
     public async Task GetPoster(long mediaId, Action<MediaPosterResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null)
