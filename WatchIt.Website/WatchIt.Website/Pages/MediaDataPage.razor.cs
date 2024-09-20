@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
@@ -38,9 +39,12 @@ public partial class MediaDataPage : ComponentBase
     private MediaResponse? _media;
     private MovieResponse? _movie;
     private IEnumerable<GenreResponse> _genres;
+    private MediaRatingResponse _globalRating;
     private MediaPhotoResponse? _background;
     private MediaPosterResponse? _poster;
     private User? _user;
+    
+    private short? _userRating;
 
     #endregion
 
@@ -52,14 +56,15 @@ public partial class MediaDataPage : ComponentBase
     {
         if (firstRender)
         {
-            await MediaWebAPIService.Get(Id, data => _media = data, () => _error = $"Media with id {Id} was not found");
+            await MediaWebAPIService.GetMedia(Id, data => _media = data, () => _error = $"Media with id {Id} was not found");
 
             if (_error is null)
             {
                 Task backgroundTask = MediaWebAPIService.GetPhotoMediaRandomBackground(Id, data => _background = data);
                 Task posterTask = MediaWebAPIService.GetPoster(Id, data => _poster = data);
                 Task<User?> userTask = AuthenticationService.GetUserAsync();
-                Task genresTask = MediaWebAPIService.GetGenres(Id, data => _genres = data);
+                Task genresTask = MediaWebAPIService.GetMediaGenres(Id, data => _genres = data);
+                Task globalRatingTask = MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data);
                 Task specificMediaTask;
                 if (_media.Type == MediaType.Movie)
                 {
@@ -76,16 +81,42 @@ public partial class MediaDataPage : ComponentBase
                     userTask,
                     specificMediaTask,
                     genresTask,
+                    globalRatingTask,
                     backgroundTask,
                     posterTask,
                 ]);
 
                 _user = await userTask;
             }
+
+            if (_user is not null)
+            {
+                Task userRatingTask = MediaWebAPIService.GetMediaRatingByUser(Id, _user.Id, data => _userRating = data);
+                
+                await Task.WhenAll(
+                [
+                    userRatingTask,
+                ]);
+            }
             
             _loaded = true;
             StateHasChanged();
         }
+    }
+
+    private async Task AddRating(short rating)
+    {
+        if (_userRating == rating)
+        {
+            await MediaWebAPIService.DeleteMediaRating(Id);
+            _userRating = null;
+        }
+        else
+        {
+            await MediaWebAPIService.PutMediaRating(Id, new MediaRatingRequest(rating));
+            _userRating = rating;
+        }
+        await MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data);
     }
 
     #endregion

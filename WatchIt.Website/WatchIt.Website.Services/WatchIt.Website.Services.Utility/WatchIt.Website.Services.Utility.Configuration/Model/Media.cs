@@ -7,6 +7,10 @@ public class Media
     public string GetGenres { get; set; }
     public string PostGenre { get; set; }
     public string DeleteGenre { get; set; }
+    public string GetMediaRating { get; set; }
+    public string GetMediaRatingByUser { get; set; }
+    public string PutMediaRating { get; set; }
+    public string DeleteMediaRating { get; set; }
     public string GetPhotoMediaRandomBackground { get; set; }
     public string GetPoster { get; set; }
     public string PutPoster { get; set; }
