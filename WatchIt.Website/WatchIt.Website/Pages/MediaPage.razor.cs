@@ -9,7 +9,7 @@ using WatchIt.Website.Services.WebAPI.Movies;
 
 namespace WatchIt.Website.Pages;
 
-public partial class MediaDataPage : ComponentBase
+public partial class MediaPage : ComponentBase
 {
     #region SERVICES
 
@@ -56,48 +56,48 @@ public partial class MediaDataPage : ComponentBase
     {
         if (firstRender)
         {
-            await MediaWebAPIService.GetMedia(Id, data => _media = data, () => _error = $"Media with id {Id} was not found");
-
+            List<Task> step1Tasks = new List<Task>();
+            List<Task> step2Tasks = new List<Task>();
+            List<Task> endTasks = new List<Task>();
+            
+            // STEP 0
+            step1Tasks.AddRange(
+            [
+                MediaWebAPIService.GetMedia(Id, data => _media = data, () => _error = $"Media with id {Id} was not found")
+            ]);
+            
+            // STEP 1
+            await Task.WhenAll(step1Tasks);
             if (_error is null)
             {
-                Task backgroundTask = MediaWebAPIService.GetPhotoMediaRandomBackground(Id, data => _background = data);
-                Task posterTask = MediaWebAPIService.GetPoster(Id, data => _poster = data);
-                Task<User?> userTask = AuthenticationService.GetUserAsync();
-                Task genresTask = MediaWebAPIService.GetMediaGenres(Id, data => _genres = data);
-                Task globalRatingTask = MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data);
-                Task specificMediaTask;
-                if (_media.Type == MediaType.Movie)
-                {
-                    specificMediaTask = MoviesWebAPIService.Get(Id, data => _movie = data);
-                }
-                else
-                {
-                    // TODO: download tv series info
-                    specificMediaTask = null;
-                }
-
-                await Task.WhenAll(
+                step2Tasks.AddRange(
                 [
-                    userTask,
-                    specificMediaTask,
-                    genresTask,
-                    globalRatingTask,
-                    backgroundTask,
-                    posterTask,
+                    Task.Run(async () => _user = await AuthenticationService.GetUserAsync())
                 ]);
-
-                _user = await userTask;
-            }
-
-            if (_user is not null)
-            {
-                Task userRatingTask = MediaWebAPIService.GetMediaRatingByUser(Id, _user.Id, data => _userRating = data);
                 
-                await Task.WhenAll(
+                endTasks.AddRange(
                 [
-                    userRatingTask,
+                    MediaWebAPIService.PostMediaView(Id),
+                    MediaWebAPIService.GetPhotoMediaRandomBackground(Id, data => _background = data),
+                    MediaWebAPIService.GetPoster(Id, data => _poster = data),
+                    MediaWebAPIService.GetMediaGenres(Id, data => _genres = data),
+                    MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data),
+                    _media.Type == MediaType.Movie ? MoviesWebAPIService.Get(Id, data => _movie = data) : Task.CompletedTask,
                 ]);
             }
+            
+            // STEP 2
+            await Task.WhenAll(step2Tasks);
+            if (_error is null && _user is not null)
+            {
+                endTasks.AddRange(
+                [
+                    MediaWebAPIService.GetMediaRatingByUser(Id, _user.Id, data => _userRating = data)
+                ]);
+            }
+            
+            // END
+            await Task.WhenAll(endTasks);
             
             _loaded = true;
             StateHasChanged();

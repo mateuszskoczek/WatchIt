@@ -15,10 +15,12 @@ public interface IMediaControllerService
     Task<RequestResult> GetMediaRatingByUser(long mediaId, long userId);
     Task<RequestResult> PutMediaRating(long mediaId, MediaRatingRequest data);
     Task<RequestResult> DeleteMediaRating(long mediaId);
+
+    Task<RequestResult> PostMediaView(long mediaId);
     
-    Task<RequestResult> GetMediaPoster(long id);
-    Task<RequestResult> PutMediaPoster(long id, MediaPosterRequest data);
-    Task<RequestResult> DeleteMediaPoster(long id);
+    Task<RequestResult> GetMediaPoster(long mediaId);
+    Task<RequestResult> PutMediaPoster(long mediaId, MediaPosterRequest data);
+    Task<RequestResult> DeleteMediaPoster(long mediaId);
     
     Task<RequestResult> GetPhoto(Guid id);
     Task<RequestResult> GetPhotos(MediaPhotoQueryParameters query);

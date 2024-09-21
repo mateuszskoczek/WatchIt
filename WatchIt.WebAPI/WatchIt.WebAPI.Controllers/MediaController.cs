@@ -81,6 +81,18 @@ public class MediaController(IMediaControllerService mediaControllerService)
     public async Task<ActionResult> DeleteMediaRating([FromRoute] long id) => await mediaControllerService.DeleteMediaRating(id);
     
     #endregion
+
+
+
+    #region VIEW COUNT
+
+    [HttpPost("{id}/view")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> PostMediaView([FromRoute] long id) => await mediaControllerService.PostMediaView(id);
+
+    #endregion
     
     
     

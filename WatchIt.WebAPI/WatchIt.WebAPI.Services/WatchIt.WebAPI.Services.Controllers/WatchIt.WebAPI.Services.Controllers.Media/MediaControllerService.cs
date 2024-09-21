@@ -5,6 +5,7 @@ using WatchIt.Common.Model.Media;
 using WatchIt.Database;
 using WatchIt.Database.Model.Media;
 using WatchIt.Database.Model.Rating;
+using WatchIt.Database.Model.ViewCount;
 using WatchIt.WebAPI.Services.Controllers.Common;
 using WatchIt.WebAPI.Services.Utility.User;
 
@@ -183,12 +184,45 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
     }
 
     #endregion
+
+    #region View count
+
+    public async Task<RequestResult> PostMediaView(long mediaId)
+    {
+        Database.Model.Media.Media? item = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
+        if (item is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        DateOnly dateNow = DateOnly.FromDateTime(DateTime.Now);
+        ViewCountMedia? viewCount = await database.ViewCountsMedia.FirstOrDefaultAsync(x => x.MediaId == mediaId && x.Date == dateNow);
+        if (viewCount is null)
+        {
+            viewCount = new ViewCountMedia
+            {
+                MediaId = mediaId,
+                Date = dateNow,
+                ViewCount = 1
+            };
+            await database.ViewCountsMedia.AddAsync(viewCount);
+        }
+        else
+        {
+            viewCount.ViewCount++;
+        }
+        await database.SaveChangesAsync();
+        
+        return RequestResult.Ok();
+    }
+
+    #endregion
     
     #region Poster
     
-    public async Task<RequestResult> GetMediaPoster(long id)
+    public async Task<RequestResult> GetMediaPoster(long mediaId)
     {
-        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == id);
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
         if (media is null)
         {
             return RequestResult.BadRequest();
@@ -204,7 +238,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         return RequestResult.Ok(data);
     }
 
-    public async Task<RequestResult> PutMediaPoster(long id, MediaPosterRequest data)
+    public async Task<RequestResult> PutMediaPoster(long mediaId, MediaPosterRequest data)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -212,7 +246,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
             return RequestResult.Forbidden();
         }
         
-        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == id);
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
         if (media is null)
         {
             return RequestResult.BadRequest();
@@ -236,7 +270,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         return RequestResult.Ok();
     }
 
-    public async Task<RequestResult> DeleteMediaPoster(long id)
+    public async Task<RequestResult> DeleteMediaPoster(long mediaId)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -244,7 +278,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
             return RequestResult.Forbidden();
         }
         
-        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == id);
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
 
         if (media?.MediaPosterImage != null)
         {

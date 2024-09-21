@@ -11,6 +11,7 @@ public class Media
     public string GetMediaRatingByUser { get; set; }
     public string PutMediaRating { get; set; }
     public string DeleteMediaRating { get; set; }
+    public string PostMediaView { get; set; }
     public string GetPhotoMediaRandomBackground { get; set; }
     public string GetPoster { get; set; }
     public string PutPoster { get; set; }

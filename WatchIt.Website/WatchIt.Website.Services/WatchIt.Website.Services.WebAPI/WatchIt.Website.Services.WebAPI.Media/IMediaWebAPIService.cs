@@ -14,6 +14,8 @@ public interface IMediaWebAPIService
     Task GetMediaRatingByUser(long mediaId, long userId, Action<short>? successAction = null, Action? notFoundAction = null);
     Task PutMediaRating(long mediaId, MediaRatingRequest body, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? notFoundAction = null);
     Task DeleteMediaRating(long mediaId, Action? successAction = null, Action? unauthorizedAction = null);
+
+    Task PostMediaView(long mediaId, Action? successAction = null, Action? notFoundAction = null);
     
     Task GetPhotoMediaRandomBackground(long mediaId, Action<MediaPhotoResponse>? successAction = null, Action? notFoundAction = null);
     Task GetPhotoRandomBackground(Action<MediaPhotoResponse>? successAction = null, Action? notFoundAction = null);
