@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Text;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Primitives;
 using WatchIt.Common.Model.Movies;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Utility.Configuration;
@@ -28,11 +30,14 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
     #endregion
 
 
+    
     #region PUBLIC METHODS
+    
+    #region Main
 
-    public async Task GetAll(MovieQueryParameters? query = null, Action<IEnumerable<MovieResponse>>? successAction = null)
+    public async Task GetAllMovies(MovieQueryParameters? query = null, Action<IEnumerable<MovieResponse>>? successAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Movies.GetAll);
+        string url = GetUrl(EndpointsConfiguration.Movies.GetAllMovies);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         request.Query = query;
@@ -42,9 +47,21 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task Post(MovieRequest data, Action<MovieResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task GetMovie(long id, Action<MovieResponse>? successAction = null, Action? notFoundAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Movies.Post);
+        string url = GetUrl(EndpointsConfiguration.Movies.GetMovie, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task PostMovie(MovieRequest data, Action<MovieResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Movies.PostMovie);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
         request.Body = data;
@@ -57,21 +74,9 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task Get(long id, Action<MovieResponse>? successAction = null, Action? notFoundAction = null)
+    public async Task PutMovie(long id, MovieRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Movies.Get, id);
-        
-        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
-        
-        HttpResponse response = await _httpClientService.SendRequestAsync(request);
-        response.RegisterActionFor2XXSuccess(successAction)
-                .RegisterActionFor404NotFound(notFoundAction)
-                .ExecuteAction();
-    }
-    
-    public async Task Put(long id, MovieRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
-    {
-        string url = GetUrl(EndpointsConfiguration.Movies.Put, id);
+        string url = GetUrl(EndpointsConfiguration.Movies.PutMovie, id);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Put, url);
         request.Body = data;
@@ -84,9 +89,9 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task Delete(long id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task DeleteMovie(long id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Movies.Delete, id);
+        string url = GetUrl(EndpointsConfiguration.Movies.DeleteMovie, id);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
         
@@ -96,6 +101,44 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
                 .RegisterActionFor403Forbidden(forbiddenAction)
                 .ExecuteAction();
     }
+    
+    #endregion
+
+    #region View count
+
+    public async Task GetMoviesViewRank(int? first = null, int? days = null, Action<IEnumerable<MovieResponse>>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Movies.GetMoviesViewRank);
+        if (first.HasValue || days.HasValue)
+        {
+            StringBuilder urlBuilder = new StringBuilder(url);
+            urlBuilder.Append('?');
+            bool firstParameter = true;
+            if (first.HasValue)
+            {
+                urlBuilder.Append($"first={first.Value}");
+                firstParameter = false;
+            }
+            if (days.HasValue)
+            {
+                if (!firstParameter)
+                {
+                    urlBuilder.Append('&');
+                }
+                urlBuilder.Append($"days={days.Value}");
+            }
+            url = urlBuilder.ToString();
+        }
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .ExecuteAction();
+    }
+
+    #endregion
 
     #endregion
     

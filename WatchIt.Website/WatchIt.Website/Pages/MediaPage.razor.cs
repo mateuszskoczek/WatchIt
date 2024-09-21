@@ -84,7 +84,7 @@ public partial class MediaPage : ComponentBase
                     MediaWebAPIService.GetPoster(Id, data => _poster = data),
                     MediaWebAPIService.GetMediaGenres(Id, data => _genres = data),
                     MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data),
-                    _media.Type == MediaType.Movie ? MoviesWebAPIService.Get(Id, data => _movie = data) : Task.CompletedTask,
+                    _media.Type == MediaType.Movie ? MoviesWebAPIService.GetMovie(Id, data => _movie = data) : Task.CompletedTask,
                 ]);
             }
             
