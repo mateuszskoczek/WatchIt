@@ -113,6 +113,22 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
     }
 
     #endregion
+
+    #region View count
+
+    public async Task PostMediaView(long mediaId, Action? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.PostMediaView, mediaId);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+
+    #endregion
     
     
 
