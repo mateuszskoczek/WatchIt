@@ -7,8 +7,10 @@ public class MediaResponse : Media
 {
     #region PROPERTIES
 
+    [JsonPropertyName("id")]
     public long Id { get; set; }
     
+    [JsonPropertyName("type")]
     public MediaType Type { get; set; }
 
     #endregion
