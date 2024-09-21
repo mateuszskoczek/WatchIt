@@ -33,16 +33,18 @@ public partial class MediaPage : ComponentBase
 
     #region FIELDS
 
-    private bool _loaded = false;
+    private bool _loaded;
     private string? _error;
 
     private MediaResponse? _media;
-    private MovieResponse? _movie;
-    private IEnumerable<GenreResponse> _genres;
-    private MediaRatingResponse _globalRating;
+    
+    private User? _user;
+    
     private MediaPhotoResponse? _background;
     private MediaPosterResponse? _poster;
-    private User? _user;
+    private IEnumerable<GenreResponse> _genres;
+    private MediaRatingResponse _globalRating;
+    private MovieResponse? _movie;
     
     private short? _userRating;
 
