@@ -82,6 +82,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchIt.Website.Services.Ut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchIt.WebAPI.Services.Controllers.Series", "WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Series\WatchIt.WebAPI.Services.Controllers.Series.csproj", "{F8FCEF7B-72EA-48BC-AC68-E11244B067DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchIt.Website.Services.WebAPI.Series", "WatchIt.Website\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Series\WatchIt.Website.Services.WebAPI.Series.csproj", "{783C743A-85BF-4382-BFE5-7A90E3F3B8B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,7 @@ Global
 		{77FDAFDD-E97E-4059-A935-B563B6B0D555} = {130BC8F5-82CE-4EDF-AECB-21594DD41849}
 		{8720AECA-7084-429A-BA15-49B6622C1A32} = {130BC8F5-82CE-4EDF-AECB-21594DD41849}
 		{F8FCEF7B-72EA-48BC-AC68-E11244B067DD} = {CEC468DB-CC49-47D3-9E3E-1CC9530C3CE7}
+		{783C743A-85BF-4382-BFE5-7A90E3F3B8B6} = {46E3711F-18BD-4004-AF53-EA4D8643D92F}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{23383776-1F27-4B5D-8C7C-57BFF75FA473}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -243,5 +246,9 @@ Global
 		{F8FCEF7B-72EA-48BC-AC68-E11244B067DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8FCEF7B-72EA-48BC-AC68-E11244B067DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8FCEF7B-72EA-48BC-AC68-E11244B067DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{783C743A-85BF-4382-BFE5-7A90E3F3B8B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{783C743A-85BF-4382-BFE5-7A90E3F3B8B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{783C743A-85BF-4382-BFE5-7A90E3F3B8B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{783C743A-85BF-4382-BFE5-7A90E3F3B8B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
