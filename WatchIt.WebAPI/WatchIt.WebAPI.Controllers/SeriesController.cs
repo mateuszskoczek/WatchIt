@@ -71,5 +71,15 @@ public class SeriesController : ControllerBase
 
     #endregion
     
+    #region View count
+    
+    [HttpGet("view")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<SeriesResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> GetSeriesViewRank([FromQuery] int first = 5, [FromQuery] int days = 7) => await _seriesControllerService.GetSeriesViewRank(first, days);
+    
+    #endregion
+    
     #endregion
 }

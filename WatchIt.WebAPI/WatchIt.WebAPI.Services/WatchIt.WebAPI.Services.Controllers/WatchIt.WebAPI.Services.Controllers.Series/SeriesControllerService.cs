@@ -34,6 +34,8 @@ public class SeriesControllerService : ISeriesControllerService
     
     #region PUBLIC METHODS
     
+    #region Main
+    
     public async Task<RequestResult> GetAllSeries(SeriesQueryParameters query)
     {
         IEnumerable<SeriesResponse> data = await _database.MediaSeries.Select(x => new SeriesResponse(x)).ToListAsync();
@@ -130,6 +132,31 @@ public class SeriesControllerService : ISeriesControllerService
         
         return RequestResult.NoContent();
     }
+    
+    #endregion
+
+    #region View count
+
+    public async Task<RequestResult> GetSeriesViewRank(int first, int days)
+    {
+        if (first < 1 || days < 1)
+        {
+            return RequestResult.BadRequest();
+        }
+        
+        DateOnly startDate = DateOnly.FromDateTime(DateTime.Now).AddDays(-days);
+        IEnumerable<MediaSeries> rawData = await _database.MediaSeries.OrderByDescending(x => x.Media.ViewCountsMedia.Where(y => y.Date >= startDate)
+                                                                                                                     .Sum(y => y.ViewCount))
+                                                                      .ThenBy(x => x.Id)
+                                                                      .Take(first)
+                                                                      .ToListAsync();
+        
+        IEnumerable<SeriesResponse> data = rawData.Select(x => new SeriesResponse(x));
+        
+        return RequestResult.Ok(data);
+    }
+
+    #endregion
     
     #endregion
 }

@@ -10,4 +10,6 @@ public interface ISeriesControllerService
     Task<RequestResult> PostSeries(SeriesRequest data);
     Task<RequestResult> PutSeries(long id, SeriesRequest data);
     Task<RequestResult> DeleteSeries(long id);
+
+    Task<RequestResult> GetSeriesViewRank(int first, int days);
 }
