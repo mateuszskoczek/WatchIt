@@ -64,7 +64,7 @@ public partial class MovieEditPage : ComponentBase
     {
         if (Id is not null)
         {
-            await MoviesWebAPIService.Get(Id.Value, GetSuccessAction, NoIdAction);
+            await MoviesWebAPIService.GetMovie(Id.Value, GetSuccessAction, NoIdAction);
         }
 
         return;
@@ -83,11 +83,11 @@ public partial class MovieEditPage : ComponentBase
         _movieDataInfo = null;
         if (Id is null)
         {
-            await MoviesWebAPIService.Post(_movieData, PostSuccessAction, BadRequestAction, NoPermissionsAction, NoPermissionsAction);
+            await MoviesWebAPIService.PostMovie(_movieData, PostSuccessAction, BadRequestAction, NoPermissionsAction, NoPermissionsAction);
         }
         else
         {
-            await MoviesWebAPIService.Put(Id.Value, _movieData, PutSuccessAction, BadRequestAction, NoPermissionsAction, NoPermissionsAction);
+            await MoviesWebAPIService.PutMovie(Id.Value, _movieData, PutSuccessAction, BadRequestAction, NoPermissionsAction, NoPermissionsAction);
         }
 
         return;

@@ -1,21 +1,20 @@
-﻿using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WatchIt.Common.Model.Genres;
-using WatchIt.Common.Model.Movies;
-using WatchIt.WebAPI.Services.Controllers.Movies;
+using WatchIt.Common.Model.Series;
+using WatchIt.Database;
+using WatchIt.WebAPI.Services.Controllers.Series;
 
 namespace WatchIt.WebAPI.Controllers;
 
 [ApiController]
-[Route("movies")]
-public class MoviesController : ControllerBase
+[Route("series")]
+public class SeriesController : ControllerBase
 {
     #region SERVICES
 
-    private readonly IMoviesControllerService _moviesControllerService;
+    private readonly ISeriesControllerService _seriesControllerService;
     
     #endregion
     
@@ -23,37 +22,37 @@ public class MoviesController : ControllerBase
     
     #region CONSTRUCTORS
 
-    public MoviesController(IMoviesControllerService moviesControllerService)
+    public SeriesController(ISeriesControllerService seriesControllerService)
     {
-        _moviesControllerService = moviesControllerService;
+        _seriesControllerService = seriesControllerService;
     }
     
     #endregion
     
     
     
-    #region METHODS
-    
+    #region PUBLIC METHODS
+
     #region Main
-    
+
     [HttpGet]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(IEnumerable<MovieResponse>), StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetAllMovies(MovieQueryParameters query) => await _moviesControllerService.GetAllMovies(query);
+    [ProducesResponseType(typeof(IEnumerable<SeriesResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetAllSeries(SeriesQueryParameters query) => await _seriesControllerService.GetAllSeries(query);
     
     [HttpGet("{id}")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(MovieResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SeriesResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetMovie([FromRoute] long id) => await _moviesControllerService.GetMovie(id);
+    public async Task<ActionResult> GetSeries([FromRoute] long id) => await _seriesControllerService.GetSeries(id);
     
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [ProducesResponseType(typeof(MovieResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(SeriesResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> PostMovie([FromBody] MovieRequest body) => await _moviesControllerService.PostMovie(body);
+    public async Task<ActionResult> PostSeries([FromBody] SeriesRequest body) => await _seriesControllerService.PostSeries(body);
     
     [HttpPut("{id}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -61,24 +60,24 @@ public class MoviesController : ControllerBase
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> PutMovie([FromRoute] long id, [FromBody]MovieRequest body) => await _moviesControllerService.PutMovie(id, body);
+    public async Task<ActionResult> PutSeries([FromRoute] long id, [FromBody]SeriesRequest body) => await _seriesControllerService.PutSeries(id, body);
 
     [HttpDelete("{id}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> DeleteMovie([FromRoute] long id) => await _moviesControllerService.DeleteMovie(id);
-    
+    public async Task<ActionResult> DeleteSeries([FromRoute] long id) => await _seriesControllerService.DeleteSeries(id);
+
     #endregion
     
     #region View count
     
     [HttpGet("view")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(IEnumerable<MovieResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<SeriesResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> GetMoviesViewRank([FromQuery] int first = 5, [FromQuery] int days = 7) => await _moviesControllerService.GetMoviesViewRank(first, days);
+    public async Task<ActionResult> GetSeriesViewRank([FromQuery] int first = 5, [FromQuery] int days = 7) => await _seriesControllerService.GetSeriesViewRank(first, days);
     
     #endregion
     

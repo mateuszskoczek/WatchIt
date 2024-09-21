@@ -1,13 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WatchIt.Common.Model.Movies;
+using Microsoft.EntityFrameworkCore;
+using WatchIt.Common.Model.Series;
 using WatchIt.Database;
 using WatchIt.Database.Model.Media;
 using WatchIt.WebAPI.Services.Controllers.Common;
 using WatchIt.WebAPI.Services.Utility.User;
 
-namespace WatchIt.WebAPI.Services.Controllers.Movies;
+namespace WatchIt.WebAPI.Services.Controllers.Series;
 
-public class MoviesControllerService : IMoviesControllerService
+public class SeriesControllerService : ISeriesControllerService
 {
     #region SERVICES
 
@@ -21,7 +21,7 @@ public class MoviesControllerService : IMoviesControllerService
     
     #region CONSTRUCTORS
 
-    public MoviesControllerService(DatabaseContext database, IUserService userService)
+    public SeriesControllerService(DatabaseContext database, IUserService userService)
     {
         _database = database;
         
@@ -35,27 +35,27 @@ public class MoviesControllerService : IMoviesControllerService
     #region PUBLIC METHODS
     
     #region Main
-
-    public async Task<RequestResult> GetAllMovies(MovieQueryParameters query)
+    
+    public async Task<RequestResult> GetAllSeries(SeriesQueryParameters query)
     {
-        IEnumerable<MovieResponse> data = await _database.MediaMovies.Select(x => new MovieResponse(x)).ToListAsync();
+        IEnumerable<SeriesResponse> data = await _database.MediaSeries.Select(x => new SeriesResponse(x)).ToListAsync();
         data = query.PrepareData(data);
         return RequestResult.Ok(data);
     }
     
-    public async Task<RequestResult> GetMovie(long id)
+    public async Task<RequestResult> GetSeries(long id)
     {
-        MediaMovie? item = await _database.MediaMovies.FirstOrDefaultAsync(x => x.Id == id);
+        MediaSeries? item = await _database.MediaSeries.FirstOrDefaultAsync(x => x.Id == id);
         if (item is null)
         {
             return RequestResult.NotFound();
         }
 
-        MovieResponse data = new MovieResponse(item);
+        SeriesResponse data = new SeriesResponse(item);
         return RequestResult.Ok(data);
     }
     
-    public async Task<RequestResult> PostMovie(MovieRequest data)
+    public async Task<RequestResult> PostSeries(SeriesRequest data)
     {
         UserValidator validator = _userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -66,14 +66,14 @@ public class MoviesControllerService : IMoviesControllerService
         Media mediaItem = data.CreateMedia();
         await _database.Media.AddAsync(mediaItem);
         await _database.SaveChangesAsync();
-        MediaMovie mediaMovieItem = data.CreateMediaMovie(mediaItem.Id);
-        await _database.MediaMovies.AddAsync(mediaMovieItem);
+        MediaSeries mediaSeriesItem = data.CreateMediaSeries(mediaItem.Id);
+        await _database.MediaSeries.AddAsync(mediaSeriesItem);
         await _database.SaveChangesAsync();
         
-        return RequestResult.Created($"movies/{mediaItem.Id}", new MovieResponse(mediaMovieItem));
+        return RequestResult.Created($"series/{mediaItem.Id}", new SeriesResponse(mediaSeriesItem));
     }
     
-    public async Task<RequestResult> PutMovie(long id, MovieRequest data)
+    public async Task<RequestResult> PutSeries(long id, SeriesRequest data)
     {
         UserValidator validator = _userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -81,20 +81,20 @@ public class MoviesControllerService : IMoviesControllerService
             return RequestResult.Forbidden();
         }
         
-        MediaMovie? item = await _database.MediaMovies.FirstOrDefaultAsync(x => x.Id == id);
+        MediaSeries? item = await _database.MediaSeries.FirstOrDefaultAsync(x => x.Id == id);
         if (item is null)
         {
             return RequestResult.NotFound();
         }
         
-        data.UpdateMediaMovie(item);
+        data.UpdateMediaSeries(item);
         data.UpdateMedia(item.Media);
         await _database.SaveChangesAsync();
         
         return RequestResult.Ok();
     }
     
-    public async Task<RequestResult> DeleteMovie(long id)
+    public async Task<RequestResult> DeleteSeries(long id)
     {
         UserValidator validator = _userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -102,14 +102,14 @@ public class MoviesControllerService : IMoviesControllerService
             return RequestResult.Forbidden();
         }
         
-        MediaMovie? item = await _database.MediaMovies.FirstOrDefaultAsync(x => x.Id == id);
+        MediaSeries? item = await _database.MediaSeries.FirstOrDefaultAsync(x => x.Id == id);
         if (item is null)
         {
             return RequestResult.NotFound();
         }
 
-        _database.MediaMovies.Attach(item);
-        _database.MediaMovies.Remove(item);
+        _database.MediaSeries.Attach(item);
+        _database.MediaSeries.Remove(item);
         _database.MediaPosterImages.Attach(item.Media.MediaPosterImage!);
         _database.MediaPosterImages.Remove(item.Media.MediaPosterImage!);
         _database.MediaPhotoImages.AttachRange(item.Media.MediaPhotoImages);
@@ -137,7 +137,7 @@ public class MoviesControllerService : IMoviesControllerService
 
     #region View count
 
-    public async Task<RequestResult> GetMoviesViewRank(int first, int days)
+    public async Task<RequestResult> GetSeriesViewRank(int first, int days)
     {
         if (first < 1 || days < 1)
         {
@@ -145,18 +145,18 @@ public class MoviesControllerService : IMoviesControllerService
         }
         
         DateOnly startDate = DateOnly.FromDateTime(DateTime.Now).AddDays(-days);
-        IEnumerable<MediaMovie> rawData = await _database.MediaMovies.OrderByDescending(x => x.Media.ViewCountsMedia.Where(y => y.Date >= startDate)
-                                                                                                                    .Sum(y => y.ViewCount))
-                                                                     .ThenBy(x => x.Id)
-                                                                     .Take(first)
-                                                                     .ToListAsync();
+        IEnumerable<MediaSeries> rawData = await _database.MediaSeries.OrderByDescending(x => x.Media.ViewCountsMedia.Where(y => y.Date >= startDate)
+                                                                                                                     .Sum(y => y.ViewCount))
+                                                                      .ThenBy(x => x.Id)
+                                                                      .Take(first)
+                                                                      .ToListAsync();
         
-        IEnumerable<MovieResponse> data = rawData.Select(x => new MovieResponse(x));
+        IEnumerable<SeriesResponse> data = rawData.Select(x => new SeriesResponse(x));
         
         return RequestResult.Ok(data);
     }
 
     #endregion
-
+    
     #endregion
 }

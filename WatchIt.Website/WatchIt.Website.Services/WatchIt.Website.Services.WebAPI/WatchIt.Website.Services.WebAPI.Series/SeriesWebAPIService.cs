@@ -1,14 +1,12 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Primitives;
-using WatchIt.Common.Model.Movies;
+using System.Text;
+using WatchIt.Common.Model.Series;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Utility.Configuration;
 using WatchIt.Website.Services.WebAPI.Common;
 
-namespace WatchIt.Website.Services.WebAPI.Movies;
+namespace WatchIt.Website.Services.WebAPI.Series;
 
-public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
+public class SeriesWebAPIService : BaseWebAPIService, ISeriesWebAPIService
 {
     #region SERVICES
 
@@ -21,7 +19,7 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
     
     #region CONSTRUCTORS
 
-    public MoviesWebAPIService(IHttpClientService httpClientService, IConfigurationService configurationService) : base(configurationService)
+    public SeriesWebAPIService(IHttpClientService httpClientService, IConfigurationService configurationService) : base(configurationService)
     {
         _httpClientService = httpClientService;
         _configurationService = configurationService;
@@ -35,9 +33,9 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
     
     #region Main
 
-    public async Task GetAllMovies(MovieQueryParameters? query = null, Action<IEnumerable<MovieResponse>>? successAction = null)
+    public async Task GetAllSeries(SeriesQueryParameters? query = null, Action<IEnumerable<SeriesResponse>>? successAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Movies.GetAllMovies);
+        string url = GetUrl(EndpointsConfiguration.Series.GetAllSeries);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         request.Query = query;
@@ -47,9 +45,9 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task GetMovie(long id, Action<MovieResponse>? successAction = null, Action? notFoundAction = null)
+    public async Task GetSeries(long id, Action<SeriesResponse>? successAction = null, Action? notFoundAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Movies.GetMovie, id);
+        string url = GetUrl(EndpointsConfiguration.Series.GetSeries, id);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         
@@ -59,9 +57,9 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task PostMovie(MovieRequest data, Action<MovieResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task PostSeries(SeriesRequest data, Action<SeriesResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Movies.PostMovie);
+        string url = GetUrl(EndpointsConfiguration.Series.PostSeries);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
         request.Body = data;
@@ -74,9 +72,9 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task PutMovie(long id, MovieRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task PutSeries(long id, SeriesRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Movies.PutMovie, id);
+        string url = GetUrl(EndpointsConfiguration.Series.PutSeries, id);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Put, url);
         request.Body = data;
@@ -89,9 +87,9 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task DeleteMovie(long id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task DeleteSeries(long id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Movies.DeleteMovie, id);
+        string url = GetUrl(EndpointsConfiguration.Series.DeleteSeries, id);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
         
@@ -106,9 +104,9 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
 
     #region View count
 
-    public async Task GetMoviesViewRank(int? first = null, int? days = null, Action<IEnumerable<MovieResponse>>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null)
+    public async Task GetSeriesViewRank(int? first = null, int? days = null, Action<IEnumerable<SeriesResponse>>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Movies.GetMoviesViewRank);
+        string url = GetUrl(EndpointsConfiguration.Series.GetSeriesViewRank);
         if (first.HasValue || days.HasValue)
         {
             StringBuilder urlBuilder = new StringBuilder(url);
@@ -146,7 +144,7 @@ public class MoviesWebAPIService : BaseWebAPIService, IMoviesWebAPIService
     
     #region PRIVATE METHODS
 
-    protected override string GetServiceBase() => EndpointsConfiguration.Movies.Base;
+    protected override string GetServiceBase() => EndpointsConfiguration.Series.Base;
 
     #endregion
 }
