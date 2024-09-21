@@ -8,4 +8,5 @@ public interface IUserService
     string? GetRawToken();
     UserValidator GetValidator();
     Guid GetJti();
+    long GetUserId();
 }

@@ -1,0 +1,11 @@
+﻿/* IDS */
+
+#spinner {
+    width: 5rem; 
+    height: 5rem;
+}
+
+#text {
+    font-size: 25px;
+    border-width: 0.4rem;
+}

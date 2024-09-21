@@ -40,6 +40,14 @@ public class UserService(DatabaseContext database, IHttpContextAccessor accessor
         Guid guid = Guid.Parse(jtiClaim.Value);
         return guid;
     }
+
+    public long GetUserId()
+    {
+        ClaimsPrincipal user = GetRawUser();
+        Claim subClaim = user.FindFirst(JwtRegisteredClaimNames.Sub)!;
+        long id = long.Parse(subClaim.Value);
+        return id;
+    }
     
     #endregion
 }

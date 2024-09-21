@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text;
 using FluentValidation;
@@ -5,6 +6,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using WatchIt.Database;
 using WatchIt.WebAPI.Services.Controllers.Accounts;
@@ -26,12 +28,12 @@ public static class Program
     public static void Main(string[] args)
     {
         WebApplication app = WebApplication.CreateBuilder(args)
-                                           .SetupAuthentication()
-                                           .SetupDatabase()
-                                           .SetupWorkerServices()
-                                           .SetupServices()
-                                           .SetupApplication()
-                                           .Build();
+                                            .SetupAuthentication()
+                                            .SetupDatabase()
+                                            .SetupWorkerServices()
+                                            .SetupServices()
+                                            .SetupApplication()
+                                            .Build();
 
         if (app.Environment.IsDevelopment())
         {
@@ -40,7 +42,8 @@ public static class Program
         }
 
         app.UseHttpsRedirection();
-
+        
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();
@@ -56,6 +59,9 @@ public static class Program
 
     private static WebApplicationBuilder SetupAuthentication(this WebApplicationBuilder builder)
     {
+        JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        
         AuthenticationBuilder authenticationBuilder = builder.Services.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

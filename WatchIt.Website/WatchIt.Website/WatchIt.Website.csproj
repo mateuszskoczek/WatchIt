@@ -37,7 +37,6 @@
 
     <ItemGroup>
       <AdditionalFiles Include="Layout\MainLayout.razor" />
-      <AdditionalFiles Include="Pages\Home.razor" />
     </ItemGroup>
 
 </Project>

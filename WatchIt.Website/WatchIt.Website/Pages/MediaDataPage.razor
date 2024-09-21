@@ -1,0 +1,215 @@
+﻿@using System.Text
+@using Microsoft.IdentityModel.Tokens
+@using WatchIt.Common.Model.Genres
+
+@page "/media/{id:long}"
+
+@layout MainLayout
+
+@if (_loaded)
+{
+    if (string.IsNullOrWhiteSpace(_error))
+    {
+        <PageTitle>@_media.Title@(_media.ReleaseDate is not null ? $" ({_media.ReleaseDate.Value.Year})" : string.Empty) - WatchIt</PageTitle>
+    }
+    else
+    {
+        <PageTitle>Error - WatchIt</PageTitle>
+    }
+}
+else
+{
+    <PageTitle>Loading... - WatchIt</PageTitle>
+}
+
+
+
+<div class="container-fluid p-1 gy-2 gx-2">
+    @if (_loaded)
+    {
+        if (string.IsNullOrWhiteSpace(_error))
+        {
+            <div class="row mt-9">
+                <div class="col-auto">
+                    <img class="rounded-2 shadow" src="@(_poster is not null ? $"data:{_poster.MimeType};base64,{Encoding.UTF8.GetString(_poster.Image)}" : "assets/poster.png")" alt="poster" width="200" height="333"/>
+                </div>
+                <div class="col">
+                    <div class="d-flex h-100">
+                        <div class="container-fluid px-0 align-self-end">
+                            <div class="row">
+                                <div class="col">
+                                    <h1 class="align-self-end title-shadow">
+                                        <strong>@_media.Title</strong>
+                                    </h1>
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(_media.Description))
+                            {
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="description-shadow">
+                                            @_media.Description
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3 gx-3">
+                <div class="col">
+                    <div class="rounded-3 panel panel-regular p-4 h-100">
+                        <div class="container-fluid px-0">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="d-flex flex-wrap gap-3">
+                                        @if (!string.IsNullOrWhiteSpace(_media.OriginalTitle))
+                                        {
+                                            <div class="metadata-pill">
+                                                <strong>Original title:</strong> @_media.OriginalTitle
+                                            </div>
+                                        }
+                                        @if (_media.ReleaseDate is not null)
+                                        {
+                                            <div class="metadata-pill">
+                                                <strong>Release date:</strong> @_media.ReleaseDate.ToString()
+                                            </div>
+                                        }
+                                        @if (_media.Length is not null)
+                                        {
+                                            <div class="metadata-pill">
+                                                <strong>Length:</strong> @TimeSpan.FromMinutes(_media.Length.Value).ToString(@"hh\:mm")
+                                            </div>
+                                        }
+                                        @if (_movie?.Budget is not null)
+                                        {
+                                            <div class="metadata-pill">
+                                                <strong>Budget:</strong> @(Math.Round(_movie.Budget.Value))$
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <h4><strong>Genres:</strong></h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="d-flex flex-wrap gap-3">
+                                        @if (_genres.IsNullOrEmpty())
+                                        {
+                                            <div>
+                                                No genres assigned.
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            foreach (GenreResponse genre in _genres)
+                                            {
+                                                <a class="text-decoration-none text-light" href="/genre/@genre.Id">
+                                                    <div class="metadata-pill">
+                                                        @genre.Name
+                                                    </div>
+                                                </a>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="rounded-3 panel panel-yellow p-4 h-100">
+                        <div class="container-fluid px-0">
+                            <div class="row">
+                                <div class="col">
+                                    <h4 class="text-dark">
+                                        <strong>Global rating:</strong> @(_globalRating.RatingCount == 0 ? "no ratings" : $"{Math.Round(_globalRating.RatingAverage, 1)}/10")
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <hr class="rating-separator"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <h4 class="text-dark">
+                                        <strong>Your rating:</strong>
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    @if (_user is not null)
+                                    {
+                                        <div class="d-flex rating">
+                                            <input id="r1" type="radio" name="rate" checked="@(_userRating == 1 )" onclick="@(async () => await AddRating(1 ))"/>
+                                            <label class="text-dark" for="r1">@(_userRating >= 1 ? "\u2605" : "\u2606")</label>
+                                            <input id="r2" type="radio" name="rate" checked="@(_userRating == 2 )" onclick="@(async () => await AddRating(2 ))"/>
+                                            <label class="text-dark" for="r2">@(_userRating >= 2 ? "\u2605" : "\u2606")</label>
+                                            <input id="r3" type="radio" name="rate" checked="@(_userRating == 3 )" onclick="@(async () => await AddRating(3 ))"/>
+                                            <label class="text-dark" for="r3">@(_userRating >= 3 ? "\u2605" : "\u2606")</label>
+                                            <input id="r4" type="radio" name="rate" checked="@(_userRating == 4 )" onclick="@(async () => await AddRating(4 ))"/>
+                                            <label class="text-dark" for="r4">@(_userRating >= 4 ? "\u2605" : "\u2606")</label>
+                                            <input id="r5" type="radio" name="rate" checked="@(_userRating == 5 )" onclick="@(async () => await AddRating(5 ))"/>
+                                            <label class="text-dark" for="r5">@(_userRating >= 5 ? "\u2605" : "\u2606")</label>
+                                            <input id="r6" type="radio" name="rate" checked="@(_userRating == 6 )" onclick="@(async () => await AddRating(6 ))"/>
+                                            <label class="text-dark" for="r6">@(_userRating >= 6 ? "\u2605" : "\u2606")</label>
+                                            <input id="r7" type="radio" name="rate" checked="@(_userRating == 7 )" onclick="@(async () => await AddRating(7 ))"/>
+                                            <label class="text-dark" for="r7">@(_userRating >= 7 ? "\u2605" : "\u2606")</label>
+                                            <input id="r8" type="radio" name="rate" checked="@(_userRating == 8 )" onclick="@(async () => await AddRating(8 ))"/>
+                                            <label class="text-dark" for="r8">@(_userRating >= 8 ? "\u2605" : "\u2606")</label>
+                                            <input id="r9" type="radio" name="rate" checked="@(_userRating == 9 )" onclick="@(async () => await AddRating(9 ))"/>
+                                            <label class="text-dark" for="r9">@(_userRating >= 9 ? "\u2605" : "\u2606")</label>
+                                            <input id="r10" type="radio" name="rate" checked="@(_userRating == 10)" onclick="@(async () => await AddRating(10))"/>
+                                            <label class="text-dark" for="r10">@(_userRating == 10 ? "\u2605" : "\u2606")</label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-dark">You must be logged in to add a rating</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col rounded-3 panel panel-regular m-1">
+                    <div>
+                        <h2 class="text-danger">@_error</h2>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <LoadingPageComponent/>
+    }
+</div>
+
+
+
+@if (_background is not null)
+{
+    <style>
+        body {
+            background-image: url('@($"data:{_background.MimeType};base64,{Convert.ToBase64String(_background.Image)}")') !important;
+        }
+
+        .logo, .main-button {
+            background-image: linear-gradient(45deg, @($"#{BitConverter.ToString(_background.Background.FirstGradientColor).Replace("-", string.Empty)}"), @($"#{BitConverter.ToString(_background.Background.SecondGradientColor).Replace("-", string.Empty)}")) !important;
+        }
+    </style>
+}

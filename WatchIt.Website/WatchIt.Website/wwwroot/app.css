@@ -15,12 +15,20 @@ body, html {
     -webkit-text-fill-color: transparent;
 }
 
+.mt-9 {
+    margin-top: 9rem !important;
+}
+
 .panel-header {
     background-color: rgba(0, 0, 0, 0.8);
 }
 
 .panel-regular {
     background-color: rgba(0, 0, 0, 0.6);
+}
+
+.panel-yellow {
+    background-color: rgba(255, 184, 58, 0.6);
 }
 
 .panel {

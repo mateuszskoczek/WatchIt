@@ -1,0 +1,38 @@
+﻿/* CLASSES */
+
+.metadata-pill {
+    border-color: gray;
+    border-width: 2px;
+    border-radius: 30px;
+    border-style: solid;
+    
+    padding: 2px 10px;
+}
+
+.title-shadow {
+    text-shadow: 2px 2px 2px #000;
+}
+
+.description-shadow {
+    text-shadow: 1px 1px 1px #000;
+}
+
+.rating-separator {
+    border-color: black;
+    border-width: 1px;
+    
+    margin: 10px 0;
+}
+
+.rating > input {
+    display: none;
+}
+
+.rating > label {
+    font-size: 30px;
+}
+
+.rating > label:hover, .rating > input:hover+label {
+    color: gray !important;
+    cursor: pointer;
+}
