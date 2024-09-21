@@ -57,7 +57,7 @@ public class MoviesController : ControllerBase
     
     [HttpPut("{id}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]

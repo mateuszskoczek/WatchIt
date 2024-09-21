@@ -13,6 +13,7 @@ using WatchIt.WebAPI.Services.Controllers.Accounts;
 using WatchIt.WebAPI.Services.Controllers.Genres;
 using WatchIt.WebAPI.Services.Controllers.Media;
 using WatchIt.WebAPI.Services.Controllers.Movies;
+using WatchIt.WebAPI.Services.Controllers.Series;
 using WatchIt.WebAPI.Services.Utility.Configuration;
 using WatchIt.WebAPI.Services.Utility.Tokens;
 using WatchIt.WebAPI.Services.Utility.User;
@@ -149,6 +150,7 @@ public static class Program
         builder.Services.AddTransient<IGenresControllerService, GenresControllerService>();
         builder.Services.AddTransient<IMoviesControllerService, MoviesControllerService>();
         builder.Services.AddTransient<IMediaControllerService, MediaControllerService>();
+        builder.Services.AddTransient<ISeriesControllerService, SeriesControllerService>();
         
         return builder;
     }
