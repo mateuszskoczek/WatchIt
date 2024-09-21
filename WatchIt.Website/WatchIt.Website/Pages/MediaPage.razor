@@ -64,6 +64,9 @@ else
                             <div class="row">
                                 <div class="col">
                                     <div class="d-flex flex-wrap gap-3">
+                                        <div class="metadata-pill">
+                                            <strong>@(_media.Type == MediaType.Movie ? "Movie" : "TV Series")</strong>
+                                        </div>
                                         @if (!string.IsNullOrWhiteSpace(_media.OriginalTitle))
                                         {
                                             <div class="metadata-pill">
