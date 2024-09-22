@@ -80,7 +80,7 @@ public partial class MediaFormComponent : ComponentBase
     
     private async Task SavePoster()
     {
-        void SuccessAction()
+        void SuccessAction(MediaPosterResponse data)
         {
             _actualPosterBase64 = _posterBase64;
             _actualPosterMediaType = _posterMediaType;

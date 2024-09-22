@@ -169,7 +169,7 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
                 .ExecuteAction();
     }
 
-    public async Task PutPoster(long mediaId, MediaPosterRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task PutPoster(long mediaId, MediaPosterRequest data, Action<MediaPosterResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Media.PutPoster, mediaId);
         

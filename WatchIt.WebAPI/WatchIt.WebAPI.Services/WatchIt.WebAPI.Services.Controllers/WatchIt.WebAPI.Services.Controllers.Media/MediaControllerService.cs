@@ -267,7 +267,8 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         
         await database.SaveChangesAsync();
 
-        return RequestResult.Ok();
+        MediaPosterResponse returnData = new MediaPosterResponse(media.MediaPosterImage);
+        return RequestResult.Ok(returnData);
     }
 
     public async Task<RequestResult> DeleteMediaPoster(long mediaId)
