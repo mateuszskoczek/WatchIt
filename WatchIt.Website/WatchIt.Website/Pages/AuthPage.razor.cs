@@ -66,28 +66,32 @@ public partial class AuthPage
     
     #region METHODS
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (await AuthenticationService.GetAuthenticationStatusAsync())
+        if (firstRender)
         {
-            NavigationManager.NavigateTo("/");
-        }
+            if (await AuthenticationService.GetAuthenticationStatusAsync())
+            {
+                NavigationManager.NavigateTo("/");
+            }
         
-        Action<MediaPhotoResponse> backgroundSuccess = (data) =>
-        {
-            string imageBase64 = Convert.ToBase64String(data.Image);
-            string firstColor = BitConverter.ToString(data.Background.FirstGradientColor)
-                                            .Replace("-", string.Empty);
-            string secondColor = BitConverter.ToString(data.Background.SecondGradientColor)
-                                             .Replace("-", string.Empty);
+            Action<MediaPhotoResponse> backgroundSuccess = (data) =>
+            {
+                string imageBase64 = Convert.ToBase64String(data.Image);
+                string firstColor = BitConverter.ToString(data.Background.FirstGradientColor)
+                                                .Replace("-", string.Empty);
+                string secondColor = BitConverter.ToString(data.Background.SecondGradientColor)
+                                                 .Replace("-", string.Empty);
             
-            _background = $"data:{data.MimeType};base64,{imageBase64}";
-            _firstGradientColor = $"#{firstColor}";
-            _secondGradientColor = $"#{secondColor}";
-        };
-        await MediaWebAPIService.GetPhotoRandomBackground(backgroundSuccess);
+                _background = $"data:{data.MimeType};base64,{imageBase64}";
+                _firstGradientColor = $"#{firstColor}";
+                _secondGradientColor = $"#{secondColor}";
+            };
+            await MediaWebAPIService.GetPhotoRandomBackground(backgroundSuccess);
         
-        _loaded = true;
+            _loaded = true;
+            StateHasChanged();
+        }
     }
 
     private async Task Login()

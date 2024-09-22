@@ -24,8 +24,7 @@ public partial class MediaPage : ComponentBase
     
     #region PARAMETERS
     
-    [Parameter] 
-    public long Id { get; set; }
+    [Parameter] public long Id { get; set; }
     
     #endregion
 
