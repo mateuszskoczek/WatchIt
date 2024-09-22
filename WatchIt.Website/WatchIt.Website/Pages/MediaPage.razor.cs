@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
+using WatchIt.Common.Model.Series;
 using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
+using WatchIt.Website.Services.WebAPI.Series;
 
 namespace WatchIt.Website.Pages;
 
@@ -15,8 +17,9 @@ public partial class MediaPage : ComponentBase
 
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
     [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
-    [Inject] public IMoviesWebAPIService MoviesWebAPIService { get; set; } = default!;
     [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
+    [Inject] public IMoviesWebAPIService MoviesWebAPIService { get; set; } = default!;
+    [Inject] public ISeriesWebAPIService SeriesWebAPIService { get; set; } = default!;
     
     #endregion
     
@@ -44,6 +47,7 @@ public partial class MediaPage : ComponentBase
     private IEnumerable<GenreResponse> _genres;
     private MediaRatingResponse _globalRating;
     private MovieResponse? _movie;
+    private SeriesResponse? _series;
     
     private short? _userRating;
 
@@ -83,7 +87,7 @@ public partial class MediaPage : ComponentBase
                     MediaWebAPIService.GetPoster(Id, data => _poster = data),
                     MediaWebAPIService.GetMediaGenres(Id, data => _genres = data),
                     MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data),
-                    _media.Type == MediaType.Movie ? MoviesWebAPIService.GetMovie(Id, data => _movie = data) : Task.CompletedTask,
+                    _media.Type == MediaType.Movie ? MoviesWebAPIService.GetMovie(Id, data => _movie = data) : SeriesWebAPIService.GetSeries(Id, data => _series = data),
                 ]);
             }
             

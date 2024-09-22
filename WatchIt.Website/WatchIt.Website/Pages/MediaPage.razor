@@ -91,6 +91,12 @@ else
                                                 <strong>Budget:</strong> @(Math.Round(_movie.Budget.Value))$
                                             </div>
                                         }
+                                        @if (_series?.HasEnded == true)
+                                        {
+                                            <div class="metadata-pill">
+                                                Ended
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
