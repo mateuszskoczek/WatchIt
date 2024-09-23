@@ -9,4 +9,6 @@ public interface IMoviesWebAPIService
     Task GetMovie(long id, Action<MovieResponse>? successAction = null, Action? notFoundAction = null);
     Task PutMovie(long id, MovieRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
     Task DeleteMovie(long id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
+
+    Task GetMoviesViewRank(int? first = null, int? days = null, Action<IEnumerable<MovieResponse>>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null);
 }
