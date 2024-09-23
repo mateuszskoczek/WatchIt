@@ -52,7 +52,12 @@ jobs:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
+    - name: Convert name to lowercase
+      id: name
+      uses: ASzc/change-string-case-action@v1
+      with:
+        string: ${{ matrix.app }}
     - name: Build image
-      run: docker build ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile --tag ghcr.io/${{github.actor}}/${{ matrix.app }}:latest
+      run: docker build ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile --tag ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest
     - name: Publish image
-      run: docker push ghcr.io/${{github.actor}}/${{ matrix.app }}:latest
+      run: docker push ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest
