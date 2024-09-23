@@ -46,6 +46,8 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         images: ghcr.io/${{ matrix.app }}
+    - name: test
+      run: ls ${{ github.workspace }}
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
