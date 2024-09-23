@@ -46,10 +46,8 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         images: ghcr.io/${{ matrix.app }}
-    - name: test
-      run: ls ${{ github.workspace }}/${{ matrix.app }}
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        file: ${{ github.workspace }}/${{ matrix.app }}/Dockerfile
+        file: ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile
         push: false
