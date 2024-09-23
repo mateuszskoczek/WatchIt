@@ -57,6 +57,7 @@ jobs:
       uses: ASzc/change-string-case-action@v1
       with:
         string: ${{ matrix.app }}
+    - run: ls ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}
     - name: Build image
       run: docker build ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile --tag ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest
     - name: Publish image
