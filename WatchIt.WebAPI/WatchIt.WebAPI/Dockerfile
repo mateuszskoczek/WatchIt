@@ -7,9 +7,8 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["WatchIt.WebAPI/WatchIt.WebAPI/WatchIt.WebAPI.csproj", "WatchIt.WebAPI/WatchIt.WebAPI/"]
+COPY [".", "/src"]
 RUN dotnet restore "WatchIt.WebAPI/WatchIt.WebAPI/WatchIt.WebAPI.csproj"
-COPY . .
 WORKDIR "/src/WatchIt.WebAPI/WatchIt.WebAPI"
 RUN dotnet build "WatchIt.WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
