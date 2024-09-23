@@ -58,6 +58,6 @@ jobs:
       with:
         string: ${{ matrix.app }}
     - name: Build image
-      run: docker build ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }} --tag ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest
+      run: docker build ${{ github.workspace }} -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest -f ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile
     - name: Publish image
       run: docker push ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest
