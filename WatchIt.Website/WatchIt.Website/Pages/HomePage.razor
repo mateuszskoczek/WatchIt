@@ -1,0 +1,97 @@
+﻿@page "/"
+@using WatchIt.Common.Model.Movies
+
+<PageTitle>WatchIt</PageTitle>
+
+<div class="container-fluid">
+    @if (_loaded)
+    {
+        if (string.IsNullOrWhiteSpace(_error))
+        {
+            <div class="row">
+                <div class="col">
+                    <div class="rounded-3 panel panel-regular p-4">
+                        <div class="container-fluid p-0">
+                            <div class="row">
+                                <div class="col">
+                                    <h4><strong>Top 5 movies this week by popularity</strong></h4>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    <div class="col">
+                                        @if (_topMovies.Count > i)
+                                        {
+                                            <a class="text-reset text-decoration-none" href="/media/@_topMovies.ToArray()[i].Key.Id">
+                                                <div class="d-flex flex-column align-items-center gap-2 h-100">
+                                                    <img class="rounded-2 shadow object-fit-cover poster-aspect-ratio" src="@(_topMovies.ToArray()[i].Value is not null ? _topMovies.ToArray()[i].Value.ToString() : "assets/poster.png")" alt="poster" width="100%"/>
+                                                    <div class="container-fluid p-0">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                                <div class="text-center border border-2 border-light rounded-circle place-circle"><strong>@(i + 1)</strong></div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="text-end ms-auto">@_topMovies.ToArray()[i].Key.Title@(_topMovies.ToArray()[i].Key.ReleaseDate.HasValue ? $" ({_topMovies.ToArray()[i].Key.ReleaseDate.Value.Year})" : string.Empty)</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="rounded-3 panel panel-regular p-4">
+                        <div class="container-fluid p-0">
+                            <div class="row">
+                                <div class="col">
+                                    <h4><strong>Top 5 TV series this week by popularity</strong></h4>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    <div class="col">
+                                        @if (_topSeries.Count > i)
+                                        {
+                                            <a class="text-reset text-decoration-none" href="/media/@_topSeries.ToArray()[i].Key.Id">
+                                                <div class="d-flex flex-column align-items-center gap-2 h-100">
+                                                    <img class="rounded-2 shadow object-fit-cover poster-aspect-ratio" src="@(_topSeries.ToArray()[i].Value is not null ? _topSeries.ToArray()[i].Value.ToString() : "assets/poster.png")" alt="poster" width="100%"/>
+                                                    <div class="container-fluid p-0">
+                                                        <div class="row">
+                                                            <div class="col-auto">
+                                                                <div class="text-center border border-2 border-light rounded-circle place-circle"><strong>@(i + 1)</strong></div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="text-end ms-auto">@_topSeries.ToArray()[i].Key.Title@(_topSeries.ToArray()[i].Key.ReleaseDate.HasValue ? $" ({_topSeries.ToArray()[i].Key.ReleaseDate.Value.Year})" : string.Empty)</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <ErrorComponent ErrorMessage="@_error"/>
+        }
+    }
+    else
+    {
+        <LoadingComponent/>
+    }
+</div>

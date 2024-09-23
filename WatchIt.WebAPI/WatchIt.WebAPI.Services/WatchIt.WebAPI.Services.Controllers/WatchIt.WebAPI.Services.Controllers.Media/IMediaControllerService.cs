@@ -5,9 +5,23 @@ namespace WatchIt.WebAPI.Services.Controllers.Media;
 
 public interface IMediaControllerService
 {
-    Task<RequestResult> GetGenres(long mediaId);
-    Task<RequestResult> PostGenre(long mediaId, short genreId);
-    Task<RequestResult> DeleteGenre(long mediaId, short genreId);
+    Task<RequestResult> GetMedia(long mediaId);
+    
+    Task<RequestResult> GetMediaGenres(long mediaId);
+    Task<RequestResult> PostMediaGenre(long mediaId, short genreId);
+    Task<RequestResult> DeleteMediaGenre(long mediaId, short genreId);
+
+    Task<RequestResult> GetMediaRating(long mediaId);
+    Task<RequestResult> GetMediaRatingByUser(long mediaId, long userId);
+    Task<RequestResult> PutMediaRating(long mediaId, MediaRatingRequest data);
+    Task<RequestResult> DeleteMediaRating(long mediaId);
+
+    Task<RequestResult> PostMediaView(long mediaId);
+    
+    Task<RequestResult> GetMediaPoster(long mediaId);
+    Task<RequestResult> PutMediaPoster(long mediaId, MediaPosterRequest data);
+    Task<RequestResult> DeleteMediaPoster(long mediaId);
+    
     Task<RequestResult> GetPhoto(Guid id);
     Task<RequestResult> GetPhotos(MediaPhotoQueryParameters query);
     Task<RequestResult> GetRandomBackgroundPhoto();

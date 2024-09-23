@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text;
 using FluentValidation;
@@ -5,12 +6,14 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using WatchIt.Database;
 using WatchIt.WebAPI.Services.Controllers.Accounts;
 using WatchIt.WebAPI.Services.Controllers.Genres;
 using WatchIt.WebAPI.Services.Controllers.Media;
 using WatchIt.WebAPI.Services.Controllers.Movies;
+using WatchIt.WebAPI.Services.Controllers.Series;
 using WatchIt.WebAPI.Services.Utility.Configuration;
 using WatchIt.WebAPI.Services.Utility.Tokens;
 using WatchIt.WebAPI.Services.Utility.User;
@@ -26,12 +29,12 @@ public static class Program
     public static void Main(string[] args)
     {
         WebApplication app = WebApplication.CreateBuilder(args)
-                                           .SetupAuthentication()
-                                           .SetupDatabase()
-                                           .SetupWorkerServices()
-                                           .SetupServices()
-                                           .SetupApplication()
-                                           .Build();
+                                            .SetupAuthentication()
+                                            .SetupDatabase()
+                                            .SetupWorkerServices()
+                                            .SetupServices()
+                                            .SetupApplication()
+                                            .Build();
 
         if (app.Environment.IsDevelopment())
         {
@@ -40,7 +43,8 @@ public static class Program
         }
 
         app.UseHttpsRedirection();
-
+        
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();
@@ -56,6 +60,9 @@ public static class Program
 
     private static WebApplicationBuilder SetupAuthentication(this WebApplicationBuilder builder)
     {
+        JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        
         AuthenticationBuilder authenticationBuilder = builder.Services.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -121,7 +128,7 @@ public static class Program
     
     private static WebApplicationBuilder SetupDatabase(this WebApplicationBuilder builder)
     {
-        builder.Services.AddDbContext<DatabaseContext>(x => x.UseLazyLoadingProxies().UseNpgsql(builder.Configuration.GetConnectionString("Default")), ServiceLifetime.Singleton);
+        builder.Services.AddDbContext<DatabaseContext>(x => x.UseLazyLoadingProxies().UseNpgsql(builder.Configuration.GetConnectionString("Default")), ServiceLifetime.Transient);
         return builder;
     }
 
@@ -134,15 +141,16 @@ public static class Program
     private static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
     {
         // Utility
-        builder.Services.AddSingleton<IConfigurationService, ConfigurationService>();
-        builder.Services.AddSingleton<ITokensService, TokensService>();
-        builder.Services.AddSingleton<IUserService, UserService>();
+        builder.Services.AddTransient<IConfigurationService, ConfigurationService>();
+        builder.Services.AddTransient<ITokensService, TokensService>();
+        builder.Services.AddTransient<IUserService, UserService>();
         
         // Controller
-        builder.Services.AddSingleton<IAccountsControllerService, AccountsControllerService>();
-        builder.Services.AddSingleton<IGenresControllerService, GenresControllerService>();
-        builder.Services.AddSingleton<IMoviesControllerService, MoviesControllerService>();
-        builder.Services.AddSingleton<IMediaControllerService, MediaControllerService>();
+        builder.Services.AddTransient<IAccountsControllerService, AccountsControllerService>();
+        builder.Services.AddTransient<IGenresControllerService, GenresControllerService>();
+        builder.Services.AddTransient<IMoviesControllerService, MoviesControllerService>();
+        builder.Services.AddTransient<IMediaControllerService, MediaControllerService>();
+        builder.Services.AddTransient<ISeriesControllerService, SeriesControllerService>();
         
         return builder;
     }

@@ -85,21 +85,24 @@ public class TokensService(DatabaseContext database, IConfigurationService confi
         return TokenToString(tokenDescriptor);
     }
 
-    protected SecurityTokenDescriptor CreateBaseSecurityTokenDescriptor(Account account, Guid id, DateTime expirationTime) => new SecurityTokenDescriptor
+    protected SecurityTokenDescriptor CreateBaseSecurityTokenDescriptor(Account account, Guid id, DateTime expirationTime)
     {
-        Subject = new ClaimsIdentity(new List<Claim>
+        return new SecurityTokenDescriptor
         {
-            new Claim(JwtRegisteredClaimNames.Jti, id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, account.Email),
-            new Claim(JwtRegisteredClaimNames.UniqueName, account.Username),
-            new Claim(JwtRegisteredClaimNames.Exp, expirationTime.Ticks.ToString()),
-            new Claim("admin", account.IsAdmin.ToString()),
-        }),
-        Expires = expirationTime,
-        Issuer = configurationService.Data.Authentication.Issuer,
-        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configurationService.Data.Authentication.Key)), SecurityAlgorithms.HmacSha512)
-    };
+            Subject = new ClaimsIdentity(new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Jti, id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, account.Email),
+                new Claim(JwtRegisteredClaimNames.UniqueName, account.Username),
+                new Claim(JwtRegisteredClaimNames.Exp, expirationTime.Ticks.ToString()),
+                new Claim("admin", account.IsAdmin.ToString()),
+            }),
+            Expires = expirationTime,
+            Issuer = configurationService.Data.Authentication.Issuer,
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configurationService.Data.Authentication.Key)), SecurityAlgorithms.HmacSha512)
+        };
+    }
 
     protected string TokenToString(SecurityTokenDescriptor tokenDescriptor)
     {

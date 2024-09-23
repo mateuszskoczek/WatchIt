@@ -1,0 +1,117 @@
+﻿@page "/auth"
+@layout EmptyLayout
+
+<PageTitle>WatchIt - @(_authType == AuthType.SignIn ? "Sign in" : "Sign up")</PageTitle>
+
+
+
+
+@if (_loaded)
+{
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="d-inline-flex flex-column justify-content-center panel panel-header rounded-3">
+            <a class="logo" href="/">
+                WatchIt
+            </a>
+            <div>
+                @if (_authType == AuthType.SignIn)
+                {
+                    <form method="post" @onsubmit="Login" @formname="login">
+                        <AntiforgeryToken/>
+                        <div>
+                            <label>
+                                Username or email:
+                                <InputText @bind-Value="_loginModel!.UsernameOrEmail"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Password:
+                                <InputText type="password" @bind-Value="_loginModel!.Password"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <InputCheckbox @bind-Value="_loginModel!.RememberMe"></InputCheckbox>
+                                Remember me
+                            </label>
+                        </div>
+                        <div>
+                            <button type="submit">Sign in</button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" @onsubmit="Register" @formname="register">
+                        <AntiforgeryToken/>
+                        <div>
+                            <label>
+                                Username:
+                                <InputText @bind-Value="_registerModel!.Username"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Email:
+                                <InputText @bind-Value="_registerModel!.Email"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Password:
+                                <InputText type="password" @bind-Value="_registerModel!.Password"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Confirm password:
+                                <InputText type="password" @bind-Value="_passwordConfirmation"/>
+                            </label>
+                        </div>
+                        <div>
+                            <button type="submit">Sign up</button>
+                        </div>
+                    </form>
+                }
+            </div>
+            @if (_errors is not null)
+            {
+                <div class="text-danger">
+                    @foreach (string error in _errors)
+                    {
+                        @error
+                        <br/>
+                    }
+                </div>
+            }
+            <div>
+                <label>
+                    <input type="radio" checked="@(() => _authType == AuthType.SignIn)" name="auth" @onchange="@(() => _authType = AuthType.SignIn)" />
+                    Sign in
+                </label>
+                <label>
+                    <input type="radio" checked="@(() => _authType == AuthType.SignUp)" name="auth" @onchange="@(() => _authType = AuthType.SignUp)" />
+                    Sign up
+                </label>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <style>
+        body {
+            height: 100%;
+            
+            background-image: url('@_background');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    
+        .logo {
+            background-image: linear-gradient(45deg, @_firstGradientColor, @_secondGradientColor);
+        }
+    </style>
+}

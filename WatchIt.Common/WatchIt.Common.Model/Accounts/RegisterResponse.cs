@@ -25,7 +25,10 @@ public class RegisterResponse
 
 
     #region CONSTRUCTORS
-
+    
+    [JsonConstructor]
+    public RegisterResponse() {}
+    
     [SetsRequiredMembers]
     public RegisterResponse(Account account)
     {

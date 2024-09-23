@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col">
+        <div class="rounded-3 panel panel-regular p-4">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-center">
+                            <div class="text-danger icon-size">⚠&#xFE0E;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-center">
+                            <h3 class="text-danger">An error occured while loading a page</h3>
+                        </div>
+                    </div>
+                </div>
+                @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+                {
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-center">
+                            <p>@ErrorMessage</p>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

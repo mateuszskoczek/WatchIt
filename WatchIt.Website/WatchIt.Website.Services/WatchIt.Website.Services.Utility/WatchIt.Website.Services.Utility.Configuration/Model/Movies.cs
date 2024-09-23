@@ -3,12 +3,10 @@
 public class Movies
 {
     public string Base { get; set; }
-    public string GetAll { get; set; }
-    public string Get { get; set; }
-    public string Post { get; set; }
-    public string Put { get; set; }
-    public string Delete { get; set; }
-    public string GetGenres { get; set; }
-    public string PostGenre { get; set; }
-    public string DeleteGenre { get; set; }
+    public string GetAllMovies { get; set; }
+    public string GetMovie { get; set; }
+    public string PostMovie { get; set; }
+    public string PutMovie { get; set; }
+    public string DeleteMovie { get; set; }
+    public string GetMoviesViewRank { get; set; }
 }

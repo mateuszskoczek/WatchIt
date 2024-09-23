@@ -18,6 +18,15 @@ public class UserService(DatabaseContext database, IHttpContextAccessor accessor
         return accessor.HttpContext.User;
     }
 
+    public string? GetRawToken()
+    {
+        if (accessor.HttpContext is null)
+        {
+            throw new NullReferenceException();
+        }
+        return accessor.HttpContext.Request.Headers.Authorization;
+    }
+
     public UserValidator GetValidator()
     {
         ClaimsPrincipal rawUser = GetRawUser();
@@ -30,6 +39,14 @@ public class UserService(DatabaseContext database, IHttpContextAccessor accessor
         Claim jtiClaim = user.FindFirst(JwtRegisteredClaimNames.Jti)!;
         Guid guid = Guid.Parse(jtiClaim.Value);
         return guid;
+    }
+
+    public long GetUserId()
+    {
+        ClaimsPrincipal user = GetRawUser();
+        Claim subClaim = user.FindFirst(JwtRegisteredClaimNames.Sub)!;
+        long id = long.Parse(subClaim.Value);
+        return id;
     }
     
     #endregion

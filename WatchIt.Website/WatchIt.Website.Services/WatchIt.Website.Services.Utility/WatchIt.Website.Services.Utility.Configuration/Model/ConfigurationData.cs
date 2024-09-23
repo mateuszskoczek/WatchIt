@@ -4,5 +4,6 @@ public class ConfigurationData
 {
     public Logging Logging { get; set; }
     public string AllowedHosts { get; set; }
+    public StorageKeys StorageKeys { get; set; }
     public Endpoints Endpoints { get; set; }
 }

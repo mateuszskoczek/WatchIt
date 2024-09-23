@@ -1,0 +1,36 @@
+﻿@page "/admin"
+
+<PageTitle>WatchIt administrator panel</PageTitle>
+
+<div class="container-fluid">
+    @if (_loaded)
+    {
+        if (_authenticated)
+        {
+            <div class="row">
+                <div class="col rounded-3 panel panel-regular m-1">
+                    <h2>Add new data</h2>
+                </div>
+            </div>
+            <div class="row">
+                <a class="col rounded-3 panel panel-regular m-1" href="/media/new/movies">
+                    <p class="text-center text-decorations-none">New movie</p>
+                </a>
+                <div class="col rounded-3 panel panel-regular m-1">
+                    <p class="text-center">New TV series</p>
+                </div>
+                <div class="col rounded-3 panel panel-regular m-1">
+                    <p class="text-center">New TV series</p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <ErrorComponent ErrorMessage="You do not have permission to view this site"/>
+        }
+    }
+    else
+    {
+        <LoadingComponent/>
+    }
+</div>

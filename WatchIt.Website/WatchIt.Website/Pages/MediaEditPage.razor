@@ -1,0 +1,230 @@
+﻿@using WatchIt.Common.Model.Movies
+@using WatchIt.Common.Model.Series
+
+@page "/media/{id:long}/edit"
+@page "/media/new/{type}"
+
+
+<PageTitle>
+    WatchIt - 
+    @if (_loaded)
+    {
+        if (string.IsNullOrWhiteSpace(_error) && _user?.IsAdmin == true)
+        {
+            if (_media is not null)
+            {
+                @($"Edit \"")@(_media.Title)@("\"")
+            }
+            else
+            {
+                if (_movieRequest is null)
+                {
+                    @("New TV series")
+                }
+                else
+                {
+                    @("New movie")
+                }
+            }
+        }
+        else
+        {
+            @("Error")
+        }
+    }
+    else
+    {
+        @("Loading")
+    }
+</PageTitle>
+
+<div class="container-fluid">
+    @if (_loaded)
+    {
+        if (string.IsNullOrWhiteSpace(_error))
+        {
+            if (_user?.IsAdmin == true)
+            {
+                <div class="row">
+                    <div class="col">
+                        <div class="rounded-3 panel panel-regular p-2">
+                            <h2 class="m-0 mx-2 mb-1 p-0">@(_media is not null ? "Edit" : "Create new") @(_movieRequest is not null ? "movie" : "series")@(_media is not null ? $" \"{_media.Title}\"" : string.Empty)</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3 gx-3">
+                    <div class="col-auto">
+                        <div class="rounded-3 panel panel-regular p-4 h-100">
+                            <div class="container-fluid p-0">
+                                <div class="row">
+                                    <div class="col">
+                                        <img class="rounded-2 shadow object-fit-cover" src="@(_mediaPosterRequest is not null ? _mediaPosterRequest.ToString() : "assets/poster.png")" alt="poster" width="300" height="500"/>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col">
+                                        <InputFile class="form-control" OnChange="LoadPoster" disabled="@(_media is null)" autocomplete="off" style="width: 300px;"/>
+                                    </div>
+                                </div>
+                                @if (_mediaPosterChanged || _mediaPosterSaved is not null)
+                                {
+                                    <div class="row mt-4 gx-1" style="width: 300px;">
+                                        @if (_mediaPosterChanged)
+                                        {
+                                            <div class="col">
+                                                <button type="button" class="btn btn-secondary btn-block btn-stretch-x" @onclick="SavePoster" disabled=@(!Id.HasValue || _mediaPosterSaving || _mediaPosterDeleting) autocomplete="off">
+                                                    @if (!_mediaPosterSaving)
+                                                    {
+                                                        <span class="sr-only">Save poster</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        <span class="sr-only">Saving...</span>
+                                                    }
+                                                </button>
+                                            </div>
+                                            <div class="col">
+                                                <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="CancelPoster" disabled=@(!Id.HasValue || _mediaPosterSaving || _mediaPosterDeleting) autocomplete="off">Drop changes</button>
+                                            </div>
+                                        }
+                                        else if (_mediaPosterSaved is not null)
+                                        {
+                                            <div class="col">
+                                                <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="DeletePoster" disabled=@(!Id.HasValue || _mediaPosterSaving || _mediaPosterDeleting) autocomplete="off">
+                                                    @if (!_mediaPosterSaving)
+                                                    {
+                                                        <span class="sr-only">Delete poster</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        <span class="sr-only">Deleting...</span>
+                                                    }
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="rounded-3 panel panel-regular p-4 h-100">
+                            <EditForm Model="_mediaRequest">
+                                <AntiforgeryToken/>
+                                <div class="container-fluid p-0">
+                                    <div class="row form-group mb-1">
+                                        <label for="title" class="col-2 col-form-label">Title*</label>
+                                        <div class="col-10">
+                                            <InputText id="title" class="form-control" @bind-Value="_mediaRequest!.Title"/>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group my-1">
+                                        <label for="og-title" class="col-2 col-form-label">Original title</label>
+                                        <div class="col-10">
+                                            <InputText id="og-title" class="form-control" @bind-Value="_mediaRequest!.OriginalTitle"/>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group my-1">
+                                        <label for="desc" class="col-2 col-form-label">Description</label>
+                                        <div class="col-10">
+                                            <InputTextArea id="desc" class="form-control" @bind-Value="_mediaRequest!.Description"/>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group my-1">
+                                        <label for="rel-date" class="col-2 col-form-label">Release date</label>
+                                        <div class="col-4">
+                                            <InputDate TValue="DateOnly?" id="rel-date" class="form-control" @bind-Value="_mediaRequest!.ReleaseDate"/>
+                                        </div>
+                                        <label for="length" class="col-2 col-form-label">Length</label>
+                                        <div class="col-4">
+                                            <InputNumber TValue="short?" id="length" class="form-control" @bind-Value="_mediaRequest!.Length"/>
+                                        </div>
+                                    </div>
+                                    @if (_mediaRequest is MovieRequest)
+                                    {
+                                        <div class="row form-group mt-1">
+                                            <label for="budget" class="col-2 col-form-label">Budget</label>
+                                            <div class="col-10">
+                                                <InputNumber TValue="decimal?" id="budget" class="form-control" @bind-Value="((MovieRequest)_mediaRequest)!.Budget"/>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="row form-group mt-1">
+                                            <label class="col-2 col-form-label">Has ended</label>
+                                            <div class="col-10 col-form-label">
+                                                <div class="d-flex gap-3">
+                                                    <InputRadioGroup TValue="bool" @bind-Value="((SeriesRequest)_mediaRequest)!.HasEnded">
+                                                        <div class="d-flex gap-2">
+                                                            <InputRadio TValue="bool" Value="true"/>
+                                                            Yes
+                                                        </div>
+                                                        <div class="d-flex gap-2">
+                                                            <InputRadio TValue="bool" Value="false"/>
+                                                            No
+                                                        </div>
+                                                    </InputRadioGroup>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="row mt-4">
+                                        <div class="col">
+                                            <div class="d-flex justify-content-end align-items-center gap-3">
+                                                @if (!string.IsNullOrWhiteSpace(_basicDataError))
+                                                {
+                                                    <div class="text-danger">@_basicDataError</div>
+                                                }
+                                                <button type="button" class="btn btn-secondary" @onclick="SaveBasicData">
+                                                    @if (!_basicDataSaving)
+                                                    {
+                                                        <span class="sr-only">Save</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        <span class="sr-only">Saving...</span>
+                                                    }
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <ErrorComponent ErrorMessage="You do not have permission to view this site"/>
+            }
+        }
+        else
+        {
+            <ErrorComponent ErrorMessage="@_error"/>
+        }
+    }
+    else
+    {
+        <LoadingComponent/>
+    }
+</div>
+
+
+
+@if (_background is not null)
+{
+    <style>
+        body {
+            background-image: url('@($"data:{_background.MimeType};base64,{Convert.ToBase64String(_background.Image)}")') !important;
+        }
+
+        .logo, .main-button {
+            background-image: linear-gradient(45deg, @($"#{BitConverter.ToString(_background.Background.FirstGradientColor).Replace("-", string.Empty)}"), @($"#{BitConverter.ToString(_background.Background.SecondGradientColor).Replace("-", string.Empty)}")) !important;
+        }
+    </style>
+}

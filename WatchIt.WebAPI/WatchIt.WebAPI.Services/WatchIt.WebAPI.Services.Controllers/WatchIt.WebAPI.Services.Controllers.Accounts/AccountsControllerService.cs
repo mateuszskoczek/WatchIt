@@ -11,6 +11,7 @@ using WatchIt.WebAPI.Services.Controllers.Common;
 using WatchIt.WebAPI.Services.Utility.Tokens;
 using WatchIt.WebAPI.Services.Utility.Tokens.Exceptions;
 using WatchIt.WebAPI.Services.Utility.User;
+using AccountProfilePicture = WatchIt.Common.Model.Accounts.AccountProfilePicture;
 
 namespace WatchIt.WebAPI.Services.Controllers.Accounts;
 
@@ -73,16 +74,10 @@ public class AccountsControllerService(
             return RequestResult.Unauthorized();
         }
 
-        AuthenticateResponse response;
+        string refreshToken;
         try
         {
-            Task<string> refreshTokenTask = tokensService.ExtendRefreshTokenAsync(token.Account, token.Id);
-            Task<string> accessTokenTask = tokensService.CreateAccessTokenAsync(token.Account);
-            response = new AuthenticateResponse
-            {
-                AccessToken = await accessTokenTask,
-                RefreshToken = await refreshTokenTask,
-            };
+            refreshToken = await tokensService.ExtendRefreshTokenAsync(token.Account, token.Id);
         }
         catch (TokenNotFoundException)
         {
@@ -90,11 +85,48 @@ public class AccountsControllerService(
         }
         catch (TokenNotExtendableException)
         {
-            return RequestResult.Forbidden();
+            refreshToken = userService.GetRawToken().Replace("Bearer ", string.Empty);
         }
         
+        string accessToken = await tokensService.CreateAccessTokenAsync(token.Account);
+        
         logger.LogInformation($"Account with ID {token.AccountId} was authenticated by token refreshing");
-        return RequestResult.Ok(response);
+        return RequestResult.Ok(new AuthenticateResponse
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+        });
+    }
+
+    public async Task<RequestResult> Logout()
+    {
+        Guid jti = userService.GetJti();
+        AccountRefreshToken? token = await database.AccountRefreshTokens.FirstOrDefaultAsync(x => x.Id == jti);
+        if (token is not null)
+        {
+            database.AccountRefreshTokens.Attach(token);
+            database.AccountRefreshTokens.Remove(token);
+            await database.SaveChangesAsync();
+        }
+        return RequestResult.NoContent();
+    }
+
+    public async Task<RequestResult> GetAccountProfilePicture(long id)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null)
+        {
+            return RequestResult.BadRequest()
+                                .AddValidationError("id", "Account with this id does not exists");
+        }
+
+        if (account.ProfilePicture is null)
+        {
+            return RequestResult.NotFound();
+        }
+        
+        AccountProfilePictureResponse picture = new AccountProfilePictureResponse(account.ProfilePicture);
+        return RequestResult.Ok(picture);
     }
 
     #endregion
