@@ -34,6 +34,16 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Setup GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.7
+      with:
+        versionSpec: 5.x
+    - name: Determine Version
+      uses: gittools/actions/gitversion/execute@v0.9.7
+      id: gitversion
+      with:
+        useConfigFile: true
+        configFilePath: .github/config/gitversion.yml
     - name: App Settings Variable Substitution
       uses: microsoft/variable-substitution@v1
       if: ${{ matrix.app == 'WatchIt.WebAPI' }}
@@ -58,6 +68,15 @@ jobs:
       with:
         string: ${{ matrix.app }}
     - name: Build image
-      run: docker build ${{ github.workspace }} -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest -f ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile
+      run: docker build ${{ github.workspace }} -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:{{steps.gitversion.outputs.SemVer}} -f ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile
     - name: Publish image
       run: docker push ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }} --all-tags
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{needs.build.outputs.version}}
+        release_name: ${{needs.build.outputs.version}}
+        draft: false
+        prerelease: false
