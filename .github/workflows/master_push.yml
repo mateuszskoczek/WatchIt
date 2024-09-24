@@ -124,3 +124,5 @@ jobs:
       run: docker pull ghcr.io/mateuszskoczek/watchit.website:latest
     - name: Run new WatchIt.WebAPI container
       run: docker run -p 8080:8080 -p 8081:8081 -d --name watchit.webapi ghcr.io/mateuszskoczek/watchit.webapi:latest
+    - name: Wait for initialization
+      run: sleep 10
