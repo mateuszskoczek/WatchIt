@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+﻿using System.Security.Cryptography;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.Extensions.Logging;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Website.Services.Utility.Configuration;
 
@@ -8,6 +10,8 @@ public class TokensService : ITokensService
 {
     #region SERVICES
 
+    private readonly ILogger<TokensService> _logger;
+    
     private readonly ProtectedLocalStorage _localStorageService;
     private readonly IConfigurationService _configurationService;
 
@@ -17,8 +21,10 @@ public class TokensService : ITokensService
     
     #region CONSTRUCTORS
 
-    public TokensService(ProtectedLocalStorage localStorageService, IConfigurationService configurationService)
+    public TokensService(ILogger<TokensService> logger, ProtectedLocalStorage localStorageService, IConfigurationService configurationService)
     {
+        _logger = logger;
+        
         _localStorageService = localStorageService;
         _configurationService = configurationService;
     }
@@ -56,8 +62,16 @@ public class TokensService : ITokensService
 
     private async Task<T?> GetValueAsync<T>(string key)
     {
-        ProtectedBrowserStorageResult<T> result = await _localStorageService.GetAsync<T>(key);
-        return result.Success ? result.Value : default;
+        try
+        {
+            ProtectedBrowserStorageResult<T> result = await _localStorageService.GetAsync<T>(key);
+            return result.Success ? result.Value : default;
+        }
+        catch (CryptographicException ex)
+        {
+            _logger.LogError(ex, "Browser storage error has occurred. Deleting value.");
+            await _localStorageService.DeleteAsync(key);
+        }
     }
 
     #endregion
