@@ -111,10 +111,10 @@ jobs:
       run: docker image rm ghcr.io/mateuszskoczek/watchit.webapi
     - name: Stop old WatchIt.Website container
       continue-on-error: true
-      run: docker container stop watchit.webapi
+      run: docker container stop watchit.website
     - name: Remove old WatchIt.Website container
       continue-on-error: true
-      run: docker container rm watchit.webapi
+      run: docker container rm watchit.website
     - name: Remove old WatchIt.Website image
       continue-on-error: true
       run: docker image rm ghcr.io/mateuszskoczek/watchit.website
