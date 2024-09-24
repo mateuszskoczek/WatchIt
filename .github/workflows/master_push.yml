@@ -130,9 +130,9 @@ jobs:
     - name: Pull new WatchIt.Website image
       run: docker pull ghcr.io/mateuszskoczek/watchit.website:latest
     - name: Run new WatchIt.WebAPI container
-      run: docker run -p 1080:8080 -v watchit.webapi:/app -d --name watchit.webapi ghcr.io/mateuszskoczek/watchit.webapi:latest
+      run: docker run -p 1080:8080 -v watchit.webapi:/home/app -d --name watchit.webapi ghcr.io/mateuszskoczek/watchit.webapi:latest
     - name: Run new WatchIt.Website container
-      run: docker run -p 80:8080 -v watchit.website:/app -d --name watchit.website ghcr.io/mateuszskoczek/watchit.website:latest
+      run: docker run -p 80:8080 -v watchit.website:/home/app -d --name watchit.website ghcr.io/mateuszskoczek/watchit.website:latest
     - name: Wait for initialization
       run: sleep 10
     - name: Check WatchIt.WebAPI container health
