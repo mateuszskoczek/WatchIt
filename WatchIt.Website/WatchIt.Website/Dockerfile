@@ -5,7 +5,7 @@ EXPOSE 8080
 EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=Debug
 WORKDIR /src
 COPY [".", "/src"]
 RUN dotnet restore "WatchIt.Website/WatchIt.Website/WatchIt.Website.csproj"
@@ -13,7 +13,7 @@ WORKDIR "/src/WatchIt.Website/WatchIt.Website"
 RUN dotnet build "WatchIt.Website.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=Debug
 RUN dotnet publish "WatchIt.Website.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 RUN dotnet dev-certs https
 
