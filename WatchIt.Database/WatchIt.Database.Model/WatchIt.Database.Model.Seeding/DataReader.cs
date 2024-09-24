@@ -10,7 +10,7 @@ public class DataReader
     public static IEnumerable<T> Read<T>() => Read<T>(typeof(T).Name);
     public static IEnumerable<T> Read<T>(string filename)
     {
-        string jsonFile = $@"{AppContext.BaseDirectory}/WatchIt.Database/WatchIt.Database.Model/WatchIt.Database.Model.Seeding/Data/{filename}.json";
+        string jsonFile = $@"{AppContext.BaseDirectory}/Data/{filename}.json";
         Console.WriteLine(string.Join('\n', Directory.GetDirectories($@"{AppContext.BaseDirectory}")));
         Debug.WriteLine(string.Join('\n', Directory.GetDirectories($@"{AppContext.BaseDirectory}")));
         string dataString = File.ReadAllText(jsonFile);
