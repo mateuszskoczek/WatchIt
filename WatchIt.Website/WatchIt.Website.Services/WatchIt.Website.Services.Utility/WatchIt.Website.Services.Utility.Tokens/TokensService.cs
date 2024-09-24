@@ -71,6 +71,7 @@ public class TokensService : ITokensService
         {
             _logger.LogError(ex, "Browser storage error has occurred. Deleting value.");
             await _localStorageService.DeleteAsync(key);
+            return default;
         }
     }
 
