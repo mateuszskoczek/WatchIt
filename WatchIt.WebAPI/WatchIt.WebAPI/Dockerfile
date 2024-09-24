@@ -19,4 +19,5 @@ RUN dotnet publish "WatchIt.WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publi
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN dotnet dev-certs https
 ENTRYPOINT ["dotnet", "WatchIt.WebAPI.dll"]
