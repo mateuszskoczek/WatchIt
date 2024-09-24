@@ -36,6 +36,11 @@ public static class Program
                                             .SetupApplication()
                                             .Build();
 
+        using (IServiceScope scope = app.Services.CreateScope())
+        {
+            scope.ServiceProvider.GetService<DatabaseContext>().Database.Migrate();
+        }
+        
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
