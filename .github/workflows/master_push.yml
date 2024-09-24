@@ -137,3 +137,5 @@ jobs:
       run: sleep 10
     - name: Check WatchIt.WebAPI container health
       run: docker ps | grep "watchit.webapi"
+    - name: Check WatchIt.Website container health
+      run: docker ps | grep "watchit.website"
