@@ -73,12 +73,19 @@ jobs:
       run: docker build ${{ github.workspace }} -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:${{steps.gitversion.outputs.SemVer}} -f ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile
     - name: Publish image
       run: docker push ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }} --all-tags
+    outputs: 
+      version: ${{ steps.gitversion.outputs.SemVer }}
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
     - name: Create Release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.gitversion.outputs.SemVer }}
-        release_name: ${{ steps.gitversion.outputs.SemVer }}
+        tag_name: ${{needs.publish.outputs.version}}
+        release_name: ${{needs.publish.outputs.version}}
         draft: false
         prerelease: false
