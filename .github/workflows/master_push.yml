@@ -70,7 +70,7 @@ jobs:
       with:
         string: ${{ matrix.app }}
     - name: Build image
-      run: docker build ${{ github.workspace }} -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:{{steps.gitversion.outputs.SemVer}} -f ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile
+      run: docker build ${{ github.workspace }} -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:${{steps.gitversion.outputs.SemVer}} -f ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile
     - name: Publish image
       run: docker push ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }} --all-tags
     - name: Create Release
