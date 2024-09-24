@@ -46,7 +46,7 @@ jobs:
       with:
         useConfigFile: true
         configFilePath: .github/config/gitversion.yml
-    - name: App Settings Variable Substitution
+    - name: App Settings Variable Substitution for WatchIt.WebAPI
       uses: microsoft/variable-substitution@v1
       if: ${{ matrix.app == 'WatchIt.WebAPI' }}
       with:
@@ -56,6 +56,13 @@ jobs:
         RootUser.Email: ${{ secrets.ROOT_EMAIL }}
         RootUser.Password: ${{ secrets.ROOT_PASSWORD }}
         Authentication.Key: ${{ secrets.KEY }}
+    - name: App Settings Variable Substitution for WatchIt.Website
+      uses: microsoft/variable-substitution@v1
+      if: ${{ matrix.app == 'WatchIt.Website' }}
+      with:
+        files: ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/appsettings.json
+      env:
+        Endpoints.Base: ${{ secrets.API_URL }}
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     - name: Login to GitHub Container Registry
@@ -123,6 +130,8 @@ jobs:
     - name: Pull new WatchIt.Website image
       run: docker pull ghcr.io/mateuszskoczek/watchit.website:latest
     - name: Run new WatchIt.WebAPI container
-      run: docker run -p 8080:8080 -p 8081:8081 -d --name watchit.webapi ghcr.io/mateuszskoczek/watchit.webapi:latest
+      run: docker run -p 8080:1080 -p 8081:1443 -e ASPNETCORE_URLS="https://+;http://+" -d --name watchit.webapi ghcr.io/mateuszskoczek/watchit.webapi:latest
+    - name: Run new WatchIt.Website container
+      run: docker run -p 8080:80 -p 8081:443 -e ASPNETCORE_URLS="https://+;http://+" -d --name watchit.webapi ghcr.io/mateuszskoczek/watchit.website:latest
     - name: Wait for initialization
       run: sleep 10

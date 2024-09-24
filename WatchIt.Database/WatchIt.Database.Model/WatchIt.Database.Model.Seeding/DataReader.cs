@@ -11,8 +11,6 @@ public class DataReader
     public static IEnumerable<T> Read<T>(string filename)
     {
         string jsonFile = $@"{AppContext.BaseDirectory}/Data/{filename}.json";
-        Console.WriteLine(string.Join('\n', Directory.GetDirectories($@"{AppContext.BaseDirectory}")));
-        Debug.WriteLine(string.Join('\n', Directory.GetDirectories($@"{AppContext.BaseDirectory}")));
         string dataString = File.ReadAllText(jsonFile);
         IEnumerable<T>? data = JsonSerializer.Deserialize<IEnumerable<T>>(dataString);
         if (data is null)
