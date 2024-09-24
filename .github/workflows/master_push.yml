@@ -89,3 +89,36 @@ jobs:
         release_name: ${{needs.publish.outputs.version}}
         draft: false
         prerelease: false
+  deploy:
+    name: Deploy
+    runs-on: watchit
+    needs: publish
+    steps:
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+    - name: Stop old WatchIt.WebAPI container
+      continue-on-error: true
+      run: docker container stop watchit.webapi
+    - name: Remove old WatchIt.WebAPI container
+      continue-on-error: true
+      run: docker container rm watchit.webapi
+    - name: Remove old WatchIt.WebAPI image
+      continue-on-error: true
+      run: docker image rm ghcr.io/mateuszskoczek/watchit.webapi
+    - name: Stop old WatchIt.Website container
+      continue-on-error: true
+      run: docker container stop watchit.webapi
+    - name: Remove old WatchIt.Website container
+      continue-on-error: true
+      run: docker container rm watchit.webapi
+    - name: Remove old WatchIt.Website image
+      continue-on-error: true
+      run: docker image rm ghcr.io/mateuszskoczek/watchit.website
+    - name: Pull new WatchIt.WebAPI image
+      run: docker pull ghcr.io/mateuszskoczek/watchit.webapi:latest
+    - name: Pull new WatchIt.Website image
+      run: docker pull ghcr.io/mateuszskoczek/watchit.website:latest
