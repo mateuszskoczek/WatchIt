@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using WatchIt.Common.Model.Photos
+@using WatchIt.Website.Services.WebAPI.Photos
+@inherits LayoutComponentBase
 
 @if (_loaded)
 {
@@ -87,6 +89,7 @@
     [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
     [Inject] public IAccountsWebAPIService AccountsWebAPIService { get; set; } = default!;
     [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
+    [Inject] public IPhotosWebAPIService PhotosWebAPIService { get; set; } = default!;
 
     #endregion
 
@@ -134,7 +137,7 @@
 
     private async Task GetBackground()
     {
-        Action<MediaPhotoResponse> backgroundSuccess = (data) =>
+        Action<PhotoResponse> backgroundSuccess = (data) =>
         {
             string imageBase64 = Convert.ToBase64String(data.Image);
             string firstColor = BitConverter.ToString(data.Background.FirstGradientColor)
@@ -146,7 +149,7 @@
             _firstGradientColor = $"#{firstColor}";
             _secondGradientColor = $"#{secondColor}";
         };
-        await MediaWebAPIService.GetPhotoRandomBackground(backgroundSuccess);
+        await PhotosWebAPIService.GetPhotoRandomBackground(backgroundSuccess);
     }
 
     private async Task GetAuthenticatedUser()

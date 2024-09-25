@@ -9,7 +9,6 @@ public class MediaPhotoRequestValidator : AbstractValidator<MediaPhotoRequest>
 {
     public MediaPhotoRequestValidator(DatabaseContext database)
     {
-        RuleFor(x => x.MediaId).MustBeIn(database.Media, x => x.Id).WithMessage("Media does not exists");
         RuleFor(x => x.Image).NotEmpty();
         RuleFor(x => x.MimeType).Matches(@"\w+/.+").WithMessage("Incorrect mimetype");
         When(x => x.Background is not null, () =>

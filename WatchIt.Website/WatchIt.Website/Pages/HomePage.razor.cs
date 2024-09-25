@@ -53,8 +53,8 @@ public partial class HomePage
             await Task.WhenAll(step1Tasks);
             endTasks.AddRange(
             [
-                Parallel.ForEachAsync(_topMovies, async (x, _) => await MediaWebAPIService.GetPoster(x.Key.Id, y => _topMovies[x.Key] = y)),
-                Parallel.ForEachAsync(_topSeries, async (x, _) => await MediaWebAPIService.GetPoster(x.Key.Id, y => _topSeries[x.Key] = y))
+                Parallel.ForEachAsync(_topMovies, async (x, _) => await MediaWebAPIService.GetMediaPoster(x.Key.Id, y => _topMovies[x.Key] = y)),
+                Parallel.ForEachAsync(_topSeries, async (x, _) => await MediaWebAPIService.GetMediaPoster(x.Key.Id, y => _topSeries[x.Key] = y))
             ]);
             
             // END

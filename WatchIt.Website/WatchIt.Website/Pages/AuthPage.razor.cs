@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Media;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.Utility.Tokens;
 using WatchIt.Website.Services.WebAPI.Accounts;
 using WatchIt.Website.Services.WebAPI.Media;
+using WatchIt.Website.Services.WebAPI.Photos;
 
 namespace WatchIt.Website.Pages;
 
@@ -17,6 +19,7 @@ public partial class AuthPage
     [Inject] public ITokensService TokensService { get; set; } = default!;
     [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
     [Inject] public IAccountsWebAPIService AccountsWebAPIService { get; set; } = default!;
+    [Inject] public IPhotosWebAPIService PhotosWebAPIService { get; set; } = default!;
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
 
     #endregion
@@ -75,7 +78,7 @@ public partial class AuthPage
                 NavigationManager.NavigateTo("/");
             }
         
-            Action<MediaPhotoResponse> backgroundSuccess = (data) =>
+            Action<PhotoResponse> backgroundSuccess = (data) =>
             {
                 string imageBase64 = Convert.ToBase64String(data.Image);
                 string firstColor = BitConverter.ToString(data.Background.FirstGradientColor)
@@ -87,7 +90,7 @@ public partial class AuthPage
                 _firstGradientColor = $"#{firstColor}";
                 _secondGradientColor = $"#{secondColor}";
             };
-            await MediaWebAPIService.GetPhotoRandomBackground(backgroundSuccess);
+            await PhotosWebAPIService.GetPhotoRandomBackground(backgroundSuccess);
         
             _loaded = true;
             StateHasChanged();
