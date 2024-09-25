@@ -4,33 +4,53 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
+using WatchIt.Common.Model.Photos;
 using WatchIt.WebAPI.Services.Controllers.Media;
 
 namespace WatchIt.WebAPI.Controllers;
 
 [ApiController]
 [Route("media")]
-public class MediaController(IMediaControllerService mediaControllerService)
+public class MediaController : ControllerBase
 {
-    #region MAIN
+    #region FIELDS
     
-    [HttpGet("{id}")]
-    [AllowAnonymous]
-    [ProducesResponseType(typeof(MediaResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetMedia([FromRoute] long id) => await mediaControllerService.GetMedia(id);
+    private readonly IMediaControllerService _mediaControllerService;
     
     #endregion
     
     
     
-    #region GENRES
+    #region CONSTRUCTORS
+
+    public MediaController(IMediaControllerService mediaControllerService)
+    {
+        _mediaControllerService = mediaControllerService;
+    }
+    
+    #endregion
+    
+    
+    
+    #region METHODS
+    
+    #region Main
+    
+    [HttpGet("{id}")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(MediaResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetMedia([FromRoute] long id) => await _mediaControllerService.GetMedia(id);
+    
+    #endregion
+    
+    #region Genres
     
     [HttpGet("{id}/genres")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(IEnumerable<GenreResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetMediaGenres([FromRoute]long id) => await mediaControllerService.GetMediaGenres(id);
+    public async Task<ActionResult> GetMediaGenres([FromRoute]long id) => await _mediaControllerService.GetMediaGenres(id);
     
     [HttpPost("{id}/genres/{genre_id}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -38,7 +58,7 @@ public class MediaController(IMediaControllerService mediaControllerService)
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PostMediaGenre([FromRoute]long id, [FromRoute(Name = "genre_id")]short genreId) => await mediaControllerService.PostMediaGenre(id, genreId);
+    public async Task<ActionResult> PostMediaGenre([FromRoute]long id, [FromRoute(Name = "genre_id")]short genreId) => await _mediaControllerService.PostMediaGenre(id, genreId);
     
     [HttpDelete("{id}/genres/{genre_id}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -46,25 +66,23 @@ public class MediaController(IMediaControllerService mediaControllerService)
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> DeleteMediaGenre([FromRoute]long id, [FromRoute(Name = "genre_id")]short genreId) => await mediaControllerService.DeleteMediaGenre(id, genreId);
+    public async Task<ActionResult> DeleteMediaGenre([FromRoute]long id, [FromRoute(Name = "genre_id")]short genreId) => await _mediaControllerService.DeleteMediaGenre(id, genreId);
     
     #endregion
 
-
-
-    #region RATING
+    #region Rating
 
     [HttpGet("{id}/rating")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(MediaRatingResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetMediaRating([FromRoute] long id) => await mediaControllerService.GetMediaRating(id);
+    public async Task<ActionResult> GetMediaRating([FromRoute] long id) => await _mediaControllerService.GetMediaRating(id);
     
     [HttpGet("{id}/rating/{user_id}")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(short), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetMediaRatingByUser([FromRoute] long id, [FromRoute(Name = "user_id")]long userId) => await mediaControllerService.GetMediaRatingByUser(id, userId);
+    public async Task<ActionResult> GetMediaRatingByUser([FromRoute] long id, [FromRoute(Name = "user_id")]long userId) => await _mediaControllerService.GetMediaRatingByUser(id, userId);
     
     [HttpPut("{id}/rating")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -72,38 +90,34 @@ public class MediaController(IMediaControllerService mediaControllerService)
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PutMediaRating([FromRoute] long id, [FromBody] MediaRatingRequest data) => await mediaControllerService.PutMediaRating(id, data);
+    public async Task<ActionResult> PutMediaRating([FromRoute] long id, [FromBody] MediaRatingRequest data) => await _mediaControllerService.PutMediaRating(id, data);
     
     [HttpDelete("{id}/rating")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult> DeleteMediaRating([FromRoute] long id) => await mediaControllerService.DeleteMediaRating(id);
+    public async Task<ActionResult> DeleteMediaRating([FromRoute] long id) => await _mediaControllerService.DeleteMediaRating(id);
     
     #endregion
 
-
-
-    #region VIEW COUNT
+    #region View count
 
     [HttpPost("{id}/view")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PostMediaView([FromRoute] long id) => await mediaControllerService.PostMediaView(id);
+    public async Task<ActionResult> PostMediaView([FromRoute] long id) => await _mediaControllerService.PostMediaView(id);
 
     #endregion
     
-    
-    
-    #region POSTER
+    #region Poster
     
     [HttpGet("{id}/poster")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(MediaPosterResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetMediaPoster([FromRoute] long id) => await mediaControllerService.GetMediaPoster(id);
+    public async Task<ActionResult> GetMediaPoster([FromRoute] long id) => await _mediaControllerService.GetMediaPoster(id);
     
     [HttpPut("{id}/poster")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -111,68 +125,41 @@ public class MediaController(IMediaControllerService mediaControllerService)
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> PutMediaPoster([FromRoute]long id, [FromBody]MediaPosterRequest body) => await mediaControllerService.PutMediaPoster(id, body);
+    public async Task<ActionResult> PutMediaPoster([FromRoute]long id, [FromBody]MediaPosterRequest body) => await _mediaControllerService.PutMediaPoster(id, body);
     
     [HttpDelete("{id}/poster")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> DeleteMediaPoster([FromRoute]long id) => await mediaControllerService.DeleteMediaPoster(id);
+    public async Task<ActionResult> DeleteMediaPoster([FromRoute]long id) => await _mediaControllerService.DeleteMediaPoster(id);
     
     #endregion
     
+    #region Photos
     
-    
-    #region PHOTOS
+    [HttpGet("{id}/photos")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<PhotoResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetMediaPhotos([FromRoute]long id, PhotoQueryParameters query) => await _mediaControllerService.GetMediaPhotos(id, query);
     
     [HttpGet("{id}/photos/random_background")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(MediaPhotoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PhotoResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetMediaPhotoRandomBackground([FromRoute]long id) => await mediaControllerService.GetMediaRandomBackgroundPhoto(id);
+    public async Task<ActionResult> GetMediaPhotoRandomBackground([FromRoute]long id) => await _mediaControllerService.GetMediaPhotoRandomBackground(id);
     
-    [HttpGet("photos/{photo_id}")]
-    [AllowAnonymous]
-    [ProducesResponseType(typeof(MediaPhotoResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetPhoto([FromRoute(Name = "photo_id")] Guid photoId) => await mediaControllerService.GetPhoto(photoId);
-
-    [HttpGet("photos")]
-    [AllowAnonymous]
-    [ProducesResponseType(typeof(IEnumerable<MediaPhotoResponse>), StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetPhotos(MediaPhotoQueryParameters query) => await mediaControllerService.GetPhotos(query);
-
-    [HttpGet("photos/random_background")]
-    [AllowAnonymous]
-    [ProducesResponseType(typeof(MediaPhotoResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetPhotoRandomBackground() => await mediaControllerService.GetRandomBackgroundPhoto();
-    
-    [HttpPost("photos")]
+    [HttpPost("{id}/photos")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [ProducesResponseType(typeof(MediaPhotoResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> PostPhoto([FromBody]MediaPhotoRequest body) => await mediaControllerService.PostPhoto(body);
-    
-    [HttpPut("photos/{photo_id}")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PhotoResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PutPhoto([FromRoute(Name = "photo_id")]Guid photoId, [FromBody]MediaPhotoRequest body) => await mediaControllerService.PutPhoto(photoId, body);
+    public async Task<ActionResult> PostPhoto([FromRoute]long id, [FromBody]MediaPhotoRequest body) => await _mediaControllerService.PostMediaPhoto(id, body);
     
-    [HttpDelete("photos/{photo_id}")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> DeletePhoto([FromRoute(Name = "photo_id")]Guid photoId) => await mediaControllerService.DeletePhoto(photoId);
+    #endregion
     
     #endregion
 }

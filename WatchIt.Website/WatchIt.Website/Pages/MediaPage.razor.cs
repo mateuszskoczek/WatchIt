@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Series;
 using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.WebAPI.Media;
@@ -42,7 +43,7 @@ public partial class MediaPage : ComponentBase
     
     private User? _user;
     
-    private MediaPhotoResponse? _background;
+    private PhotoResponse? _background;
     private MediaPosterResponse? _poster;
     private IEnumerable<GenreResponse> _genres;
     private MediaRatingResponse _globalRating;
@@ -83,8 +84,8 @@ public partial class MediaPage : ComponentBase
                 endTasks.AddRange(
                 [
                     MediaWebAPIService.PostMediaView(Id),
-                    MediaWebAPIService.GetPhotoMediaRandomBackground(Id, data => _background = data),
-                    MediaWebAPIService.GetPoster(Id, data => _poster = data),
+                    MediaWebAPIService.GetMediaPhotoRandomBackground(Id, data => _background = data),
+                    MediaWebAPIService.GetMediaPoster(Id, data => _poster = data),
                     MediaWebAPIService.GetMediaGenres(Id, data => _genres = data),
                     MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data),
                     _media.Type == MediaType.Movie ? MoviesWebAPIService.GetMovie(Id, data => _movie = data) : SeriesWebAPIService.GetSeries(Id, data => _series = data),

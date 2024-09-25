@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Series;
 using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
+using WatchIt.Website.Services.WebAPI.Photos;
 using WatchIt.Website.Services.WebAPI.Series;
 
 namespace WatchIt.Website.Pages;
@@ -41,7 +43,7 @@ public partial class MediaEditPage : ComponentBase
     
     private User? _user;
     
-    private MediaPhotoResponse? _background;
+    private PhotoResponse? _background;
 
     private MediaResponse? _media;
     private MovieRequest? _movieRequest;
@@ -94,8 +96,8 @@ public partial class MediaEditPage : ComponentBase
             {
                 endTasks.AddRange(
                 [
-                    MediaWebAPIService.GetPhotoMediaRandomBackground(Id.Value, data => _background = data),
-                    MediaWebAPIService.GetPoster(Id.Value, data =>
+                    MediaWebAPIService.GetMediaPhotoRandomBackground(Id.Value, data => _background = data),
+                    MediaWebAPIService.GetMediaPoster(Id.Value, data =>
                     {
                         _mediaPosterSaved = data;
                         _mediaPosterRequest = new MediaPosterRequest(data);
@@ -179,7 +181,7 @@ public partial class MediaEditPage : ComponentBase
         }
         
         _mediaPosterSaving = true;
-        await MediaWebAPIService.PutPoster(Id.Value, _mediaPosterRequest, Success);
+        await MediaWebAPIService.PutMediaPoster(Id.Value, _mediaPosterRequest, Success);
     }
 
     private void CancelPoster()
@@ -199,7 +201,7 @@ public partial class MediaEditPage : ComponentBase
         }
         
         _mediaPosterDeleting = true;
-        await MediaWebAPIService.DeletePoster(Id.Value, Success);
+        await MediaWebAPIService.DeleteMediaPoster(Id.Value, Success);
     }
     
     #endregion

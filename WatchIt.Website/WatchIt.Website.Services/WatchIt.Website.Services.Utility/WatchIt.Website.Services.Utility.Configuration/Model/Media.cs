@@ -3,23 +3,19 @@
 public class Media
 {
     public string Base { get; set; }
-    public string Get { get; set; }
-    public string GetGenres { get; set; }
-    public string PostGenre { get; set; }
-    public string DeleteGenre { get; set; }
+    public string GetMedia { get; set; }
+    public string GetMediaGenres { get; set; }
+    public string PostMediaGenre { get; set; }
+    public string DeleteMediaGenre { get; set; }
     public string GetMediaRating { get; set; }
     public string GetMediaRatingByUser { get; set; }
     public string PutMediaRating { get; set; }
     public string DeleteMediaRating { get; set; }
     public string PostMediaView { get; set; }
-    public string GetPhotoMediaRandomBackground { get; set; }
-    public string GetPoster { get; set; }
-    public string PutPoster { get; set; }
-    public string DeletePoster { get; set; }
-    public string GetPhoto { get; set; }
-    public string GetPhotos { get; set; }
-    public string GetPhotoRandomBackground { get; set; }
-    public string PostPhoto { get; set; }
-    public string PutPhoto { get; set; }
-    public string DeletePhoto { get; set; }
+    public string GetMediaPoster { get; set; }
+    public string PutMediaPoster { get; set; }
+    public string DeleteMediaPoster { get; set; }
+    public string GetMediaPhotos { get; set; }
+    public string GetMediaPhotoRandomBackground { get; set; }
+    public string PostMediaPhoto { get; set; }
 }

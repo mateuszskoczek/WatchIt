@@ -1,9 +1,11 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
-namespace WatchIt.Common.Model.Media;
+namespace WatchIt.Common.Model.Photos;
 
-public class MediaPhotoBackground
+public class PhotoBackgroundData
 {
+    #region PROPERTIES
+    
     [JsonPropertyName("is_universal_background")]
     public required bool IsUniversalBackground { get; set; }
     
@@ -12,4 +14,6 @@ public class MediaPhotoBackground
     
     [JsonPropertyName("second_gradient_color")]
     public required byte[] SecondGradientColor { get; set; }
+    
+    #endregion
 }

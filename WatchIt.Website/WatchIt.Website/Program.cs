@@ -8,6 +8,7 @@ using WatchIt.Website.Services.Utility.Tokens;
 using WatchIt.Website.Services.WebAPI.Accounts;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
+using WatchIt.Website.Services.WebAPI.Photos;
 using WatchIt.Website.Services.WebAPI.Series;
 
 namespace WatchIt.Website;
@@ -64,6 +65,7 @@ public static class Program
         builder.Services.AddSingleton<IMediaWebAPIService, MediaWebAPIService>();
         builder.Services.AddSingleton<IMoviesWebAPIService, MoviesWebAPIService>();
         builder.Services.AddSingleton<ISeriesWebAPIService, SeriesWebAPIService>();
+        builder.Services.AddSingleton<IPhotosWebAPIService, PhotosWebAPIService>();
         
         return builder;
     }

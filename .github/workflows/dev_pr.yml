@@ -1,7 +1,7 @@
 name: "Pull request to 'dev' branch"
 
 on:
-  push:
+  pull_request:
     branches: 
     - "dev/**"
     paths:

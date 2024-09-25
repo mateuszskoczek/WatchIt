@@ -2,20 +2,8 @@
 
 namespace WatchIt.Common.Model.Media;
 
-public abstract class MediaPoster
+public abstract class MediaPoster : Picture
 {
-    #region PROPERTIES
-    
-    [JsonPropertyName("image")]
-    public required byte[] Image { get; set; }
-    
-    [JsonPropertyName("mime_type")]
-    public required string MimeType { get; set; }
-    
-    #endregion
-    
-    
-    
     #region PUBLIC METHODS
 
     public override string ToString() => $"data:{MimeType};base64,{Convert.ToBase64String(Image)}";
