@@ -42,7 +42,7 @@ public class PhotosWebAPIService : BaseWebAPIService, IPhotosWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task DeletePhoto(Guid id, Action<PhotoResponse>? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
+    public async Task DeletePhoto(Guid id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Photos.DeletePhoto, id);
         
@@ -60,7 +60,7 @@ public class PhotosWebAPIService : BaseWebAPIService, IPhotosWebAPIService
 
     #region Background data
 
-    public async Task PutPhotoBackgroundData(Guid id, PhotoBackgroundDataRequest data, Action<PhotoResponse>? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
+    public async Task PutPhotoBackgroundData(Guid id, PhotoBackgroundDataRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Photos.PutPhotoBackgroundData, id);
         
@@ -71,13 +71,14 @@ public class PhotosWebAPIService : BaseWebAPIService, IPhotosWebAPIService
         
         HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
                 .RegisterActionFor401Unauthorized(unauthorizedAction)
                 .RegisterActionFor403Forbidden(forbiddenAction)
                 .RegisterActionFor404NotFound(notFoundAction)
                 .ExecuteAction();
     }
     
-    public async Task DeletePhotoBackgroundData(Guid id, Action<PhotoResponse>? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
+    public async Task DeletePhotoBackgroundData(Guid id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Photos.DeletePhotoBackgroundData, id);
         

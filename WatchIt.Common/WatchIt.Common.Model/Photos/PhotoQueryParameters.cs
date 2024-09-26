@@ -38,7 +38,7 @@ public class PhotoQueryParameters : QueryParameters<PhotoResponse>
         &&
         TestBoolean(item.Background is not null, IsBackground)
         &&
-        TestBoolean(item.Background!.IsUniversalBackground, IsUniversalBackground)
+        TestBoolean(item.Background is not null && item.Background.IsUniversalBackground, IsUniversalBackground)
         &&
         TestComparable(item.UploadDate, UploadDate, UploadDateFrom, UploadDateTo)
     );

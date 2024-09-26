@@ -1,10 +1,28 @@
-﻿using WatchIt.Common.Model.Photos;
+﻿using System.Diagnostics.CodeAnalysis;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Database.Model.Media;
 
 namespace WatchIt.Common.Model.Media;
 
 public class MediaPhotoRequest : Photo
 {
+    #region CONSTRUCTORS
+    
+    public MediaPhotoRequest() {}
+
+    [SetsRequiredMembers]
+    public MediaPhotoRequest(PhotoResponse response)
+    {
+        Image = response.Image;
+        MimeType = response.MimeType;
+    }
+    
+    #endregion
+    
+    
+    
+    #region PUBLIC METHODS
+
     public MediaPhotoImage CreateMediaPhotoImage(long mediaId) => new MediaPhotoImage
     {
         MediaId = mediaId,
@@ -19,4 +37,6 @@ public class MediaPhotoRequest : Photo
         FirstGradientColor = Background.FirstGradientColor,
         SecondGradientColor = Background.SecondGradientColor
     };
+
+    #endregion
 }
