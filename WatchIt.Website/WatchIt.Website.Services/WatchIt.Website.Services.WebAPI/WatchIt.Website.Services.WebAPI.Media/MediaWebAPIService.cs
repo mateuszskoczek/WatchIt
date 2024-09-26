@@ -241,7 +241,10 @@ public class MediaWebAPIService : BaseWebAPIService, IMediaWebAPIService
     {
         string url = GetUrl(EndpointsConfiguration.Media.PostMediaPhoto, mediaId);
         
-        HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
+        HttpRequest request = new HttpRequest(HttpMethodType.Post, url)
+        {
+            Body = data
+        };
         
         HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)

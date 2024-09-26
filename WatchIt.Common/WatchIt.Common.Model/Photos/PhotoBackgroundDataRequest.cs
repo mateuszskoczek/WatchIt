@@ -1,9 +1,26 @@
+using System.Diagnostics.CodeAnalysis;
 using WatchIt.Database.Model.Media;
 
 namespace WatchIt.Common.Model.Photos;
 
 public class PhotoBackgroundDataRequest : PhotoBackgroundData
 {
+    #region CONSTRUCTORS
+    
+    public PhotoBackgroundDataRequest() {}
+
+    [SetsRequiredMembers]
+    public PhotoBackgroundDataRequest(PhotoBackgroundData photoBackgroundData)
+    {
+        IsUniversalBackground = photoBackgroundData.IsUniversalBackground;
+        FirstGradientColor = photoBackgroundData.FirstGradientColor;
+        SecondGradientColor = photoBackgroundData.SecondGradientColor;
+    }
+    
+    #endregion
+    
+    
+    
     #region PUBLIC METHODS
 
     public MediaPhotoImageBackground CreateMediaPhotoImageBackground(Guid photoId) => new MediaPhotoImageBackground
