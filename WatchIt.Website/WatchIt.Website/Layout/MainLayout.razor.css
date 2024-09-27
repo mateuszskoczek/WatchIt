@@ -1,6 +1,20 @@
-body {
-    background-size: cover;
+/* TAGS */
+
+h1 {
+    margin: 0;
 }
+
+
+
+/* IDS */
+
+#user-menu {
+    position: fixed;
+}
+
+
+
+/* CLASSES */
 
 .logo {
     font-size: 40px;
@@ -14,8 +28,4 @@ body {
 
 .body-content {
     padding-top: 100px;
-}
-
-h1 {
-    margin: 0;
 }

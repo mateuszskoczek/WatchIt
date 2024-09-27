@@ -1,5 +1,22 @@
+/* TAGS */
+
+html {
+    height: 100%;
+}
+
+body {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    
+    height: 100%;
+}
+
 body, html {
     background-color: transparent;
+    
+    
     height: 100%;
     margin: 0; 
     padding: 0;

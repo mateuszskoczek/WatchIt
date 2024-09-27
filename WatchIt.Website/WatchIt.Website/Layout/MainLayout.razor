@@ -1,178 +1,77 @@
 ﻿@using WatchIt.Common.Model.Photos
 @using WatchIt.Website.Services.WebAPI.Photos
+
 @inherits LayoutComponentBase
 
-@if (_loaded)
-{
-    <div class="container-xl">
-        <div class="row align-items-center m-1 my-2 mb-3 rounded-3 header panel panel-header z-3">
-            <div class="col-2">
-                <a class="logo" href="/">
-                    WatchIt
-                </a>
+
+
+<CascadingValue Value="this">
+    @if (_loaded)
+    {
+        <div class="container-xl">
+            <div class="row align-items-center m-1 my-2 mb-3 rounded-3 header panel panel-header z-3">
+                <div class="col-2">
+                    <a class="logo" href="/">
+                        WatchIt
+                    </a>
+                </div>
+                <div class="col">
+                    <p>Menu</p>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex flex-row-reverse">
+                        @if (_user is null)
+                        {
+                            <a class="main-button" href="/auth">Sign in</a>
+                        }
+                        else
+                        {
+                            <div class="dropdown z-3">
+                                <a class="dropdown-toggle align-items-center text-decoration-none d-flex" id="dropdownUser" aria-expanded="false" @onclick="() => _menuUserIsActive = !_menuUserIsActive">
+                                    <img class="rounded-circle" alt="avatar" height="30" src="@(_userProfilePicture is null ? "assets/user_placeholder.png" : _userProfilePicture.ToString())"/>
+                                    <div class="text-decoration-none mx-2 text-white">@(_user.Username)</div>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right text-small z-3" id="user-menu" aria-labelledby="dropdownUser">
+                                    <li>
+                                        @if (_user.IsAdmin)
+                                        {
+                                            <a class="dropdown-item" href="/admin">Administrator panel</a>
+                                        }
+                                        <div class="dropdown-menu-separator"></div>
+                                        <a class="dropdown-item text-danger" @onclick="UserMenuLogOut">Log out</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
-            <div class="col">
-                <p>Menu</p>
-            </div>
-            <div class="col-auto">
-                <div class="d-flex flex-row-reverse">
-                    @if (_user is null)
-                    {
-                        <a class="main-button" href="/auth">Sign in</a>
-                    }
-                    else
-                    {
-                        <div class="dropdown z-3">
-                            <a class="dropdown-toggle align-items-center text-decoration-none d-flex" id="dropdownUser" aria-expanded="false" @onclick="() => _userMenuIsActive = !_userMenuIsActive">
-                                <img class="rounded-circle" alt="avatar" height="30" src="@(_userProfilePicture)"/>
-                                <div class="text-decoration-none mx-2 text-white">@(_user.Username)</div>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right text-small z-3" id="user-menu" aria-labelledby="dropdownUser">
-                                <li>
-                                    @if (_user.IsAdmin)
-                                    {
-                                        <a class="dropdown-item" href="/admin">Administrator panel</a>
-                                    }
-                                    <div class="dropdown-menu-separator"></div>
-                                    <a class="dropdown-item text-danger" @onclick="UserMenuLogOut">Log out</a>
-                                </li>
-                            </ul>
-                        </div>
-                    }
+            <div class="row">
+                <div class="col z-0 p-1">
+                    @Body
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col z-0 p-1">
-                @Body
-            </div>
-        </div>
-    </div>
 
-    <style>
-        html {
-            height: 100%;
-        }
-        
-        body {
-            background-image: url('@_background');
-            
-            height: 100%;
-
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-attachment: fixed;
-        }
-        
-        .logo, .main-button {
-            background-image: linear-gradient(45deg, @_firstGradientColor, @_secondGradientColor);
-        }
-        
-        #user-menu {
-            display: @(_userMenuIsActive ? "block" : "none");
-            position: fixed;
-        }
-    </style>
-}
-
-
-
-
-@code
-{
-    #region SERVICES
-
-    [Inject] public ILogger<MainLayout> Logger { get; set; } = default!;
-    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
-    [Inject] public ITokensService TokensService { get; set; } = default!;
-    [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
-    [Inject] public IAccountsWebAPIService AccountsWebAPIService { get; set; } = default!;
-    [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
-    [Inject] public IPhotosWebAPIService PhotosWebAPIService { get; set; } = default!;
-
-    #endregion
-
-
-
-    #region FIELDS
-
-    private bool _loaded = false;
-    
-    private string _background = "assets/background_temp.jpg";
-    private string _firstGradientColor = "#c6721c";
-    private string _secondGradientColor = "#85200c";
-    
-    private User? _user = null;
-    private string _userProfilePicture = "assets/user_placeholder.png";
-    private bool _userMenuIsActive = false;
-
-    #endregion
-
-
-
-    #region METHODS
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            List<Task> bgTasks = new List<Task>();
-            
-            bgTasks.Add(GetBackground());
-            
-            await GetAuthenticatedUser();
-            
-            if (_user is not null)
-            {
-                bgTasks.Add(GetProfilePicture());
+        <style>
+            /* TAGS */
+            body {
+                background-image: url('@(BackgroundPhoto?.Background is null ? "assets/background_temp.jpg": BackgroundPhoto.ToString())');
             }
 
-            await Task.WhenAll(bgTasks);
+
+            /* IDS */
+
+            #user-menu {
+                display: @(_menuUserIsActive ? "block" : "none");
+            }
             
-            _loaded = true;
-            StateHasChanged();
-        }
-    }
-
-    private async Task GetBackground()
-    {
-        Action<PhotoResponse> backgroundSuccess = (data) =>
-        {
-            string imageBase64 = Convert.ToBase64String(data.Image);
-            string firstColor = BitConverter.ToString(data.Background.FirstGradientColor)
-                                            .Replace("-", string.Empty);
-            string secondColor = BitConverter.ToString(data.Background.SecondGradientColor)
-                                             .Replace("-", string.Empty);
             
-            _background = $"data:{data.MimeType};base64,{imageBase64}";
-            _firstGradientColor = $"#{firstColor}";
-            _secondGradientColor = $"#{secondColor}";
-        };
-        await PhotosWebAPIService.GetPhotoRandomBackground(backgroundSuccess);
+            /* CLASSES */
+            
+            .logo, .main-button {
+                background-image: linear-gradient(45deg, @(BackgroundPhoto?.Background is null ? "#c6721c, #85200c" : $"#{Convert.ToHexString(BackgroundPhoto.Background.FirstGradientColor)}, #{Convert.ToHexString(BackgroundPhoto.Background.SecondGradientColor)}"));
+            }
+        </style>
     }
-
-    private async Task GetAuthenticatedUser()
-    {
-        _user = await AuthenticationService.GetUserAsync();
-    }
-
-    private async Task GetProfilePicture()
-    {
-        Action<AccountProfilePictureResponse> successAction = (data) =>
-        {
-            string imageBase64 = Convert.ToBase64String(data.Image);
-            _userProfilePicture = $"data:{data.MimeType};base64,{imageBase64}";
-        };
-        await AccountsWebAPIService.GetAccountProfilePicture(_user.Id, successAction);
-    }
-
-    private async Task UserMenuLogOut()
-    {
-        await AuthenticationService.LogoutAsync();
-        await TokensService.RemoveAuthenticationData();
-        NavigationManager.Refresh(true);
-    }
-
-    #endregion
-}
+</CascadingValue>
