@@ -1,0 +1,55 @@
+@typeparam TItem
+@using Microsoft.IdentityModel.Tokens
+@typeparam TQuery where TQuery : WatchIt.Common.Query.QueryParameters
+
+
+
+<div class="rounded-3 panel panel-regular p-4">
+    <div class="container-fluid p-0 m-0">
+        <div class="row mb-4">
+            <div class="col">
+                <h4 class="m-0"><strong>@(Title)</strong></h4>
+            </div>
+        </div>
+        @if (_loaded)
+        {
+            if (!_items.IsNullOrEmpty())
+            {
+                for (int i = 0; i < _items.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        <div class="row">
+                            <div class="col">
+                                <hr/>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col">
+                            test
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-center">
+                            No items found
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col">
+                    <LoadingComponent Color="light"/>
+                </div>
+            </div>
+        }
+    </div>
+</div>

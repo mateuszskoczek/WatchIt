@@ -38,7 +38,8 @@ public class MoviesControllerService : IMoviesControllerService
 
     public async Task<RequestResult> GetAllMovies(MovieQueryParameters query)
     {
-        IEnumerable<MovieResponse> data = await _database.MediaMovies.Select(x => new MovieResponse(x)).ToListAsync();
+        IEnumerable<MediaMovie> rawData = await _database.MediaMovies.ToListAsync();
+        IEnumerable<MovieResponse> data = rawData.Select(x => new MovieResponse(x));
         data = query.PrepareData(data);
         return RequestResult.Ok(data);
     }

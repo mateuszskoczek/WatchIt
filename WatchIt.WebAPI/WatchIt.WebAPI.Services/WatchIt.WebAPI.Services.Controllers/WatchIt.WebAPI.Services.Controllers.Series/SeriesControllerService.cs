@@ -38,7 +38,8 @@ public class SeriesControllerService : ISeriesControllerService
     
     public async Task<RequestResult> GetAllSeries(SeriesQueryParameters query)
     {
-        IEnumerable<SeriesResponse> data = await _database.MediaSeries.Select(x => new SeriesResponse(x)).ToListAsync();
+        IEnumerable<MediaSeries> rawData = await _database.MediaSeries.ToListAsync();
+        IEnumerable<SeriesResponse> data = rawData.Select(x => new SeriesResponse(x));
         data = query.PrepareData(data);
         return RequestResult.Ok(data);
     }
