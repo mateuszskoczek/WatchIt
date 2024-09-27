@@ -56,7 +56,7 @@
         <style>
             /* TAGS */
             body {
-                background-image: url('@(BackgroundPhoto?.Background is null ? "assets/background_temp.jpg": BackgroundPhoto.ToString())');
+                background-image: url('@(GetBackgroundPhoto() is null ? "assets/background_temp.jpg": GetBackgroundPhoto().ToString())');
             }
 
 
@@ -70,7 +70,7 @@
             /* CLASSES */
             
             .logo, .main-button {
-                background-image: linear-gradient(45deg, @(BackgroundPhoto?.Background is null ? "#c6721c, #85200c" : $"#{Convert.ToHexString(BackgroundPhoto.Background.FirstGradientColor)}, #{Convert.ToHexString(BackgroundPhoto.Background.SecondGradientColor)}"));
+                background-image: linear-gradient(45deg, @(GetBackgroundPhoto() is null ? "#c6721c, #85200c" : $"#{Convert.ToHexString(GetBackgroundPhoto().Background.FirstGradientColor)}, #{Convert.ToHexString(GetBackgroundPhoto().Background.SecondGradientColor)}"));
             }
         </style>
     }

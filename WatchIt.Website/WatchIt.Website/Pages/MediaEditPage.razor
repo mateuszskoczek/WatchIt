@@ -362,31 +362,28 @@
             }
             else
             {
-                <ErrorComponent ErrorMessage="You do not have permission to view this site"/>
+                <div class="row">
+                    <div class="col">
+                        <ErrorComponent ErrorMessage="You do not have permission to view this site"/>
+                    </div>
+                </div>
             }
         }
         else
         {
-            <ErrorComponent ErrorMessage="@_error"/>
+            <div class="row">
+                <div class="col">
+                    <ErrorComponent ErrorMessage="@_error"/>
+                </div>
+            </div>
         }
     }
     else
     {
-        <LoadingComponent/>
+        <div class="row">
+            <div class="col">
+                <LoadingComponent/>
+            </div>
+        </div>
     }
 </div>
-
-
-
-@if (_background is not null)
-{
-    <style>
-        body {
-            background-image: url('@(_background.ToString())') !important;
-        }
-
-        .logo, .main-button {
-            background-image: linear-gradient(45deg, @($"#{BitConverter.ToString(_background.Background.FirstGradientColor).Replace("-", string.Empty)}"), @($"#{BitConverter.ToString(_background.Background.SecondGradientColor).Replace("-", string.Empty)}")) !important;
-        }
-    </style>
-}

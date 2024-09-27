@@ -87,11 +87,19 @@
         }
         else
         {
-            <ErrorComponent ErrorMessage="@_error"/>
+            <div class="row">
+                <div class="col">
+                    <ErrorComponent ErrorMessage="@_error"/>
+                </div>
+            </div>
         }
     }
     else
     {
-        <LoadingComponent/>
+        <div class="row">
+            <div class="col">
+                <LoadingComponent/>
+            </div>
+        </div>
     }
 </div>

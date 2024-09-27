@@ -28,6 +28,8 @@ public partial class MainLayout : LayoutComponentBase
     #region FIELDS
 
     private bool _loaded = false;
+
+    private PhotoResponse? _defaultBackgroundPhoto;
     
     private User? _user = null;
     private AccountProfilePictureResponse? _userProfilePicture;
@@ -39,8 +41,17 @@ public partial class MainLayout : LayoutComponentBase
     
     
     #region PROPERTIES
-    
-    public PhotoResponse? BackgroundPhoto { get; set; }
+
+    private PhotoResponse? _backgroundPhoto;
+    public PhotoResponse? BackgroundPhoto
+    {
+        get => _backgroundPhoto;
+        set
+        {
+            _backgroundPhoto = value;
+            StateHasChanged();
+        }
+    }
     
     #endregion
     
@@ -64,7 +75,7 @@ public partial class MainLayout : LayoutComponentBase
             ]);
             endTasks.AddRange(
             [
-                PhotosWebAPIService.GetPhotoRandomBackground(data => BackgroundPhoto = data)
+                PhotosWebAPIService.GetPhotoRandomBackground(data => _defaultBackgroundPhoto = data)
             ]);
             
             // STEP 1
@@ -83,6 +94,19 @@ public partial class MainLayout : LayoutComponentBase
             _loaded = true;
             StateHasChanged();
         }
+    }
+
+    private PhotoResponse? GetBackgroundPhoto()
+    {
+        if (BackgroundPhoto?.Background is not null)
+        {
+            return BackgroundPhoto;
+        }
+        else if (_defaultBackgroundPhoto?.Background is not null)
+        {
+            return _defaultBackgroundPhoto;
+        }
+        return null;
     }
     
     #endregion

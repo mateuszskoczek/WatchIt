@@ -193,26 +193,19 @@ else
         }
         else
         {
-            <ErrorComponent ErrorMessage="@_error"/>
+            <div class="row">
+                <div class="col">
+                    <ErrorComponent ErrorMessage="@_error"/>
+                </div>
+            </div>
         }
     }
     else
     {
-        <LoadingComponent/>
+        <div class="row">
+            <div class="col">
+                <LoadingComponent/>
+            </div>
+        </div>
     }
 </div>
-
-
-
-@if (_background is not null)
-{
-    <style>
-        body {
-            background-image: url('@($"data:{_background.MimeType};base64,{Convert.ToBase64String(_background.Image)}")') !important;
-        }
-
-        .logo, .main-button {
-            background-image: linear-gradient(45deg, @($"#{BitConverter.ToString(_background.Background.FirstGradientColor).Replace("-", string.Empty)}"), @($"#{BitConverter.ToString(_background.Background.SecondGradientColor).Replace("-", string.Empty)}")) !important;
-        }
-    </style>
-}

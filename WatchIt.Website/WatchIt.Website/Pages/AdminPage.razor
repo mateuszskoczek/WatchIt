@@ -26,11 +26,19 @@
         }
         else
         {
-            <ErrorComponent ErrorMessage="You do not have permission to view this site"/>
+            <div class="row">
+                <div class="col">
+                    <ErrorComponent ErrorMessage="You do not have permission to view this site"/>
+                </div>
+            </div>
         }
     }
     else
     {
-        <LoadingComponent/>
+        <div class="row">
+            <div class="col">
+                <LoadingComponent/>
+            </div>
+        </div>
     }
 </div>
