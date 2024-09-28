@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Photos;
+using WatchIt.Common.Model.Rating;
 using WatchIt.WebAPI.Services.Controllers.Media;
 
 namespace WatchIt.WebAPI.Controllers;
@@ -74,7 +75,7 @@ public class MediaController : ControllerBase
 
     [HttpGet("{id}/rating")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(MediaRatingResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RatingResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetMediaRating([FromRoute] long id) => await _mediaControllerService.GetMediaRating(id);
     
@@ -90,7 +91,7 @@ public class MediaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PutMediaRating([FromRoute] long id, [FromBody] MediaRatingRequest data) => await _mediaControllerService.PutMediaRating(id, data);
+    public async Task<ActionResult> PutMediaRating([FromRoute] long id, [FromBody] RatingRequest data) => await _mediaControllerService.PutMediaRating(id, data);
     
     [HttpDelete("{id}/rating")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

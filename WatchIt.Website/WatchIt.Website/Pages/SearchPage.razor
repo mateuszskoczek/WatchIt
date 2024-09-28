@@ -33,8 +33,14 @@
                     <SearchResultComponent TItem="MovieResponse"
                                            TQuery="MovieQueryParameters"
                                            Title="Movies"
+                                           UrlIdTemplate="/media/{0}"
+                                           IdSource="@(item => item.Id)"
+                                           NameSource="@(item => item.Title)"
+                                           AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
                                            Query="@(new MovieQueryParameters { Title = DecodedQuery })"
-                                           DownloadingTask="MoviesWebAPIService.GetAllMovies"/>
+                                           ItemDownloadingTask="@(MoviesWebAPIService.GetAllMovies)"
+                                           PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
+                                           RatingDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"/>
                 </div>
             </div>
             <div class="row mt-3">
@@ -42,8 +48,14 @@
                     <SearchResultComponent TItem="SeriesResponse" 
                                            TQuery="SeriesQueryParameters"
                                            Title="TV series"
+                                           UrlIdTemplate="/media/{0}"
+                                           IdSource="@(item => item.Id)"
+                                           NameSource="@(item => item.Title)"
+                                           AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
                                            Query="@(new SeriesQueryParameters { Title = DecodedQuery })"
-                                           DownloadingTask="SeriesWebAPIService.GetAllSeries"/>
+                                           ItemDownloadingTask="@(SeriesWebAPIService.GetAllSeries)"
+                                           PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
+                                           RatingDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"/>
                 </div>
             </div>
         }

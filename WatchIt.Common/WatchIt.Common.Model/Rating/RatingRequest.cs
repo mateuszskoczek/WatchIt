@@ -1,9 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
-namespace WatchIt.Common.Model.Media;
+namespace WatchIt.Common.Model.Rating;
 
-public class MediaRatingRequest
+public class RatingRequest
 {
     #region PROPERTIES
     
@@ -17,7 +17,7 @@ public class MediaRatingRequest
     #region CONSTRUCTORS
 
     [SetsRequiredMembers]
-    public MediaRatingRequest(short rating)
+    public RatingRequest(short rating)
     {
         Rating = rating;
     }

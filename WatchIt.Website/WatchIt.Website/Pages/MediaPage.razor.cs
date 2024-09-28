@@ -4,6 +4,7 @@ using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
 using WatchIt.Common.Model.Photos;
+using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Model.Series;
 using WatchIt.Website.Layout;
 using WatchIt.Website.Services.Utility.Authentication;
@@ -48,7 +49,7 @@ public partial class MediaPage : ComponentBase
     
     private MediaPosterResponse? _poster;
     private IEnumerable<GenreResponse> _genres;
-    private MediaRatingResponse _globalRating;
+    private RatingResponse _globalRating;
     private MovieResponse? _movie;
     private SeriesResponse? _series;
     
@@ -123,7 +124,7 @@ public partial class MediaPage : ComponentBase
         }
         else
         {
-            await MediaWebAPIService.PutMediaRating(Id, new MediaRatingRequest(rating));
+            await MediaWebAPIService.PutMediaRating(Id, new RatingRequest(rating));
             _userRating = rating;
         }
         await MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data);

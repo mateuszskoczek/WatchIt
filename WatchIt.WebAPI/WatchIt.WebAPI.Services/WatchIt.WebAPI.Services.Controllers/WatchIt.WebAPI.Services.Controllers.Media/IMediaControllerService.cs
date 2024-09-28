@@ -1,5 +1,6 @@
 ﻿using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Photos;
+using WatchIt.Common.Model.Rating;
 using WatchIt.WebAPI.Services.Controllers.Common;
 
 namespace WatchIt.WebAPI.Services.Controllers.Media;
@@ -14,7 +15,7 @@ public interface IMediaControllerService
 
     Task<RequestResult> GetMediaRating(long mediaId);
     Task<RequestResult> GetMediaRatingByUser(long mediaId, long userId);
-    Task<RequestResult> PutMediaRating(long mediaId, MediaRatingRequest data);
+    Task<RequestResult> PutMediaRating(long mediaId, RatingRequest data);
     Task<RequestResult> DeleteMediaRating(long mediaId);
 
     Task<RequestResult> PostMediaView(long mediaId);

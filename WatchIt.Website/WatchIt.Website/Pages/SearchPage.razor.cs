@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Components;
 using WatchIt.Website.Layout;
+using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
 using WatchIt.Website.Services.WebAPI.Series;
 
@@ -12,6 +13,7 @@ public partial class SearchPage : ComponentBase
 
     [Inject] private IMoviesWebAPIService MoviesWebAPIService { get; set; } = default!;
     [Inject] private ISeriesWebAPIService SeriesWebAPIService { get; set; } = default!;
+    [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
     
     #endregion
 

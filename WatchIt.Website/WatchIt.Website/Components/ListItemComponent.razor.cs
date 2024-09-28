@@ -1,0 +1,56 @@
+using Microsoft.AspNetCore.Components;
+using WatchIt.Common.Model;
+using WatchIt.Common.Model.Rating;
+
+namespace WatchIt.Website.Components;
+
+public partial class ListItemComponent : ComponentBase
+{
+    #region PARAMETERS
+    
+    [Parameter] public required long Id { get; set; }
+    [Parameter] public required string Name { get; set; }
+    [Parameter] public string? AdditionalNameInfo { get; set; }
+    [Parameter] public required Func<long, Action<Picture>, Task> PictureDownloadingTask { get; set; }
+    [Parameter] public required Func<long, Action<RatingResponse>, Task> RatingDownloadingTask { get; set; }
+    [Parameter] public int PictureHeight { get; set; } = 150;
+
+    #endregion
+    
+    
+    
+    #region FIELDS
+
+    private bool _loaded;
+    
+    private Picture? _picture;
+    private RatingResponse? _rating;
+    
+    #endregion
+    
+    
+    
+    #region PRIVATE METHODS
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            List<Task> endTasks = new List<Task>();
+            
+            // STEP 0
+            endTasks.AddRange(
+            [
+                PictureDownloadingTask(Id, picture => _picture = picture),
+                RatingDownloadingTask(Id, rating => _rating = rating)
+            ]);
+            
+            await Task.WhenAll(endTasks);
+            
+            _loaded = true;
+            StateHasChanged();
+        }
+    }
+
+    #endregion
+}

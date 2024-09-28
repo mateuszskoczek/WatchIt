@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Components;
+using WatchIt.Common.Model;
+using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Query;
 
 namespace WatchIt.Website.Components.SearchPage;
@@ -9,7 +11,13 @@ public partial class SearchResultComponent<TItem, TQuery> : ComponentBase where 
 
     [Parameter] public required string Title { get; set; }
     [Parameter] public required TQuery Query { get; set; }
-    [Parameter] public Func<TQuery, Action<IEnumerable<TItem>>, Task> DownloadingTask { get; set; }
+    [Parameter] public required Func<TItem, long> IdSource { get; set; }
+    [Parameter] public required Func<TItem, string> NameSource { get; set; }
+    [Parameter] public Func<TItem, string?> AdditionalNameInfoSource { get; set; } = _ => null;
+    [Parameter] public required string UrlIdTemplate { get; set; }
+    [Parameter] public required Func<TQuery, Action<IEnumerable<TItem>>, Task> ItemDownloadingTask { get; set; }
+    [Parameter] public required Func<long, Action<Picture>, Task> PictureDownloadingTask { get; set; }
+    [Parameter] public required Func<long, Action<RatingResponse>, Task> RatingDownloadingTask { get; set; }
 
     #endregion
     
@@ -21,7 +29,7 @@ public partial class SearchResultComponent<TItem, TQuery> : ComponentBase where 
     
     private List<TItem> _items = [];
     private bool _allItemsLoaded;
-    
+    private bool _itemsLoading;
     
     #endregion
     
@@ -41,7 +49,18 @@ public partial class SearchResultComponent<TItem, TQuery> : ComponentBase where 
             // STEP 0
             endTasks.AddRange(
             [
-                DownloadingTask(Query, data => _items.AddRange(data))
+                ItemDownloadingTask(Query, data =>
+                {
+                    _items.AddRange(data);
+                    if (data.Count() < 5)
+                    {
+                        _allItemsLoaded = true;
+                    }
+                    else
+                    {
+                        Query.After = 5;
+                    }
+                })
             ]);
             
             // END
@@ -50,6 +69,24 @@ public partial class SearchResultComponent<TItem, TQuery> : ComponentBase where 
             _loaded = true;
             StateHasChanged();
         }
+    }
+
+    private async Task DownloadItems()
+    {
+        _itemsLoading = true;
+        await ItemDownloadingTask(Query, data =>
+        {
+            _items.AddRange(data);
+            if (data.Count() < 5)
+            {
+                _allItemsLoaded = true;
+            }
+            else
+            {
+                Query.After += 5;
+            }
+            _itemsLoading = false;
+        });
     }
 
     #endregion
