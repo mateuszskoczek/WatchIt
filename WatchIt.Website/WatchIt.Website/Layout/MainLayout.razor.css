@@ -11,3 +11,8 @@ h1 {
 #logo {
     font-size: 40px;
 }
+
+#searchbarCancel {
+    cursor: pointer;
+    color: #6c757d;
+}

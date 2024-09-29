@@ -20,7 +20,23 @@
                                     </a>
                                 </div>
                                 <div class="col-auto">
-                                    menu
+                                    <div class="d-flex gap-2 align-items-center">
+                                        @if (_searchbarVisible)
+                                        {
+                                            <div class="input-group input-group-sm">
+                                                <InputText class="form-control" placeholder="Search with regex" @bind-Value="@(_searchbarText)"/>
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(SearchStart)">⌕</button>
+                                            <a id="searchbarCancel" @onclick="@(() => _searchbarVisible = false)">
+                                                <img src="assets/icons/cancel.png" alt="cancel_icon" height="20" width="20"/>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-sm">Rankings</button>
+                                            <button type="button" class="btn btn-sm" @onclick="@(() => _searchbarVisible = true)">⌕</button>
+                                        }
+                                    </div>
                                 </div>
                                 <div class="col">
                                     <div class="float-end">

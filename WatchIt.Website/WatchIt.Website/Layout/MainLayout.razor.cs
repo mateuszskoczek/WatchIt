@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Photos;
@@ -32,6 +33,9 @@ public partial class MainLayout : LayoutComponentBase
     private User? _user;
     private PhotoResponse? _defaultBackgroundPhoto;
     private AccountProfilePictureResponse? _userProfilePicture;
+    
+    private bool _searchbarVisible;
+    private string _searchbarText = string.Empty;
     
     #endregion
     
@@ -104,6 +108,19 @@ public partial class MainLayout : LayoutComponentBase
             return _defaultBackgroundPhoto;
         }
         return null;
+    }
+    
+    #endregion
+    
+    #region Search
+
+    private void SearchStart()
+    {
+        if (!string.IsNullOrWhiteSpace(_searchbarText))
+        {
+            string query = WebUtility.UrlEncode(_searchbarText);
+            NavigationManager.NavigateTo($"/search/{query}");
+        }
     }
     
     #endregion

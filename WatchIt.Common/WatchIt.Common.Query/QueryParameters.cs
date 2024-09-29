@@ -66,7 +66,7 @@ public abstract class QueryParameters
         (
             !string.IsNullOrEmpty(property) 
             && 
-            new Regex(regexQuery).IsMatch(property)
+            Regex.IsMatch(property, regexQuery, RegexOptions.IgnoreCase)
         )
     );
 
