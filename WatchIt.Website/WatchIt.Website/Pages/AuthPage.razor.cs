@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Net;
+using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Photos;
@@ -26,26 +27,24 @@ public partial class AuthPage
     
     
     
-    #region ENUMS
+    #region PARAMETERS
 
-    private enum AuthType
-    {
-        SignIn,
-        SignUp
-    }
-
+    [SupplyParameterFromQuery(Name = "redirect_to")]
+    private string RedirectTo { get; set; } = "/";
+    
     #endregion
     
     
     
     #region FIELDS
     
-    private bool _loaded = false;
+    private bool _loaded;
 
-    private AuthType _authType = AuthType.SignIn;
-    private string _background = "assets/background_temp.jpg";
-    private string _firstGradientColor = "#c6721c";
-    private string _secondGradientColor = "#85200c";
+    private PhotoResponse? _background;
+
+    private bool _isSingUp;
+    
+    
 
     private AuthenticateRequest _loginModel = new AuthenticateRequest
     {
@@ -75,22 +74,19 @@ public partial class AuthPage
         {
             if (await AuthenticationService.GetAuthenticationStatusAsync())
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo(WebUtility.UrlDecode(RedirectTo));
             }
-        
-            Action<PhotoResponse> backgroundSuccess = (data) =>
-            {
-                string imageBase64 = Convert.ToBase64String(data.Image);
-                string firstColor = BitConverter.ToString(data.Background.FirstGradientColor)
-                                                .Replace("-", string.Empty);
-                string secondColor = BitConverter.ToString(data.Background.SecondGradientColor)
-                                                 .Replace("-", string.Empty);
             
-                _background = $"data:{data.MimeType};base64,{imageBase64}";
-                _firstGradientColor = $"#{firstColor}";
-                _secondGradientColor = $"#{secondColor}";
-            };
-            await PhotosWebAPIService.GetPhotoRandomBackground(backgroundSuccess);
+            List<Task> endTasks = new List<Task>();
+            
+            // STEP 0
+            endTasks.AddRange(
+            [
+                PhotosWebAPIService.GetPhotoRandomBackground(data => _background = data)
+            ]);
+            
+            // END
+            await Task.WhenAll(endTasks);
         
             _loaded = true;
             StateHasChanged();
@@ -104,7 +100,7 @@ public partial class AuthPage
         async void LoginSuccess(AuthenticateResponse data)
         {
             await TokensService.SaveAuthenticationData(data);
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo(RedirectTo);
         }
         
         void LoginBadRequest(IDictionary<string, string[]> data)
@@ -130,7 +126,7 @@ public partial class AuthPage
 
         void RegisterSuccess(RegisterResponse data)
         {
-            _authType = AuthType.SignIn;
+            _isSingUp = false;
         }
 
         void RegisterBadRequest(IDictionary<string, string[]> data)

@@ -1,8 +1,7 @@
 ﻿@page "/auth"
 @layout EmptyLayout
 
-<PageTitle>WatchIt - @(_authType == AuthType.SignIn ? "Sign in" : "Sign up")</PageTitle>
-
+<PageTitle>WatchIt - @(_isSingUp ? "Sign up" : "Sign in")</PageTitle>
 
 
 
@@ -10,38 +9,11 @@
 {
     <div class="h-100 d-flex align-items-center justify-content-center">
         <div class="d-inline-flex flex-column justify-content-center panel panel-header rounded-3">
-            <a class="logo" href="/">
+            <a id="logo" class="logo" href="/">
                 WatchIt
             </a>
             <div>
-                @if (_authType == AuthType.SignIn)
-                {
-                    <form method="post" @onsubmit="Login" @formname="login">
-                        <AntiforgeryToken/>
-                        <div>
-                            <label>
-                                Username or email:
-                                <InputText @bind-Value="_loginModel!.UsernameOrEmail"/>
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                Password:
-                                <InputText type="password" @bind-Value="_loginModel!.Password"/>
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                <InputCheckbox @bind-Value="_loginModel!.RememberMe"></InputCheckbox>
-                                Remember me
-                            </label>
-                        </div>
-                        <div>
-                            <button type="submit">Sign in</button>
-                        </div>
-                    </form>
-                }
-                else
+                @if (_isSingUp)
                 {
                     <form method="post" @onsubmit="Register" @formname="register">
                         <AntiforgeryToken/>
@@ -74,6 +46,33 @@
                         </div>
                     </form>
                 }
+                else
+                {
+                    <form method="post" @onsubmit="Login" @formname="login">
+                        <AntiforgeryToken/>
+                        <div>
+                            <label>
+                                Username or email:
+                                <InputText @bind-Value="_loginModel!.UsernameOrEmail"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Password:
+                                <InputText type="password" @bind-Value="_loginModel!.Password"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <InputCheckbox @bind-Value="_loginModel!.RememberMe"></InputCheckbox>
+                                Remember me
+                            </label>
+                        </div>
+                        <div>
+                            <button type="submit">Sign in</button>
+                        </div>
+                    </form>
+                }
             </div>
             @if (_errors is not null)
             {
@@ -87,31 +86,31 @@
             }
             <div>
                 <label>
-                    <input type="radio" checked="@(() => _authType == AuthType.SignIn)" name="auth" @onchange="@(() => _authType = AuthType.SignIn)" />
+                    <input type="radio" checked="@(() => !_isSingUp)" name="auth" @onchange="@(() => _isSingUp = false)" />
                     Sign in
                 </label>
                 <label>
-                    <input type="radio" checked="@(() => _authType == AuthType.SignUp)" name="auth" @onchange="@(() => _authType = AuthType.SignUp)" />
+                    <input type="radio" checked="@(() => _isSingUp)" name="auth" @onchange="@(() => _isSingUp = true)" />
                     Sign up
                 </label>
             </div>
         </div>
     </div>
-    
-    
-    
-    <style>
+
+
+
+<style>
+        /* TAGS */
+        
         body {
-            height: 100%;
-            
-            background-image: url('@_background');
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
+            background-image: url('@(_background is null ? "assets/background_temp.jpg": _background.ToString())');
         }
     
-        .logo {
-            background-image: linear-gradient(45deg, @_firstGradientColor, @_secondGradientColor);
+    
+        /* IDS */
+    
+        #logo {
+            background-image: linear-gradient(45deg, @(_background is null ? "#c6721c, #85200c" : $"#{Convert.ToHexString(_background.Background.FirstGradientColor)}, #{Convert.ToHexString(_background.Background.SecondGradientColor)}"));
         }
-    </style>
+</style>
 }

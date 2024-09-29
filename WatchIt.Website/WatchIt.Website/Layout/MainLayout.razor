@@ -1,4 +1,5 @@
-﻿@using WatchIt.Common.Model.Photos
+﻿@using System.Net
+@using WatchIt.Common.Model.Photos
 @using WatchIt.Website.Services.WebAPI.Photos
 
 @inherits LayoutComponentBase
@@ -42,7 +43,7 @@
                                     <div class="float-end">
                                         @if (_user is null)
                                         {
-                                            <a id="signInButton" class="main-button" href="/auth">Sign in</a>
+                                            <a id="signInButton" class="main-button" href="/auth?redirect_to=@(WebUtility.UrlEncode(NavigationManager.Uri))">Sign in</a>
                                         }
                                         else
                                         {
