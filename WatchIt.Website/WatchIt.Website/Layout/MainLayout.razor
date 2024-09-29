@@ -1,4 +1,5 @@
-﻿@using WatchIt.Common.Model.Photos
+﻿@using System.Net
+@using WatchIt.Common.Model.Photos
 @using WatchIt.Website.Services.WebAPI.Photos
 
 @inherits LayoutComponentBase
@@ -27,9 +28,7 @@
                                                 <InputText class="form-control" placeholder="Search with regex" @bind-Value="@(_searchbarText)"/>
                                             </div>
                                             <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(SearchStart)">⌕</button>
-                                            <a id="searchbarCancel" @onclick="@(() => _searchbarVisible = false)">
-                                                <img src="assets/icons/cancel.png" alt="cancel_icon" height="20" width="20"/>
-                                            </a>
+                                            <button type="button" class="btn btn-sm" @onclick="@(() => _searchbarVisible = false)">&#10060;&#xFE0E;</button>
                                         }
                                         else
                                         {
@@ -42,7 +41,7 @@
                                     <div class="float-end">
                                         @if (_user is null)
                                         {
-                                            <a id="signInButton" class="main-button" href="/auth">Sign in</a>
+                                            <a id="signInButton" class="main-button" href="/auth?redirect_to=@(WebUtility.UrlEncode(NavigationManager.Uri))">Sign in</a>
                                         }
                                         else
                                         {
