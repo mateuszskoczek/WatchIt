@@ -6,7 +6,7 @@
 
 
 <div class="rounded-3 panel panel-regular p-4">
-    <div class="container-fluid p-0 m-0">
+    <div class="container-grid">
         <div class="row mb-4">
             <div class="col">
                 <h4 class="m-0"><strong>@(Title)</strong></h4>
@@ -46,12 +46,12 @@
                                 <button class="btn btn-secondary" @onclick="DownloadItems">
                                     @if (!_itemsLoading)
                                     {
-                                        <span class="sr-only">Load more</span>
+                                        <span>Load more</span>
                                     }
                                     else
                                     {
                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                        <span class="sr-only">Saving...</span>
+                                        <span>Saving...</span>
                                     }
                                 </button>
                             </div>

@@ -2,7 +2,7 @@
 
 <PageTitle>WatchIt</PageTitle>
 
-<div class="container-fluid">
+<div class="container-grid">
     @if (_loaded)
     {
         if (string.IsNullOrWhiteSpace(_error))
@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col">
                     <div class="rounded-3 panel panel-regular p-4">
-                        <div class="container-fluid p-0">
+                        <div class="container-grid">
                             <div class="row">
                                 <div class="col">
                                     <h4><strong>Top 5 movies this week by popularity</strong></h4>
@@ -25,7 +25,7 @@
                                             <a class="text-reset text-decoration-none" href="/media/@_topMovies.ToArray()[i].Key.Id">
                                                 <div class="d-flex flex-column align-items-center gap-2 h-100">
                                                     <img class="rounded-2 shadow object-fit-cover poster-aspect-ratio" src="@(_topMovies.ToArray()[i].Value is not null ? _topMovies.ToArray()[i].Value.ToString() : "assets/poster.png")" alt="poster" width="100%"/>
-                                                    <div class="container-fluid p-0">
+                                                    <div class="container-grid">
                                                         <div class="row">
                                                             <div class="col-auto">
                                                                 <div class="text-center border border-2 border-light rounded-circle place-circle"><strong>@(i + 1)</strong></div>
@@ -48,7 +48,7 @@
             <div class="row mt-3">
                 <div class="col">
                     <div class="rounded-3 panel panel-regular p-4">
-                        <div class="container-fluid p-0">
+                        <div class="container-grid">
                             <div class="row">
                                 <div class="col">
                                     <h4><strong>Top 5 TV series this week by popularity</strong></h4>
@@ -63,7 +63,7 @@
                                             <a class="text-reset text-decoration-none" href="/media/@_topSeries.ToArray()[i].Key.Id">
                                                 <div class="d-flex flex-column align-items-center gap-2 h-100">
                                                     <img class="rounded-2 shadow object-fit-cover poster-aspect-ratio" src="@(_topSeries.ToArray()[i].Value is not null ? _topSeries.ToArray()[i].Value.ToString() : "assets/poster.png")" alt="poster" width="100%"/>
-                                                    <div class="container-fluid p-0">
+                                                    <div class="container-grid">
                                                         <div class="row">
                                                             <div class="col-auto">
                                                                 <div class="text-center border border-2 border-light rounded-circle place-circle"><strong>@(i + 1)</strong></div>

@@ -27,14 +27,11 @@ public partial class MainLayout : LayoutComponentBase
     
     #region FIELDS
 
-    private bool _loaded = false;
-
+    private bool _loaded;
+    
+    private User? _user;
     private PhotoResponse? _defaultBackgroundPhoto;
-    
-    private User? _user = null;
     private AccountProfilePictureResponse? _userProfilePicture;
-    
-    private bool _menuUserIsActive;
     
     #endregion
     

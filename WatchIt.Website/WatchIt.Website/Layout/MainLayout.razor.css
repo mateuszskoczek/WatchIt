@@ -8,24 +8,6 @@ h1 {
 
 /* IDS */
 
-#user-menu {
-    position: fixed;
-}
-
-
-
-/* CLASSES */
-
-.logo {
+#logo {
     font-size: 40px;
-}
-
-.header {
-    position: sticky;
-    top: 10px;
-    height: 60px;
-}
-
-.body-content {
-    padding-top: 100px;
 }

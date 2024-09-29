@@ -9,49 +9,60 @@
     @if (_loaded)
     {
         <div class="container-xl">
-            <div class="row align-items-center m-1 my-2 mb-3 rounded-3 header panel panel-header z-3">
-                <div class="col-2">
-                    <a class="logo" href="/">
-                        WatchIt
-                    </a>
-                </div>
+            <div class="row sticky-top top-3 mb-2rem">
                 <div class="col">
-                    <p>Menu</p>
-                </div>
-                <div class="col-auto">
-                    <div class="d-flex flex-row-reverse">
-                        @if (_user is null)
-                        {
-                            <a class="main-button" href="/auth">Sign in</a>
-                        }
-                        else
-                        {
-                            <div class="dropdown z-3">
-                                <a class="dropdown-toggle align-items-center text-decoration-none d-flex" id="dropdownUser" aria-expanded="false" @onclick="() => _menuUserIsActive = !_menuUserIsActive">
-                                    <img class="rounded-circle" alt="avatar" height="30" src="@(_userProfilePicture is null ? "assets/user_placeholder.png" : _userProfilePicture.ToString())"/>
-                                    <div class="text-decoration-none mx-2 text-white">@(_user.Username)</div>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-right text-small z-3" id="user-menu" aria-labelledby="dropdownUser">
-                                    <li>
-                                        @if (_user.IsAdmin)
+                    <div class="panel panel-header rounded-3 px-3">
+                        <div class="container-grid">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <a id="logo" class="logo" href="/">
+                                        WatchIt
+                                    </a>
+                                </div>
+                                <div class="col-auto">
+                                    menu
+                                </div>
+                                <div class="col">
+                                    <div class="float-end">
+                                        @if (_user is null)
                                         {
-                                            <a class="dropdown-item" href="/admin">Administrator panel</a>
+                                            <a id="signInButton" class="main-button" href="/auth">Sign in</a>
                                         }
-                                        <div class="dropdown-menu-separator"></div>
-                                        <a class="dropdown-item text-danger" @onclick="UserMenuLogOut">Log out</a>
-                                    </li>
-                                </ul>
+                                        else
+                                        {
+                                            <Dropdown RightAligned>
+                                                <Button Color="Color.Default">
+                                                    <div class="d-flex gap-2 align-items-center">
+                                                        <img class="rounded-circle" alt="avatar" height="30" src="@(_userProfilePicture is null ? "assets/user_placeholder.png" : _userProfilePicture.ToString())"/>
+                                                        <span>@(_user.Username)</span>
+                                                    </div>
+                                                </Button>
+                                                <DropdownToggle Color="Color.Default" Split />
+                                                <DropdownMenu >
+                                                    @if (_user.IsAdmin)
+                                                    {
+                                                        <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/admin"))">Administrator panel</DropdownItem>
+                                                    }
+                                                    <DropdownDivider/>
+                                                    <DropdownItem Clicked="UserMenuLogOut"><span class="text-danger">Log out</span></DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        }
+                                    </div>
+                                </div>
                             </div>
-                        }
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col z-0 p-1">
+                <div class="col">
                     @Body
                 </div>
             </div>
         </div>
+        
+        
 
         <style>
             /* TAGS */
@@ -62,14 +73,7 @@
 
             /* IDS */
 
-            #user-menu {
-                display: @(_menuUserIsActive ? "block" : "none");
-            }
-            
-            
-            /* CLASSES */
-            
-            .logo, .main-button {
+            #logo, #signInButton {
                 background-image: linear-gradient(45deg, @(GetBackgroundPhoto() is null ? "#c6721c, #85200c" : $"#{Convert.ToHexString(GetBackgroundPhoto().Background.FirstGradientColor)}, #{Convert.ToHexString(GetBackgroundPhoto().Background.SecondGradientColor)}"));
             }
         </style>

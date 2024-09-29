@@ -40,7 +40,7 @@
     }
 </PageTitle>
 
-<div class="container-fluid">
+<div class="container-grid">
     @if (_loaded)
     {
         if (string.IsNullOrWhiteSpace(_error))
@@ -57,7 +57,7 @@
                 <div class="row mt-3 gx-3">
                     <div class="col-auto">
                         <div class="rounded-3 panel panel-regular p-4 h-100">
-                            <div class="container-fluid p-0">
+                            <div class="container-grid">
                                 <div class="row">
                                     <div class="col">
                                         <img class="rounded-2 shadow object-fit-cover" src="@(_mediaPosterRequest is not null ? _mediaPosterRequest.ToString() : "assets/poster.png")" alt="poster" width="300" height="500"/>
@@ -77,12 +77,12 @@
                                                 <button type="button" class="btn btn-secondary btn-block btn-stretch-x" @onclick="SavePoster" disabled=@(!Id.HasValue || _mediaPosterSaving || _mediaPosterDeleting) autocomplete="off">
                                                     @if (!_mediaPosterSaving)
                                                     {
-                                                        <span class="sr-only">Save poster</span>
+                                                        <span>Save poster</span>
                                                     }
                                                     else
                                                     {
                                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                        <span class="sr-only">Saving...</span>
+                                                        <span>Saving...</span>
                                                     }
                                                 </button>
                                             </div>
@@ -96,12 +96,12 @@
                                                 <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="DeletePoster" disabled=@(!Id.HasValue || _mediaPosterSaving || _mediaPosterDeleting) autocomplete="off">
                                                     @if (!_mediaPosterSaving)
                                                     {
-                                                        <span class="sr-only">Delete poster</span>
+                                                        <span>Delete poster</span>
                                                     }
                                                     else
                                                     {
                                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                        <span class="sr-only">Deleting...</span>
+                                                        <span>Deleting...</span>
                                                     }
                                                 </button>
                                             </div>
@@ -115,7 +115,7 @@
                         <div class="rounded-3 panel panel-regular p-4 h-100">
                             <EditForm Model="_mediaRequest">
                                 <AntiforgeryToken/>
-                                <div class="container-fluid p-0">
+                                <div class="container-grid">
                                     <div class="row form-group mb-1">
                                         <label for="title" class="col-2 col-form-label">Title*</label>
                                         <div class="col-10">
@@ -183,12 +183,12 @@
                                                 <button type="button" class="btn btn-secondary" @onclick="SaveBasicData">
                                                     @if (!_basicDataSaving)
                                                     {
-                                                        <span class="sr-only">Save</span>
+                                                        <span>Save</span>
                                                     }
                                                     else
                                                     {
                                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                        <span class="sr-only">Saving...</span>
+                                                        <span>Saving...</span>
                                                     }
                                                 </button>
                                             </div>
@@ -202,7 +202,7 @@
                 <div class="row mt-3">
                     <div class="col">
                         <div class="rounded-3 panel panel-regular p-4">
-                            <div class="container-fluid p-0">
+                            <div class="container-grid">
                                 <div class="row mb-3">
                                     <div class="col">
                                         <div class="d-flex align-items-center h-100">
@@ -226,12 +226,12 @@
                                                 <button type="button" class="btn btn-secondary" disabled="@(_photoEditSaving)" @onclick="SaveEditPhoto">
                                                     @if (!_photoEditSaving)
                                                     {
-                                                        <span class="sr-only">Save</span>
+                                                        <span>Save</span>
                                                     }
                                                     else
                                                     {
                                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                        <span class="sr-only">Saving...</span>
+                                                        <span>Saving...</span>
                                                     }
                                                 </button>
                                                 <button type="button" class="btn btn-secondary" disabled="@(_photoEditSaving)" @onclick="CancelEditPhoto">Cancel</button>
@@ -248,7 +248,7 @@
                                                 <div id="scrollPhotos" class="d-flex p-3 gap-3" data-bs-spy="scroll" tabindex="0">
                                                     @foreach (PhotoResponse photo in _photos)
                                                     {
-                                                        <div class="container-fluid p-0 m-0 photo-container">
+                                                        <div class="container-grid photo-container">
                                                             <div class="row">
                                                                 <div class="col">
                                                                     <img class="rounded-1 shadow object-fit-cover photo-default-aspect-ratio" src="@(photo.ToString())" alt="photo" width="350"/>
@@ -301,10 +301,10 @@
                                         }
                                         else
                                         {
-                                            <div class="container-fluid p-0 m-0">
+                                            <div class="container-grid">
                                                 <div class="row">
                                                     <div class="col-auto">
-                                                        <div class="container-fluid p-0 m-0">
+                                                        <div class="container-grid">
                                                             <div class="row">
                                                                 <div class="col">
                                                                     <img class="rounded-1 shadow object-fit-cover photo-default-aspect-ratio" src="@(_photoEditRequest is null ? "assets/photo.png" : _photoEditRequest.ToString())" alt="edit_photo" width="300px"/>
@@ -321,7 +321,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="container-fluid p-0 m-0">
+                                                        <div class="container-grid">
                                                             <div class="row form-group">
                                                                 <div class="col">
                                                                     <div class="form-check">
