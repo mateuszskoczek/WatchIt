@@ -28,9 +28,7 @@
                                                 <InputText class="form-control" placeholder="Search with regex" @bind-Value="@(_searchbarText)"/>
                                             </div>
                                             <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(SearchStart)">⌕</button>
-                                            <a id="searchbarCancel" @onclick="@(() => _searchbarVisible = false)">
-                                                <img src="assets/icons/cancel.png" alt="cancel_icon" height="20" width="20"/>
-                                            </a>
+                                            <button type="button" class="btn btn-sm" @onclick="@(() => _searchbarVisible = false)">&#10060;&#xFE0E;</button>
                                         }
                                         else
                                         {

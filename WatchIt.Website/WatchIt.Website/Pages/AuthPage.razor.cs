@@ -43,24 +43,22 @@ public partial class AuthPage
     private PhotoResponse? _background;
 
     private bool _isSingUp;
+    private string? _formMessage;
+    private bool _formMessageIsSuccess;
     
-    
-
-    private AuthenticateRequest _loginModel = new AuthenticateRequest
-    {
-        UsernameOrEmail = null,
-        Password = null
-    };
-
     private RegisterRequest _registerModel = new RegisterRequest
     {
         Username = null,
         Email = null,
         Password = null
     };
-    private string _passwordConfirmation;
-
-    private IEnumerable<string> _errors;
+    private string _registerPasswordConfirmation;
+    
+    private AuthenticateRequest _loginModel = new AuthenticateRequest
+    {
+        UsernameOrEmail = null,
+        Password = null
+    };
 
     #endregion
 
@@ -95,44 +93,51 @@ public partial class AuthPage
 
     private async Task Login()
     {
-        await AccountsWebAPIService.Authenticate(_loginModel, LoginSuccess, LoginBadRequest, LoginUnauthorized);
+        void LoginBadRequest(IDictionary<string, string[]> data)
+        {
+            _formMessageIsSuccess = false;
+            _formMessage = data.SelectMany(x => x.Value).FirstOrDefault();
+        }
+
+        void LoginUnauthorized()
+        {
+            _formMessageIsSuccess = false;
+            _formMessage = "Incorrect account data";
+        }
         
-        async void LoginSuccess(AuthenticateResponse data)
+        async Task LoginSuccess(AuthenticateResponse data)
         {
             await TokensService.SaveAuthenticationData(data);
             NavigationManager.NavigateTo(RedirectTo);
         }
         
-        void LoginBadRequest(IDictionary<string, string[]> data)
-        {
-            _errors = data.SelectMany(x => x.Value).Select(x => $"• {x}");
-        }
         
-        void LoginUnauthorized()
-        {
-            _errors = [ "Incorrect account data" ];
-        }
+        await AccountsWebAPIService.Authenticate(_loginModel, async (data) => await LoginSuccess(data), LoginBadRequest, LoginUnauthorized);
     }
     
     private async Task Register()
     {
-        if (_registerModel.Password != _passwordConfirmation)
-        {
-            _errors = [ "Password fields don't match" ];
-            return;
-        }
-        
-        await AccountsWebAPIService.Register(_registerModel, RegisterSuccess, RegisterBadRequest);
-
         void RegisterSuccess(RegisterResponse data)
         {
+            _formMessageIsSuccess = true;
+            _formMessage = "You are registered. You can sign in now.";
             _isSingUp = false;
         }
-
+        
         void RegisterBadRequest(IDictionary<string, string[]> data)
         {
-            _errors = data.SelectMany(x => x.Value).Select(x => $"• {x}");
+            _formMessageIsSuccess = false;
+            _formMessage = data.SelectMany(x => x.Value).FirstOrDefault();
         }
+        
+        
+        if (_registerModel.Password != _registerPasswordConfirmation)
+        {
+            _formMessageIsSuccess = false;
+            _formMessage = "Password fields don't match";
+            return;
+        }
+        await AccountsWebAPIService.Register(_registerModel, RegisterSuccess, RegisterBadRequest);
     }
 
     #endregion
