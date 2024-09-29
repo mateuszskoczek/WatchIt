@@ -1,5 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Blazorise;
+using Blazorise.Bootstrap5;
+using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Components.Authorization;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Utility.Authentication;
@@ -53,6 +56,12 @@ public static class Program
     private static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<HttpClient>();
+        builder.Services.AddBlazorise(options =>
+                         {
+                             options.Immediate = true;
+                         })
+                         .AddBootstrap5Providers()
+                         .AddFontAwesomeIcons();
         
         // Utility
         builder.Services.AddSingleton<IHttpClientService, HttpClientService>();

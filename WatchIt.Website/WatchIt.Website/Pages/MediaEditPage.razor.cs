@@ -5,6 +5,7 @@ using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
 using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Series;
+using WatchIt.Website.Layout;
 using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
@@ -33,6 +34,8 @@ public partial class MediaEditPage : ComponentBase
     [Parameter] public long? Id { get; set; }
     [Parameter] public string? Type { get; set; }
     
+    [CascadingParameter] public MainLayout Layout { get; set; }
+    
     #endregion
     
     
@@ -43,8 +46,6 @@ public partial class MediaEditPage : ComponentBase
     private string? _error;
     
     private User? _user;
-    
-    private PhotoResponse? _background;
 
     private MediaResponse? _media;
     private MovieRequest? _movieRequest;
@@ -86,6 +87,8 @@ public partial class MediaEditPage : ComponentBase
     {
         if (firstRender)
         {
+            Layout.BackgroundPhoto = null;
+            
             List<Task> step1Tasks = new List<Task>();
             List<Task> step2Tasks = new List<Task>();
             List<Task> endTasks = new List<Task>();
@@ -112,7 +115,7 @@ public partial class MediaEditPage : ComponentBase
             {
                 endTasks.AddRange(
                 [
-                    MediaWebAPIService.GetMediaPhotoRandomBackground(Id.Value, data => _background = data),
+                    MediaWebAPIService.GetMediaPhotoRandomBackground(Id.Value, data => Layout.BackgroundPhoto = data),
                     MediaWebAPIService.GetMediaPoster(Id.Value, data =>
                     {
                         _mediaPosterSaved = data;

@@ -1,9 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
-namespace WatchIt.Common.Model.Media;
+namespace WatchIt.Common.Model.Rating;
 
-public class MediaRatingResponse
+public class RatingResponse
 {
     #region PROPERTIES
     
@@ -20,10 +20,10 @@ public class MediaRatingResponse
     #region CONSTRUCTORS
 
     [JsonConstructor]
-    public MediaRatingResponse() {}
+    public RatingResponse() {}
     
     [SetsRequiredMembers]
-    public MediaRatingResponse(double ratingAverage, long ratingCount)
+    public RatingResponse(double ratingAverage, long ratingCount)
     {
         RatingAverage = ratingAverage;
         RatingCount = ratingCount;

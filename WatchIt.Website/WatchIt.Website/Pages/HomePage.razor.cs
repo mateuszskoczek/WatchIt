@@ -2,6 +2,7 @@
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
 using WatchIt.Common.Model.Series;
+using WatchIt.Website.Layout;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
 using WatchIt.Website.Services.WebAPI.Series;
@@ -16,6 +17,14 @@ public partial class HomePage
     [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
     [Inject] public IMoviesWebAPIService MoviesWebAPIService { get; set; } = default!;
     [Inject] public ISeriesWebAPIService SeriesWebAPIService { get; set; } = default!;
+    
+    #endregion
+    
+    
+    
+    #region PARAMETERS
+    
+    [CascadingParameter] public MainLayout Layout { get; set; }
     
     #endregion
     
@@ -39,6 +48,8 @@ public partial class HomePage
     {
         if (firstRender)
         {
+            Layout.BackgroundPhoto = null;
+            
             List<Task> step1Tasks = new List<Task>();
             List<Task> endTasks = new List<Task>();
             

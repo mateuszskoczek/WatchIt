@@ -1,14 +1,23 @@
 ﻿using Microsoft.AspNetCore.Components;
+using WatchIt.Website.Layout;
 using WatchIt.Website.Services.Utility.Authentication;
 
 namespace WatchIt.Website.Pages;
 
 public partial class AdminPage
 {
-    #region SERVICE
+    #region SERVICES
 
     [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
 
+    #endregion
+    
+    
+    
+    #region PARAMETERS
+    
+    [CascadingParameter] public MainLayout Layout { get; set; }
+    
     #endregion
 
 
@@ -28,6 +37,8 @@ public partial class AdminPage
     {
         if (firstRender)
         {
+            Layout.BackgroundPhoto = null;
+            
             User? user = await AuthenticationService.GetUserAsync();
             if (user is not null && user.IsAdmin)
             {

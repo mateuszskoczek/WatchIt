@@ -2,7 +2,7 @@
 
 <PageTitle>WatchIt administrator panel</PageTitle>
 
-<div class="container-fluid">
+<div class="container-grid">
     @if (_loaded)
     {
         if (_authenticated)
@@ -26,11 +26,21 @@
         }
         else
         {
-            <ErrorComponent ErrorMessage="You do not have permission to view this site"/>
+            <div class="row">
+                <div class="col">
+                    <ErrorComponent ErrorMessage="You do not have permission to view this site"/>
+                </div>
+            </div>
         }
     }
     else
     {
-        <LoadingComponent/>
+        <div class="row">
+            <div class="col">
+                <div class="m-5">
+                    <LoadingComponent/>
+                </div>
+            </div>
+        </div>
     }
 </div>

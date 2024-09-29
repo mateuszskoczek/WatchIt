@@ -3,6 +3,7 @@ using SimpleToolkit.Extensions;
 using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Photos;
+using WatchIt.Common.Model.Rating;
 using WatchIt.Database;
 using WatchIt.Database.Model.Media;
 using WatchIt.Database.Model.Rating;
@@ -109,7 +110,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
 
         double ratingAverage = item.RatingMedia.Any() ? item.RatingMedia.Average(x => x.Rating) : 0;
         long ratingCount = item.RatingMedia.Count();
-        MediaRatingResponse ratingResponse = new MediaRatingResponse(ratingAverage, ratingCount);
+        RatingResponse ratingResponse = new RatingResponse(ratingAverage, ratingCount);
         
         return RequestResult.Ok(ratingResponse);
     }
@@ -131,7 +132,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         return RequestResult.Ok(rating.Value);
     }
     
-    public async Task<RequestResult> PutMediaRating(long mediaId, MediaRatingRequest data)
+    public async Task<RequestResult> PutMediaRating(long mediaId, RatingRequest data)
     {
         short ratingValue = data.Rating;
         if (ratingValue < 1 || ratingValue > 10)

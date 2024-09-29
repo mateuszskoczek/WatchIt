@@ -2,20 +2,8 @@
 
 namespace WatchIt.Common.Model.Accounts;
 
-public abstract class AccountProfilePicture
+public abstract class AccountProfilePicture : Picture
 {
-    #region PROPERTIES
-    
-    [JsonPropertyName("image")]
-    public required byte[] Image { get; set; }
-    
-    [JsonPropertyName("mime_type")]
-    public required string MimeType { get; set; }
-    
-    #endregion
-
-
-
     #region CONSTRUCTORS
 
     [JsonConstructor]

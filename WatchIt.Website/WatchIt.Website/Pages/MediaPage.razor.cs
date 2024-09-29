@@ -4,7 +4,9 @@ using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
 using WatchIt.Common.Model.Photos;
+using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Model.Series;
+using WatchIt.Website.Layout;
 using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
@@ -30,6 +32,8 @@ public partial class MediaPage : ComponentBase
     
     [Parameter] public long Id { get; set; }
     
+    [CascadingParameter] public MainLayout Layout { get; set; }
+    
     #endregion
 
 
@@ -43,10 +47,9 @@ public partial class MediaPage : ComponentBase
     
     private User? _user;
     
-    private PhotoResponse? _background;
     private MediaPosterResponse? _poster;
     private IEnumerable<GenreResponse> _genres;
-    private MediaRatingResponse _globalRating;
+    private RatingResponse _globalRating;
     private MovieResponse? _movie;
     private SeriesResponse? _series;
     
@@ -62,6 +65,8 @@ public partial class MediaPage : ComponentBase
     {
         if (firstRender)
         {
+            Layout.BackgroundPhoto = null;
+            
             List<Task> step1Tasks = new List<Task>();
             List<Task> step2Tasks = new List<Task>();
             List<Task> endTasks = new List<Task>();
@@ -84,7 +89,7 @@ public partial class MediaPage : ComponentBase
                 endTasks.AddRange(
                 [
                     MediaWebAPIService.PostMediaView(Id),
-                    MediaWebAPIService.GetMediaPhotoRandomBackground(Id, data => _background = data),
+                    MediaWebAPIService.GetMediaPhotoRandomBackground(Id, data => Layout.BackgroundPhoto = data),
                     MediaWebAPIService.GetMediaPoster(Id, data => _poster = data),
                     MediaWebAPIService.GetMediaGenres(Id, data => _genres = data),
                     MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data),
@@ -119,7 +124,7 @@ public partial class MediaPage : ComponentBase
         }
         else
         {
-            await MediaWebAPIService.PutMediaRating(Id, new MediaRatingRequest(rating));
+            await MediaWebAPIService.PutMediaRating(Id, new RatingRequest(rating));
             _userRating = rating;
         }
         await MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data);

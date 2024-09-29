@@ -1,6 +1,7 @@
 ﻿using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Photos;
+using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Utility.Configuration;
 using WatchIt.Website.Services.Utility.Configuration.Model;
@@ -93,7 +94,7 @@ public class MediaWebAPIService : BaseWebAPIService, IMediaWebAPIService
 
     #region Rating
 
-    public async Task GetMediaRating(long mediaId, Action<MediaRatingResponse>? successAction = null, Action? notFoundAction = null)
+    public async Task GetMediaRating(long mediaId, Action<RatingResponse>? successAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Media.GetMediaRating, mediaId);
         
@@ -117,7 +118,7 @@ public class MediaWebAPIService : BaseWebAPIService, IMediaWebAPIService
                 .ExecuteAction();
     }
 
-    public async Task PutMediaRating(long mediaId, MediaRatingRequest body, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? notFoundAction = null)
+    public async Task PutMediaRating(long mediaId, RatingRequest body, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Media.PutMediaRating, mediaId);
         

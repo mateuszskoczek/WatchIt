@@ -1,0 +1,79 @@
+@using WatchIt.Common.Model.Movies
+@using WatchIt.Common.Model.Series
+@using WatchIt.Common.Query
+@using WatchIt.Website.Components.SearchPage
+@using WatchIt.Website.Services.WebAPI.Movies
+
+@layout MainLayout
+
+@page "/search/{query}"
+
+<PageTitle>WatchIt - Searching "@(Query)"</PageTitle>
+
+
+
+<div class="container-grid">
+    @if (_loaded)
+    {
+        if (string.IsNullOrWhiteSpace(_error))
+        {
+            <div class="row">
+                <div class="col">
+                    <div class="rounded-3 panel panel-regular p-3">
+                        <div class="d-flex justify-content-center">
+                            <h3 class="m-0">
+                                <strong>Search results for phrase:</strong> "@(DecodedQuery)"
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <SearchResultComponent TItem="MovieResponse"
+                                           TQuery="MovieQueryParameters"
+                                           Title="Movies"
+                                           UrlIdTemplate="/media/{0}"
+                                           IdSource="@(item => item.Id)"
+                                           NameSource="@(item => item.Title)"
+                                           AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                                           Query="@(new MovieQueryParameters { Title = DecodedQuery })"
+                                           ItemDownloadingTask="@(MoviesWebAPIService.GetAllMovies)"
+                                           PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
+                                           RatingDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"/>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <SearchResultComponent TItem="SeriesResponse" 
+                                           TQuery="SeriesQueryParameters"
+                                           Title="TV series"
+                                           UrlIdTemplate="/media/{0}"
+                                           IdSource="@(item => item.Id)"
+                                           NameSource="@(item => item.Title)"
+                                           AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                                           Query="@(new SeriesQueryParameters { Title = DecodedQuery })"
+                                           ItemDownloadingTask="@(SeriesWebAPIService.GetAllSeries)"
+                                           PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
+                                           RatingDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"/>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col">
+                    <ErrorComponent ErrorMessage="@(_error)"/>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="row">
+            <div class="col">
+                <LoadingComponent/>
+            </div>
+        </div>
+    }
+</div>

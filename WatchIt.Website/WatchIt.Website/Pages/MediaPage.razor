@@ -24,7 +24,7 @@ else
 
 
 
-<div class="container-fluid">
+<div class="container-grid">
     @if (_loaded)
     {
         if (string.IsNullOrWhiteSpace(_error))
@@ -35,7 +35,7 @@ else
                 </div>
                 <div class="col">
                     <div class="d-flex h-100">
-                        <div class="container-fluid px-0 align-self-end">
+                        <div class="container-grid align-self-end">
                             <div class="row">
                                 <div class="col">
                                     <h1 class="align-self-end title-shadow">
@@ -60,7 +60,7 @@ else
             <div class="row mt-3 gx-3">
                 <div class="col">
                     <div class="rounded-3 panel panel-regular p-4 h-100">
-                        <div class="container-fluid px-0">
+                        <div class="container-grid">
                             <div class="row">
                                 <div class="col">
                                     <div class="d-flex flex-wrap gap-3">
@@ -133,7 +133,7 @@ else
                 </div>
                 <div class="col-auto">
                     <div class="rounded-3 panel panel-yellow p-4 h-100">
-                        <div class="container-fluid px-0">
+                        <div class="container-grid">
                             <div class="row">
                                 <div class="col">
                                     <h4 class="text-dark">
@@ -193,26 +193,21 @@ else
         }
         else
         {
-            <ErrorComponent ErrorMessage="@_error"/>
+            <div class="row">
+                <div class="col">
+                    <ErrorComponent ErrorMessage="@_error"/>
+                </div>
+            </div>
         }
     }
     else
     {
-        <LoadingComponent/>
+        <div class="row">
+            <div class="col">
+                <div class="m-5">
+                    <LoadingComponent/>
+                </div>
+            </div>
+        </div>
     }
 </div>
-
-
-
-@if (_background is not null)
-{
-    <style>
-        body {
-            background-image: url('@($"data:{_background.MimeType};base64,{Convert.ToBase64String(_background.Image)}")') !important;
-        }
-
-        .logo, .main-button {
-            background-image: linear-gradient(45deg, @($"#{BitConverter.ToString(_background.Background.FirstGradientColor).Replace("-", string.Empty)}"), @($"#{BitConverter.ToString(_background.Background.SecondGradientColor).Replace("-", string.Empty)}")) !important;
-        }
-    </style>
-}
