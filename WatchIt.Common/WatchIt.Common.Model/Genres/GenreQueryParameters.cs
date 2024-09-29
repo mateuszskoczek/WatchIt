@@ -21,9 +21,9 @@ public class GenreQueryParameters : QueryParameters<GenreResponse>
 
     public override bool IsMeetingConditions(GenreResponse item) =>
     (
-        TestString(item.Name, Name)
+        TestStringWithRegex(item.Name, Name)
         &&
-        TestString(item.Description, Description)
+        TestStringWithRegex(item.Description, Description)
     );
 
     #endregion

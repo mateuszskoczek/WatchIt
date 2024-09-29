@@ -1,5 +1,7 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using WatchIt.Common.Model.Media;
+using WatchIt.Common.Model.Series;
 using WatchIt.Common.Query;
 
 namespace WatchIt.Common.Model.Photos;
@@ -34,11 +36,11 @@ public class PhotoQueryParameters : QueryParameters<PhotoResponse>
 
     public override bool IsMeetingConditions(PhotoResponse item) =>
     (
-        TestString(item.MimeType, MimeType)
+        TestStringWithRegex(item.MimeType, MimeType)
         &&
-        TestBoolean(item.Background is not null, IsBackground)
+        Test(item.Background is not null, IsBackground)
         &&
-        TestBoolean(item.Background is not null && item.Background.IsUniversalBackground, IsUniversalBackground)
+        Test(item.Background is not null && item.Background.IsUniversalBackground, IsUniversalBackground)
         &&
         TestComparable(item.UploadDate, UploadDate, UploadDateFrom, UploadDateTo)
     );

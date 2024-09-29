@@ -43,6 +43,24 @@ public class MovieQueryParameters : QueryParameters<MovieResponse>
     [FromQuery(Name = "budget_to")]
     public decimal? BudgetTo { get; set; }
 
+    [FromQuery(Name = "rating_average")]
+    public double? RatingAverage { get; set; }
+
+    [FromQuery(Name = "rating_average_from")]
+    public double? RatingAverageFrom { get; set; }
+
+    [FromQuery(Name = "rating_average_to")]
+    public double? RatingAverageTo { get; set; }
+
+    [FromQuery(Name = "rating_count")]
+    public double? RatingCount { get; set; }
+
+    [FromQuery(Name = "rating_count_from")]
+    public double? RatingCountFrom { get; set; }
+
+    [FromQuery(Name = "rating_count_to")]
+    public double? RatingCountTo { get; set; }
+
     #endregion
     
     
@@ -51,17 +69,21 @@ public class MovieQueryParameters : QueryParameters<MovieResponse>
 
     public override bool IsMeetingConditions(MovieResponse item) =>
     (
-        TestString(item.Title, Title)
+        TestStringWithRegex(item.Title, Title)
         &&
-        TestString(item.OriginalTitle, OriginalTitle)
+        TestStringWithRegex(item.OriginalTitle, OriginalTitle)
         &&
-        TestString(item.Description, Description)
+        TestStringWithRegex(item.Description, Description)
         &&
         TestComparable(item.ReleaseDate, ReleaseDate, ReleaseDateFrom, ReleaseDateTo)
         &&
         TestComparable(item.Length, Length, LengthFrom, LengthTo)
         &&
         TestComparable(item.Budget, Budget, BudgetFrom, BudgetTo)
+        &&
+        TestComparable(item.Rating.Average, RatingAverage, RatingAverageFrom, RatingAverageTo)
+        &&
+        TestComparable(item.Rating.Count, RatingCount, RatingCountFrom, RatingCountTo)
     );
 
     #endregion

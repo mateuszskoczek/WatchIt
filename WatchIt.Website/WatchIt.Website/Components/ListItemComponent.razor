@@ -13,10 +13,10 @@
                 <div class="d-inline-flex gap-2">
                     <span id="ratingStar">★</span>
                     <div class="d-inline-flex flex-column justify-content-center">
-                        <span id="ratingValue">@(_rating is not null && _rating.RatingCount > 0 ? _rating.RatingAverage : "--")/10</span>
-                        @if (_rating is not null && _rating.RatingCount > 0)
+                        <span id="ratingValue">@(Rating.Count > 0 ? Rating.Average : "--")/10</span>
+                        @if (Rating.Count > 0)
                         {
-                            <span id="ratingCount">@(_rating.RatingCount)</span>
+                            <span id="ratingCount">@(Rating.Count)</span>
                         }
                     </div>
                 </div>

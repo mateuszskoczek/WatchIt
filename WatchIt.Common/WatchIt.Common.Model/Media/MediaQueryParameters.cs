@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using WatchIt.Common.Query;
 
-namespace WatchIt.Common.Model.Series;
+namespace WatchIt.Common.Model.Media;
 
-public class SeriesQueryParameters : QueryParameters<SeriesResponse>
+public class MediaQueryParameters : QueryParameters<MediaResponse>
 {
     #region PROPERTIES
+    
+    [FromQuery(Name = "type")]
+    public MediaType? Type { get; set; }
 
     [FromQuery(Name = "title")]
     public string? Title { get; set; }
@@ -34,9 +37,6 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
     [FromQuery(Name = "length_to")]
     public short? LengthTo { get; set; }
 
-    [FromQuery(Name = "has_ended")]
-    public bool? HasEnded { get; set; }
-
     [FromQuery(Name = "rating_average")]
     public double? RatingAverage { get; set; }
 
@@ -61,8 +61,10 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
     
     #region PUBLIC METHODS
 
-    public override bool IsMeetingConditions(SeriesResponse item) =>
+    public override bool IsMeetingConditions(MediaResponse item) =>
     (
+        Test(item.Type, Type)
+        &&
         TestStringWithRegex(item.Title, Title)
         &&
         TestStringWithRegex(item.OriginalTitle, OriginalTitle)
@@ -72,8 +74,6 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
         TestComparable(item.ReleaseDate, ReleaseDate, ReleaseDateFrom, ReleaseDateTo)
         &&
         TestComparable(item.Length, Length, LengthFrom, LengthTo)
-        &&
-        Test(item.HasEnded, HasEnded)
         &&
         TestComparable(item.Rating.Average, RatingAverage, RatingAverageFrom, RatingAverageTo)
         &&

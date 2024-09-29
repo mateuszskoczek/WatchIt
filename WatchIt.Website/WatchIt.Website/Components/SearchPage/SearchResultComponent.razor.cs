@@ -14,10 +14,10 @@ public partial class SearchResultComponent<TItem, TQuery> : ComponentBase where 
     [Parameter] public required Func<TItem, long> IdSource { get; set; }
     [Parameter] public required Func<TItem, string> NameSource { get; set; }
     [Parameter] public Func<TItem, string?> AdditionalNameInfoSource { get; set; } = _ => null;
+    [Parameter] public required Func<TItem, RatingResponse> RatingSource { get; set; }
     [Parameter] public required string UrlIdTemplate { get; set; }
     [Parameter] public required Func<TQuery, Action<IEnumerable<TItem>>, Task> ItemDownloadingTask { get; set; }
     [Parameter] public required Func<long, Action<Picture>, Task> PictureDownloadingTask { get; set; }
-    [Parameter] public required Func<long, Action<RatingResponse>, Task> RatingDownloadingTask { get; set; }
 
     #endregion
     

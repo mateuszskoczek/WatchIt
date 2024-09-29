@@ -32,8 +32,8 @@
                                 <ListItemComponent Id="@(IdSource(_items[i]))"
                                                    Name="@(NameSource(_items[i]))"
                                                    AdditionalNameInfo="@(AdditionalNameInfoSource(_items[i]))"
-                                                   PictureDownloadingTask="@(PictureDownloadingTask)"
-                                                   RatingDownloadingTask="@(RatingDownloadingTask)"/>
+                                                   Rating="@(RatingSource(_items[i]))"
+                                                   PictureDownloadingTask="@(PictureDownloadingTask)"/>
                             </a>
                         </div>
                     </div>
