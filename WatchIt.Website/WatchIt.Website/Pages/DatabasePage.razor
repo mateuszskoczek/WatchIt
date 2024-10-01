@@ -6,6 +6,16 @@
 
 
 
+<PageTitle>
+    @switch (Type)
+    {
+        case "movies": @("Movies"); break;
+        case "series": @("Series"); break;    
+    }
+    @(" database - WatchIt")
+</PageTitle>
+
+
 @if (_loaded)
 {
     switch (Type)
