@@ -89,9 +89,9 @@
                 }
                 <div class="btn-group w-100">
                     <input type="radio" class="btn-check" name="signtype" id="signin" autocomplete="off" checked="@(!_isSingUp)" @onclick="() => { _isSingUp = false; _formMessage = null; _formMessageIsSuccess = false; }">
-                    <label class="btn btn-outline-secondary" for="signin">Sign in</label>
+                    <label class="btn btn-outline-secondary btn-sm" for="signin">Sign in</label>
                     <input type="radio" class="btn-check" name="signtype" id="signup" autocomplete="off" checked="@(_isSingUp)" @onclick="() => { _isSingUp = true; _formMessage = null; _formMessageIsSuccess = false; }">
-                    <label class="btn btn-outline-secondary" for="signup">Sign up</label>
+                    <label class="btn btn-outline-secondary btn-sm" for="signup">Sign up</label>
                 </div>
             </div>
         </div>

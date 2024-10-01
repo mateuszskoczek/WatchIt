@@ -37,6 +37,24 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
     [FromQuery(Name = "has_ended")]
     public bool? HasEnded { get; set; }
 
+    [FromQuery(Name = "rating_average")]
+    public decimal? RatingAverage { get; set; }
+
+    [FromQuery(Name = "rating_average_from")]
+    public decimal? RatingAverageFrom { get; set; }
+
+    [FromQuery(Name = "rating_average_to")]
+    public decimal? RatingAverageTo { get; set; }
+
+    [FromQuery(Name = "rating_count")]
+    public long? RatingCount { get; set; }
+
+    [FromQuery(Name = "rating_count_from")]
+    public long? RatingCountFrom { get; set; }
+
+    [FromQuery(Name = "rating_count_to")]
+    public long? RatingCountTo { get; set; }
+
     #endregion
     
     
@@ -45,17 +63,21 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
 
     public override bool IsMeetingConditions(SeriesResponse item) =>
     (
-        TestString(item.Title, Title)
+        TestStringWithRegex(item.Title, Title)
         &&
-        TestString(item.OriginalTitle, OriginalTitle)
+        TestStringWithRegex(item.OriginalTitle, OriginalTitle)
         &&
-        TestString(item.Description, Description)
+        TestStringWithRegex(item.Description, Description)
         &&
         TestComparable(item.ReleaseDate, ReleaseDate, ReleaseDateFrom, ReleaseDateTo)
         &&
         TestComparable(item.Length, Length, LengthFrom, LengthTo)
         &&
-        TestBoolean(item.HasEnded, HasEnded)
+        Test(item.HasEnded, HasEnded)
+        &&
+        TestComparable(item.Rating.Average, RatingAverage, RatingAverageFrom, RatingAverageTo)
+        &&
+        TestComparable(item.Rating.Count, RatingCount, RatingCountFrom, RatingCountTo)
     );
 
     #endregion

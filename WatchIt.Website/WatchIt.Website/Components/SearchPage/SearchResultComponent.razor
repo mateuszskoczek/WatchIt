@@ -32,8 +32,8 @@
                                 <ListItemComponent Id="@(IdSource(_items[i]))"
                                                    Name="@(NameSource(_items[i]))"
                                                    AdditionalNameInfo="@(AdditionalNameInfoSource(_items[i]))"
-                                                   PictureDownloadingTask="@(PictureDownloadingTask)"
-                                                   RatingDownloadingTask="@(RatingDownloadingTask)"/>
+                                                   Rating="@(RatingSource(_items[i]))"
+                                                   PictureDownloadingTask="@(PictureDownloadingTask)"/>
                             </a>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                                     else
                                     {
                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                        <span>Saving...</span>
+                                        <span>Loading...</span>
                                     }
                                 </button>
                             </div>

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -38,7 +39,12 @@ public abstract class QueryParameters
             FromQueryAttribute? attribute = property.GetCustomAttributes<FromQueryAttribute>(true).FirstOrDefault();
             if (value is not null && attribute is not null)
             {
-                string query = $"{attribute.Name}={value}";
+                string valueString = (value switch
+                {
+                    decimal d => d.ToString(CultureInfo.InvariantCulture),
+                    _ => value.ToString()
+                })!;
+                string query = $"{attribute.Name}={valueString}";
                 queries.Add(query);
             }
         }
@@ -52,14 +58,18 @@ public abstract class QueryParameters
     
     #region PRIVATE METHODS
 
-    protected static bool TestBoolean(bool property, bool? query) =>
+    protected static bool Test<T>(T? property, T? query) =>
     (
         query is null
         ||
-        property == query
+        (
+            property is not null
+            &&
+            property.Equals(query)
+        )
     );
 
-    protected static bool TestString(string? property, string? regexQuery) => 
+    protected static bool TestStringWithRegex(string? property, string? regexQuery) => 
     (
         string.IsNullOrEmpty(regexQuery) 
         || 
@@ -88,7 +98,7 @@ public abstract class QueryParameters
             (
                 property is not null
                 &&
-                property.CompareTo(from) > 0
+                property.CompareTo(from) >= 0
             )
         )
         &&
@@ -108,7 +118,7 @@ public abstract class QueryParameters
 
 
 
-public abstract class QueryParameters<T> : QueryParameters where T : class 
+public abstract class QueryParameters<T> : QueryParameters where T : IQueryOrderable<T> 
 {
     #region PUBLIC METHODS
 
@@ -120,22 +130,9 @@ public abstract class QueryParameters<T> : QueryParameters where T : class
         
         if (OrderBy is not null)
         {
-            PropertyInfo[] properties = typeof(T).GetProperties();
-            foreach (PropertyInfo property in properties)
+            if (T.OrderableProperties.TryGetValue(OrderBy, out Func<T, IComparable>? orderFunc))
             {
-                JsonPropertyNameAttribute? attribute = property.GetCustomAttributes<JsonPropertyNameAttribute>(true).FirstOrDefault();
-                if (attribute is not null && attribute.Name == OrderBy)
-                {
-                    if (Order == "asc")
-                    {
-                        data = data.OrderBy(property.GetValue);
-                    }
-                    else
-                    {
-                        data = data.OrderByDescending(property.GetValue);
-                    }
-                    break;
-                }
+                data = Order == "asc" ? data.OrderBy(orderFunc) : data.OrderByDescending(orderFunc);
             }
         }
         if (After is not null)

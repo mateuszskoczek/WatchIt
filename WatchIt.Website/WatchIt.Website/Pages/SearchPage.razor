@@ -37,10 +37,10 @@
                                            IdSource="@(item => item.Id)"
                                            NameSource="@(item => item.Title)"
                                            AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
-                                           Query="@(new MovieQueryParameters { Title = DecodedQuery })"
+                                           RatingSource="@(item => item.Rating)"
+                                           Query="@(new MovieQueryParameters { Title = DecodedQuery, OrderBy = "rating.count" })"
                                            ItemDownloadingTask="@(MoviesWebAPIService.GetAllMovies)"
-                                           PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
-                                           RatingDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"/>
+                                           PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"/>
                 </div>
             </div>
             <div class="row mt-3">
@@ -52,10 +52,10 @@
                                            IdSource="@(item => item.Id)"
                                            NameSource="@(item => item.Title)"
                                            AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
-                                           Query="@(new SeriesQueryParameters { Title = DecodedQuery })"
+                                           RatingSource="@(item => item.Rating)"
+                                           Query="@(new SeriesQueryParameters { Title = DecodedQuery, OrderBy = "rating.count" })"
                                            ItemDownloadingTask="@(SeriesWebAPIService.GetAllSeries)"
-                                           PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
-                                           RatingDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"/>
+                                           PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"/>
                 </div>
             </div>
         }

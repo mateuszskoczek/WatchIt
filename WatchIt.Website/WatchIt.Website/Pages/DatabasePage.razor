@@ -1,0 +1,63 @@
+@using WatchIt.Common.Model.Movies
+@using WatchIt.Common.Model.Series
+@using WatchIt.Website.Components.DatabasePage
+
+@page "/database/{type?}"
+
+
+
+@if (_loaded)
+{
+    switch (Type)
+    {
+        case "movies":
+            <DatabasePageComponent TItem="MovieResponse" 
+                                   TQuery="MovieQueryParameters"
+                                   Title="Movies database"
+                                   IdSource="@(item => item.Id)"
+                                   NameSource="@(item => item.Title)"
+                                   AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                                   RatingSource="@(item => item.Rating)"
+                                   UrlIdTemplate="/media/{0}"
+                                   PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
+                                   ItemDownloadingTask="@(MoviesWebAPIService.GetAllMovies)"
+                                   SortingOptions="@(new Dictionary<string, string>
+                                                   {
+                                                       { "rating.count", "Number of ratings" },
+                                                       { "rating.average", "Average rating" },
+                                                       { "title", "Title" },
+                                                       { "release_date", "Release date" },
+                                                   })">
+                <MoviesFilterFormComponent/>
+            </DatabasePageComponent>
+            break;
+        case "series":
+            <DatabasePageComponent TItem="SeriesResponse" 
+                                   TQuery="SeriesQueryParameters"
+                                   Title="TV series database"
+                                   IdSource="@(item => item.Id)"
+                                   NameSource="@(item => item.Title)"
+                                   AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                                   RatingSource="@(item => item.Rating)"
+                                   UrlIdTemplate="/media/{0}"
+                                   PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
+                                   ItemDownloadingTask="@(SeriesWebAPIService.GetAllSeries)"
+                                   SortingOptions="@(new Dictionary<string, string>
+                                                   {
+                                                       { "rating.count", "Number of ratings" },
+                                                       { "rating.average", "Average rating" },
+                                                       { "title", "Title" },
+                                                       { "release_date", "Release date" },
+                                                   })">
+                <SeriesFilterFormComponent/>
+            </DatabasePageComponent>
+            break;
+    }
+    
+}
+else
+{
+    <div class="m-5">
+        <LoadingComponent/>
+    </div>
+}

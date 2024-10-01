@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using WatchIt.Common.Query;
 
-namespace WatchIt.Common.Model.Movies;
+namespace WatchIt.Common.Model.Media;
 
-public class MovieQueryParameters : QueryParameters<MovieResponse>
+public class MediaQueryParameters : QueryParameters<MediaResponse>
 {
     #region PROPERTIES
+    
+    [FromQuery(Name = "type")]
+    public MediaType? Type { get; set; }
 
     [FromQuery(Name = "title")]
     public string? Title { get; set; }
@@ -34,15 +37,6 @@ public class MovieQueryParameters : QueryParameters<MovieResponse>
     [FromQuery(Name = "length_to")]
     public short? LengthTo { get; set; }
 
-    [FromQuery(Name = "budget")]
-    public decimal? Budget { get; set; }
-
-    [FromQuery(Name = "budget_from")]
-    public decimal? BudgetFrom { get; set; }
-
-    [FromQuery(Name = "budget_to")]
-    public decimal? BudgetTo { get; set; }
-
     [FromQuery(Name = "rating_average")]
     public decimal? RatingAverage { get; set; }
 
@@ -67,8 +61,10 @@ public class MovieQueryParameters : QueryParameters<MovieResponse>
     
     #region PUBLIC METHODS
 
-    public override bool IsMeetingConditions(MovieResponse item) =>
+    public override bool IsMeetingConditions(MediaResponse item) =>
     (
+        Test(item.Type, Type)
+        &&
         TestStringWithRegex(item.Title, Title)
         &&
         TestStringWithRegex(item.OriginalTitle, OriginalTitle)
@@ -78,8 +74,6 @@ public class MovieQueryParameters : QueryParameters<MovieResponse>
         TestComparable(item.ReleaseDate, ReleaseDate, ReleaseDateFrom, ReleaseDateTo)
         &&
         TestComparable(item.Length, Length, LengthFrom, LengthTo)
-        &&
-        TestComparable(item.Budget, Budget, BudgetFrom, BudgetTo)
         &&
         TestComparable(item.Rating.Average, RatingAverage, RatingAverageFrom, RatingAverageTo)
         &&

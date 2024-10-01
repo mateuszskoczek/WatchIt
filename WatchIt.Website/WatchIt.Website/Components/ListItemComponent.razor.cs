@@ -11,8 +11,8 @@ public partial class ListItemComponent : ComponentBase
     [Parameter] public required long Id { get; set; }
     [Parameter] public required string Name { get; set; }
     [Parameter] public string? AdditionalNameInfo { get; set; }
+    [Parameter] public required RatingResponse Rating { get; set; }
     [Parameter] public required Func<long, Action<Picture>, Task> PictureDownloadingTask { get; set; }
-    [Parameter] public required Func<long, Action<RatingResponse>, Task> RatingDownloadingTask { get; set; }
     [Parameter] public int PictureHeight { get; set; } = 150;
 
     #endregion
@@ -24,7 +24,6 @@ public partial class ListItemComponent : ComponentBase
     private bool _loaded;
     
     private Picture? _picture;
-    private RatingResponse? _rating;
     
     #endregion
     
@@ -42,7 +41,6 @@ public partial class ListItemComponent : ComponentBase
             endTasks.AddRange(
             [
                 PictureDownloadingTask(Id, picture => _picture = picture),
-                RatingDownloadingTask(Id, rating => _rating = rating)
             ]);
             
             await Task.WhenAll(endTasks);
