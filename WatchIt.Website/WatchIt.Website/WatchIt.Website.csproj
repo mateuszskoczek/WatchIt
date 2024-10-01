@@ -22,6 +22,7 @@
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Accounts\WatchIt.Website.Services.WebAPI.Accounts.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Media\WatchIt.Website.Services.WebAPI.Media.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Movies\WatchIt.Website.Services.WebAPI.Movies.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Photos\WatchIt.Website.Services.WebAPI.Photos.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Series\WatchIt.Website.Services.WebAPI.Series.csproj" />
     </ItemGroup>
 
@@ -34,10 +35,16 @@
       <_ContentIncludedByDefault Remove="Components\Pages\Weather.razor" />
       <_ContentIncludedByDefault Remove="wwwroot\bootstrap\bootstrap.min.css" />
       <_ContentIncludedByDefault Remove="wwwroot\bootstrap\bootstrap.min.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\scripts\popper.min.js" />
     </ItemGroup>
 
     <ItemGroup>
       <AdditionalFiles Include="Layout\MainLayout.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Blazorise.Bootstrap5" Version="1.6.1" />
+      <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.6.1" />
     </ItemGroup>
 
 </Project>

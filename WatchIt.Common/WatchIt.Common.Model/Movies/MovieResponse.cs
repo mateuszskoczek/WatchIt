@@ -1,15 +1,35 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using WatchIt.Common.Model.Rating;
+using WatchIt.Common.Query;
 using WatchIt.Database.Model.Media;
 
 namespace WatchIt.Common.Model.Movies;
 
-public class MovieResponse : Movie
+public class MovieResponse : Movie, IQueryOrderable<MovieResponse>
 {
     #region PROPERTIES
 
+    [JsonIgnore]
+    public static IDictionary<string, Func<MovieResponse, IComparable>> OrderableProperties { get; } = new Dictionary<string, Func<MovieResponse, IComparable>>
+    {
+        { "id", x => x.Id },
+        { "title", x => x.Title },
+        { "original_title", x => x.OriginalTitle },
+        { "description", x => x.Description },
+        { "release_date", x => x.ReleaseDate },
+        { "length", x => x.Length },
+        { "budget", x => x.Budget },
+        { "rating.average", x => x.Rating.Average },
+        { "rating.count", x => x.Rating.Count }
+    };
+
+
     [JsonPropertyName("id")]
     public long Id { get; set; }
+    
+    [JsonPropertyName("rating")]
+    public RatingResponse Rating { get; set; }
 
     #endregion
     
@@ -30,6 +50,7 @@ public class MovieResponse : Movie
         ReleaseDate = mediaMovie.Media.ReleaseDate;
         Length = mediaMovie.Media.Length;
         Budget = mediaMovie.Budget;
+        Rating = new RatingResponse(mediaMovie.Media.RatingMedia);
     }
 
     #endregion

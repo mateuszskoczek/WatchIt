@@ -1,5 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Blazorise;
+using Blazorise.Bootstrap5;
+using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Components.Authorization;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Utility.Authentication;
@@ -8,6 +11,7 @@ using WatchIt.Website.Services.Utility.Tokens;
 using WatchIt.Website.Services.WebAPI.Accounts;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
+using WatchIt.Website.Services.WebAPI.Photos;
 using WatchIt.Website.Services.WebAPI.Series;
 
 namespace WatchIt.Website;
@@ -52,6 +56,12 @@ public static class Program
     private static WebApplicationBuilder SetupServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<HttpClient>();
+        builder.Services.AddBlazorise(options =>
+                         {
+                             options.Immediate = true;
+                         })
+                         .AddBootstrap5Providers()
+                         .AddFontAwesomeIcons();
         
         // Utility
         builder.Services.AddSingleton<IHttpClientService, HttpClientService>();
@@ -64,6 +74,7 @@ public static class Program
         builder.Services.AddSingleton<IMediaWebAPIService, MediaWebAPIService>();
         builder.Services.AddSingleton<IMoviesWebAPIService, MoviesWebAPIService>();
         builder.Services.AddSingleton<ISeriesWebAPIService, SeriesWebAPIService>();
+        builder.Services.AddSingleton<IPhotosWebAPIService, PhotosWebAPIService>();
         
         return builder;
     }

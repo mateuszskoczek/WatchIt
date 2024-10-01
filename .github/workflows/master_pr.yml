@@ -1,0 +1,45 @@
+name: "Pull request to 'master' branch"
+
+on:
+  pull_request:
+    branches: 
+    - "master"
+
+jobs:
+  build-dotnet:
+    name: Dotnet solution build test and unit tests execution
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build solution
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+  build-docker:
+    name: Docker image build test
+    needs: build-dotnet
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app:
+        - WatchIt.WebAPI
+        - WatchIt.Website
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Convert name to lowercase
+      id: name
+      uses: ASzc/change-string-case-action@v1
+      with:
+        string: ${{ matrix.app }}
+    - name: Build image
+      run: docker build ${{ github.workspace }} -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:build-test -f ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile

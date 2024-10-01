@@ -2,6 +2,8 @@
 using SimpleToolkit.Extensions;
 using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
+using WatchIt.Common.Model.Photos;
+using WatchIt.Common.Model.Rating;
 using WatchIt.Database;
 using WatchIt.Database.Model.Media;
 using WatchIt.Database.Model.Rating;
@@ -105,10 +107,8 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         {
             return RequestResult.NotFound();
         }
-
-        double ratingAverage = item.RatingMedia.Any() ? item.RatingMedia.Average(x => x.Rating) : 0;
-        long ratingCount = item.RatingMedia.Count();
-        MediaRatingResponse ratingResponse = new MediaRatingResponse(ratingAverage, ratingCount);
+        
+        RatingResponse ratingResponse = new RatingResponse(item.RatingMedia);
         
         return RequestResult.Ok(ratingResponse);
     }
@@ -130,7 +130,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         return RequestResult.Ok(rating.Value);
     }
     
-    public async Task<RequestResult> PutMediaRating(long mediaId, MediaRatingRequest data)
+    public async Task<RequestResult> PutMediaRating(long mediaId, RatingRequest data)
     {
         short ratingValue = data.Rating;
         if (ratingValue < 1 || ratingValue > 10)
@@ -294,59 +294,48 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
     #endregion
 
     #region Photos
-    
-    public async Task<RequestResult> GetPhoto(Guid id)
+
+    public async Task<RequestResult> GetMediaPhotos(long mediaId, PhotoQueryParameters queryParameters)
     {
-        MediaPhotoImage? item = await database.MediaPhotoImages.FirstOrDefaultAsync(x => x.Id == id);
-        if (item is null)
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
+        if (media is null)
         {
             return RequestResult.NotFound();
         }
-        
-        MediaPhotoResponse data = new MediaPhotoResponse(item);
-        return RequestResult.Ok(data);
+            
+        IEnumerable<MediaPhotoImage> imagesRaw = await database.MediaPhotoImages.Where(x => x.MediaId == mediaId).ToListAsync();
+        IEnumerable<PhotoResponse> images = imagesRaw.Select(x => new PhotoResponse(x));
+        images = queryParameters.PrepareData(images);
+        return RequestResult.Ok(images);
     }
     
-    public async Task<RequestResult> GetPhotos(MediaPhotoQueryParameters query)
+    public Task<RequestResult> GetMediaPhotoRandomBackground(long mediaId)
     {
-        IEnumerable<MediaPhotoResponse> data = await database.MediaPhotoImages.Select(x => new MediaPhotoResponse(x)).ToListAsync();
-        data = query.PrepareData(data);
-        return RequestResult.Ok(data);
-    }
-    
-    public Task<RequestResult> GetRandomBackgroundPhoto()
-    {
-        MediaPhotoImage? image = database.MediaPhotoImages.Where(x => x.MediaPhotoImageBackground != null && x.MediaPhotoImageBackground.IsUniversalBackground).Random();
+        MediaPhotoImage? image = database.MediaPhotoImages.Where(x => x.MediaId == mediaId && x.MediaPhotoImageBackground != null).Random();
         if (image is null)
         {
             return Task.FromResult<RequestResult>(RequestResult.NotFound());
         }
 
-        MediaPhotoResponse data = new MediaPhotoResponse(image);
-        return Task.FromResult<RequestResult>(RequestResult.Ok(data));
-    }
-    
-    public Task<RequestResult> GetMediaRandomBackgroundPhoto(long id)
-    {
-        MediaPhotoImage? image = database.MediaPhotoImages.Where(x => x.MediaId == id && x.MediaPhotoImageBackground != null).Random();
-        if (image is null)
-        {
-            return Task.FromResult<RequestResult>(RequestResult.NotFound());
-        }
-
-        MediaPhotoResponse data = new MediaPhotoResponse(image);
+        PhotoResponse data = new PhotoResponse(image);
         return Task.FromResult<RequestResult>(RequestResult.Ok(data));
     }
 
-    public async Task<RequestResult> PostPhoto(MediaPhotoRequest data)
+    public async Task<RequestResult> PostMediaPhoto(long mediaId, MediaPhotoRequest data)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
         {
             return RequestResult.Forbidden();
         }
+        
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
+        if (media is null)
+        {
+            return RequestResult.NotFound();
+        }
 
-        MediaPhotoImage item = data.CreateMediaPhotoImage();
+        MediaPhotoImage item = data.CreateMediaPhotoImage(mediaId);
         await database.MediaPhotoImages.AddAsync(item);
         await database.SaveChangesAsync();
 
@@ -357,69 +346,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
             await database.SaveChangesAsync();
         }
         
-        return RequestResult.Created($"photos/{item.Id}", new MediaPhotoResponse(item));
-    }
-    
-    public async Task<RequestResult> PutPhoto(Guid photoId, MediaPhotoRequest data)
-    {
-        UserValidator validator = userService.GetValidator().MustBeAdmin();
-        if (!validator.IsValid)
-        {
-            return RequestResult.Forbidden();
-        }
-
-        MediaPhotoImage? item = await database.MediaPhotoImages.FirstOrDefaultAsync(x => x.Id == photoId);
-        if (item is null)
-        {
-            return RequestResult.NotFound();
-        }
-
-        data.UpdateMediaPhotoImage(item);
-        if (item.MediaPhotoImageBackground is null && data.Background is not null)
-        {
-            MediaPhotoImageBackground background = data.CreateMediaPhotoImageBackground(item.Id)!;
-            await database.MediaPhotoImageBackgrounds.AddAsync(background);
-        }
-        else if (item.MediaPhotoImageBackground is not null && data.Background is null)
-        {
-            database.MediaPhotoImageBackgrounds.Attach(item.MediaPhotoImageBackground);
-            database.MediaPhotoImageBackgrounds.Remove(item.MediaPhotoImageBackground);
-        }
-        else if (item.MediaPhotoImageBackground is not null && data.Background is not null)
-        {
-            data.UpdateMediaPhotoImageBackground(item.MediaPhotoImageBackground);
-        }
-        await database.SaveChangesAsync();
-        
-        return RequestResult.Ok();
-    }
-    
-    public async Task<RequestResult> DeletePhoto(Guid photoId)
-    {
-        UserValidator validator = userService.GetValidator().MustBeAdmin();
-        if (!validator.IsValid)
-        {
-            return RequestResult.Forbidden();
-        }
-        
-        MediaPhotoImage? item = await database.MediaPhotoImages.FirstOrDefaultAsync(x => x.Id == photoId);
-        if (item is null)
-        {
-            return RequestResult.NotFound();
-        }
-
-        if (item.MediaPhotoImageBackground is not null)
-        {
-            database.MediaPhotoImageBackgrounds.Attach(item.MediaPhotoImageBackground);
-            database.MediaPhotoImageBackgrounds.Remove(item.MediaPhotoImageBackground);
-            await database.SaveChangesAsync();
-        }
-
-        database.MediaPhotoImages.Attach(item);
-        database.MediaPhotoImages.Remove(item);
-        await database.SaveChangesAsync();
-        
-        return RequestResult.Ok();
+        return RequestResult.Created($"photos/{item.Id}", new PhotoResponse(item));
     }
     
     #endregion

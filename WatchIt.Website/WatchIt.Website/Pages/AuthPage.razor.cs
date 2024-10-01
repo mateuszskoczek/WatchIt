@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Net;
+using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Media;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.Utility.Tokens;
 using WatchIt.Website.Services.WebAPI.Accounts;
 using WatchIt.Website.Services.WebAPI.Media;
+using WatchIt.Website.Services.WebAPI.Photos;
 
 namespace WatchIt.Website.Pages;
 
@@ -17,48 +20,45 @@ public partial class AuthPage
     [Inject] public ITokensService TokensService { get; set; } = default!;
     [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
     [Inject] public IAccountsWebAPIService AccountsWebAPIService { get; set; } = default!;
+    [Inject] public IPhotosWebAPIService PhotosWebAPIService { get; set; } = default!;
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
 
     #endregion
     
     
     
-    #region ENUMS
+    #region PARAMETERS
 
-    private enum AuthType
-    {
-        SignIn,
-        SignUp
-    }
-
+    [SupplyParameterFromQuery(Name = "redirect_to")]
+    private string RedirectTo { get; set; } = "/";
+    
     #endregion
     
     
     
     #region FIELDS
     
-    private bool _loaded = false;
+    private bool _loaded;
 
-    private AuthType _authType = AuthType.SignIn;
-    private string _background = "assets/background_temp.jpg";
-    private string _firstGradientColor = "#c6721c";
-    private string _secondGradientColor = "#85200c";
+    private PhotoResponse? _background;
 
-    private AuthenticateRequest _loginModel = new AuthenticateRequest
-    {
-        UsernameOrEmail = null,
-        Password = null
-    };
-
+    private bool _isSingUp;
+    private string? _formMessage;
+    private bool _formMessageIsSuccess;
+    
     private RegisterRequest _registerModel = new RegisterRequest
     {
         Username = null,
         Email = null,
         Password = null
     };
-    private string _passwordConfirmation;
-
-    private IEnumerable<string> _errors;
+    private string _registerPasswordConfirmation;
+    
+    private AuthenticateRequest _loginModel = new AuthenticateRequest
+    {
+        UsernameOrEmail = null,
+        Password = null
+    };
 
     #endregion
 
@@ -72,22 +72,19 @@ public partial class AuthPage
         {
             if (await AuthenticationService.GetAuthenticationStatusAsync())
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo(WebUtility.UrlDecode(RedirectTo));
             }
-        
-            Action<MediaPhotoResponse> backgroundSuccess = (data) =>
-            {
-                string imageBase64 = Convert.ToBase64String(data.Image);
-                string firstColor = BitConverter.ToString(data.Background.FirstGradientColor)
-                                                .Replace("-", string.Empty);
-                string secondColor = BitConverter.ToString(data.Background.SecondGradientColor)
-                                                 .Replace("-", string.Empty);
             
-                _background = $"data:{data.MimeType};base64,{imageBase64}";
-                _firstGradientColor = $"#{firstColor}";
-                _secondGradientColor = $"#{secondColor}";
-            };
-            await MediaWebAPIService.GetPhotoRandomBackground(backgroundSuccess);
+            List<Task> endTasks = new List<Task>();
+            
+            // STEP 0
+            endTasks.AddRange(
+            [
+                PhotosWebAPIService.GetPhotoRandomBackground(data => _background = data)
+            ]);
+            
+            // END
+            await Task.WhenAll(endTasks);
         
             _loaded = true;
             StateHasChanged();
@@ -96,44 +93,51 @@ public partial class AuthPage
 
     private async Task Login()
     {
-        await AccountsWebAPIService.Authenticate(_loginModel, LoginSuccess, LoginBadRequest, LoginUnauthorized);
-        
-        async void LoginSuccess(AuthenticateResponse data)
-        {
-            await TokensService.SaveAuthenticationData(data);
-            NavigationManager.NavigateTo("/");
-        }
-        
         void LoginBadRequest(IDictionary<string, string[]> data)
         {
-            _errors = data.SelectMany(x => x.Value).Select(x => $"• {x}");
+            _formMessageIsSuccess = false;
+            _formMessage = data.SelectMany(x => x.Value).FirstOrDefault();
         }
-        
+
         void LoginUnauthorized()
         {
-            _errors = [ "Incorrect account data" ];
+            _formMessageIsSuccess = false;
+            _formMessage = "Incorrect account data";
         }
+        
+        async Task LoginSuccess(AuthenticateResponse data)
+        {
+            await TokensService.SaveAuthenticationData(data);
+            NavigationManager.NavigateTo(RedirectTo);
+        }
+        
+        
+        await AccountsWebAPIService.Authenticate(_loginModel, async (data) => await LoginSuccess(data), LoginBadRequest, LoginUnauthorized);
     }
     
     private async Task Register()
     {
-        if (_registerModel.Password != _passwordConfirmation)
-        {
-            _errors = [ "Password fields don't match" ];
-            return;
-        }
-        
-        await AccountsWebAPIService.Register(_registerModel, RegisterSuccess, RegisterBadRequest);
-
         void RegisterSuccess(RegisterResponse data)
         {
-            _authType = AuthType.SignIn;
+            _formMessageIsSuccess = true;
+            _formMessage = "You are registered. You can sign in now.";
+            _isSingUp = false;
         }
-
+        
         void RegisterBadRequest(IDictionary<string, string[]> data)
         {
-            _errors = data.SelectMany(x => x.Value).Select(x => $"• {x}");
+            _formMessageIsSuccess = false;
+            _formMessage = data.SelectMany(x => x.Value).FirstOrDefault();
         }
+        
+        
+        if (_registerModel.Password != _registerPasswordConfirmation)
+        {
+            _formMessageIsSuccess = false;
+            _formMessage = "Password fields don't match";
+            return;
+        }
+        await AccountsWebAPIService.Register(_registerModel, RegisterSuccess, RegisterBadRequest);
     }
 
     #endregion

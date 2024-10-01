@@ -1,21 +1,18 @@
-body {
-    background-size: cover;
-}
-
-.logo {
-    font-size: 40px;
-}
-
-.header {
-    position: sticky;
-    top: 10px;
-    height: 60px;
-}
-
-.body-content {
-    padding-top: 100px;
-}
+/* TAGS */
 
 h1 {
     margin: 0;
+}
+
+
+
+/* IDS */
+
+#logo {
+    font-size: 40px;
+}
+
+#searchbarCancel {
+    cursor: pointer;
+    color: #6c757d;
 }

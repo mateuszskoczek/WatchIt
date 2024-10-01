@@ -1,5 +1,7 @@
 ﻿using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
+using WatchIt.Common.Model.Photos;
+using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Utility.Configuration;
 using WatchIt.Website.Services.Utility.Configuration.Model;
@@ -7,19 +9,38 @@ using WatchIt.Website.Services.WebAPI.Common;
 
 namespace WatchIt.Website.Services.WebAPI.Media;
 
-public class MediaWebAPIService(IHttpClientService httpClientService, IConfigurationService configurationService) : BaseWebAPIService(configurationService), IMediaWebAPIService
+public class MediaWebAPIService : BaseWebAPIService, IMediaWebAPIService
 {
+    #region FIELDS
+    
+    private readonly IHttpClientService _httpClientService;
+    
+    #endregion
+
+
+
+    #region CONSTRUCTORS
+
+    public MediaWebAPIService(IHttpClientService httpClientService, IConfigurationService configurationService) : base(configurationService)
+    {
+        _httpClientService = httpClientService;
+    }
+
+    #endregion
+    
+    
+    
     #region PUBLIC METHODS
     
     #region Main
     
     public async Task GetMedia(long mediaId, Action<MediaResponse>? successAction = null, Action? notFoundAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Media.Get, mediaId);
+        string url = GetUrl(EndpointsConfiguration.Media.GetMedia, mediaId);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor404NotFound(notFoundAction)
                 .ExecuteAction();
@@ -31,11 +52,11 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
 
     public async Task GetMediaGenres(long mediaId, Action<IEnumerable<GenreResponse>>? successAction = null, Action? notFoundAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Media.GetGenres, mediaId);
+        string url = GetUrl(EndpointsConfiguration.Media.GetMediaGenres, mediaId);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor404NotFound(notFoundAction)
                 .ExecuteAction();
@@ -43,11 +64,25 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
     
     public async Task PostMediaGenre(long mediaId, long genreId, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Media.PostGenre, mediaId, genreId);
+        string url = GetUrl(EndpointsConfiguration.Media.PostMediaGenre, mediaId, genreId);
         
-        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
         
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task DeleteMediaGenre(long mediaId, long genreId, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.DeleteMediaGenre, mediaId, genreId);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor401Unauthorized(unauthorizedAction)
                 .RegisterActionFor403Forbidden(forbiddenAction)
@@ -59,13 +94,13 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
 
     #region Rating
 
-    public async Task GetMediaRating(long mediaId, Action<MediaRatingResponse>? successAction = null, Action? notFoundAction = null)
+    public async Task GetMediaRating(long mediaId, Action<RatingResponse>? successAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Media.GetMediaRating, mediaId);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor404NotFound(notFoundAction)
                 .ExecuteAction();
@@ -77,13 +112,13 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
         
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor404NotFound(notFoundAction)
                 .ExecuteAction();
     }
 
-    public async Task PutMediaRating(long mediaId, MediaRatingRequest body, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? notFoundAction = null)
+    public async Task PutMediaRating(long mediaId, RatingRequest body, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Media.PutMediaRating, mediaId);
         
@@ -92,7 +127,7 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
             Body = body
         };
         
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor400BadRequest(badRequestAction)
                 .RegisterActionFor401Unauthorized(unauthorizedAction)
@@ -106,7 +141,7 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
         
         HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
         
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor401Unauthorized(unauthorizedAction)
                 .ExecuteAction();
@@ -122,7 +157,7 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
         
         HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
         
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor404NotFound(notFoundAction)
                 .ExecuteAction();
@@ -130,55 +165,31 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
 
     #endregion
     
+    #region Poster
     
-
-    public async Task GetPhotoMediaRandomBackground(long mediaId, Action<MediaPhotoResponse>? successAction = null, Action? notFoundAction = null)
+    public async Task GetMediaPoster(long mediaId, Action<MediaPosterResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Media.GetPhotoMediaRandomBackground, mediaId);
+        string url = GetUrl(EndpointsConfiguration.Media.GetMediaPoster, mediaId);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
-        response.RegisterActionFor2XXSuccess(successAction)
-                .RegisterActionFor404NotFound(notFoundAction)
-                .ExecuteAction();
-    }
-
-    public async Task GetPhotoRandomBackground(Action<MediaPhotoResponse>? successAction = null, Action? notFoundAction = null)
-    {
-        string url = GetUrl(EndpointsConfiguration.Media.GetPhotoRandomBackground);
-        
-        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
-        
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
-        response.RegisterActionFor2XXSuccess(successAction)
-                .RegisterActionFor404NotFound(notFoundAction)
-                .ExecuteAction();
-    }
-    
-    public async Task GetPoster(long mediaId, Action<MediaPosterResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null)
-    {
-        string url = GetUrl(EndpointsConfiguration.Media.GetPoster, mediaId);
-        
-        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
-        
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor400BadRequest(badRequestAction)
                 .RegisterActionFor404NotFound(notFoundAction)
                 .ExecuteAction();
     }
 
-    public async Task PutPoster(long mediaId, MediaPosterRequest data, Action<MediaPosterResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task PutMediaPoster(long mediaId, MediaPosterRequest data, Action<MediaPosterResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Media.PutPoster, mediaId);
+        string url = GetUrl(EndpointsConfiguration.Media.PutMediaPoster, mediaId);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Put, url)
         {
             Body = data
         };
         
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor400BadRequest(badRequestAction)
                 .RegisterActionFor401Unauthorized(unauthorizedAction)
@@ -186,18 +197,66 @@ public class MediaWebAPIService(IHttpClientService httpClientService, IConfigura
                 .ExecuteAction();
     }
     
-    public async Task DeletePoster(long mediaId, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task DeleteMediaPoster(long mediaId, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Media.DeletePoster, mediaId);
+        string url = GetUrl(EndpointsConfiguration.Media.DeleteMediaPoster, mediaId);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
         
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor401Unauthorized(unauthorizedAction)
                 .RegisterActionFor403Forbidden(forbiddenAction)
                 .ExecuteAction();
     }
+
+    #endregion
+
+    #region Photos
+
+    public async Task GetMediaPhotos(long mediaId, PhotoQueryParameters? query = null, Action<IEnumerable<PhotoResponse>>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.GetMediaPhotos, mediaId);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+
+    public async Task GetMediaPhotoRandomBackground(long mediaId, Action<PhotoResponse>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.GetMediaPhotoRandomBackground, mediaId);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+
+    public async Task PostMediaPhoto(long mediaId, MediaPhotoRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.PostMediaPhoto, mediaId);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Post, url)
+        {
+            Body = data
+        };
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+
+    #endregion
     
     #endregion
 

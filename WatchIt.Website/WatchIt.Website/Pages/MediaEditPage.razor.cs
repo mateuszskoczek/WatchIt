@@ -3,10 +3,13 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Series;
+using WatchIt.Website.Layout;
 using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
+using WatchIt.Website.Services.WebAPI.Photos;
 using WatchIt.Website.Services.WebAPI.Series;
 
 namespace WatchIt.Website.Pages;
@@ -20,6 +23,7 @@ public partial class MediaEditPage : ComponentBase
     [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
     [Inject] public IMoviesWebAPIService MoviesWebAPIService { get; set; } = default!;
     [Inject] public ISeriesWebAPIService SeriesWebAPIService { get; set; } = default!;
+    [Inject] public IPhotosWebAPIService PhotosWebAPIService { get; set; } = default!;
     
     #endregion
     
@@ -29,6 +33,8 @@ public partial class MediaEditPage : ComponentBase
     
     [Parameter] public long? Id { get; set; }
     [Parameter] public string? Type { get; set; }
+    
+    [CascadingParameter] public MainLayout Layout { get; set; }
     
     #endregion
     
@@ -40,8 +46,6 @@ public partial class MediaEditPage : ComponentBase
     private string? _error;
     
     private User? _user;
-    
-    private MediaPhotoResponse? _background;
 
     private MediaResponse? _media;
     private MovieRequest? _movieRequest;
@@ -55,6 +59,21 @@ public partial class MediaEditPage : ComponentBase
     private bool _mediaPosterChanged;
     private bool _mediaPosterSaving;
     private bool _mediaPosterDeleting;
+    
+    private IEnumerable<PhotoResponse> _photos = new List<PhotoResponse>();
+    private List<Guid> _photoDeleting = new List<Guid>();
+    private bool _photoEditMode;
+    private string? _photoEditError;
+    private Guid? _photoEditId;
+    private bool _photoEditSaving;
+    private bool _photoEditIsBackground;
+    private MediaPhotoRequest? _photoEditRequest;
+    private PhotoBackgroundDataRequest? _photoEditBackgroundData = new PhotoBackgroundDataRequest()
+    {
+        FirstGradientColor = [0xFF, 0xFF, 0xFF],
+        SecondGradientColor = [0x00, 0x00, 0x00],
+        IsUniversalBackground = false
+    };
 
     #endregion
     
@@ -68,6 +87,8 @@ public partial class MediaEditPage : ComponentBase
     {
         if (firstRender)
         {
+            Layout.BackgroundPhoto = null;
+            
             List<Task> step1Tasks = new List<Task>();
             List<Task> step2Tasks = new List<Task>();
             List<Task> endTasks = new List<Task>();
@@ -94,12 +115,13 @@ public partial class MediaEditPage : ComponentBase
             {
                 endTasks.AddRange(
                 [
-                    MediaWebAPIService.GetPhotoMediaRandomBackground(Id.Value, data => _background = data),
-                    MediaWebAPIService.GetPoster(Id.Value, data =>
+                    MediaWebAPIService.GetMediaPhotoRandomBackground(Id.Value, data => Layout.BackgroundPhoto = data),
+                    MediaWebAPIService.GetMediaPoster(Id.Value, data =>
                     {
                         _mediaPosterSaved = data;
                         _mediaPosterRequest = new MediaPosterRequest(data);
-                    })
+                    }),
+                    MediaWebAPIService.GetMediaPhotos(Id.Value, successAction: data => _photos = data)
                 ]);
             }
 
@@ -179,7 +201,7 @@ public partial class MediaEditPage : ComponentBase
         }
         
         _mediaPosterSaving = true;
-        await MediaWebAPIService.PutPoster(Id.Value, _mediaPosterRequest, Success);
+        await MediaWebAPIService.PutMediaPoster(Id.Value, _mediaPosterRequest, Success);
     }
 
     private void CancelPoster()
@@ -199,7 +221,7 @@ public partial class MediaEditPage : ComponentBase
         }
         
         _mediaPosterDeleting = true;
-        await MediaWebAPIService.DeletePoster(Id.Value, Success);
+        await MediaWebAPIService.DeleteMediaPoster(Id.Value, Success);
     }
     
     #endregion
@@ -250,5 +272,116 @@ public partial class MediaEditPage : ComponentBase
 
     #endregion
 
+    #region Photos
+
+    private async Task DeletePhoto(Guid id)
+    {
+        async Task Success()
+        {
+            NavigationManager.Refresh(true);
+        }
+        
+        _photoDeleting.Add(id);
+        await PhotosWebAPIService.DeletePhoto(id, async () => await Success());
+    }
+
+    private void InitEditPhoto(Guid? id)
+    {
+        _photoEditMode = true;
+        _photoEditId = id;
+        _photoEditRequest = null;
+        _photoEditIsBackground = false;
+        _photoEditBackgroundData = new PhotoBackgroundDataRequest
+        {
+            FirstGradientColor = [0xFF, 0xFF, 0xFF],
+            SecondGradientColor = [0x00, 0x00, 0x00],
+            IsUniversalBackground = false
+        };
+        if (id is not null)
+        {
+            PhotoResponse response = _photos.First(x => x.Id == id);
+            _photoEditRequest = new MediaPhotoRequest(response);
+            if (response.Background is not null)
+            {
+                _photoEditIsBackground = true;
+                _photoEditBackgroundData = new PhotoBackgroundDataRequest(response.Background);
+            }
+        }
+    }
+
+    private void CancelEditPhoto()
+    {
+        _photoEditMode = false;
+        _photoEditId = null;
+        _photoEditError = null;
+    }
+
+    private async Task SaveEditPhoto()
+    {
+        void Success()
+        {
+            NavigationManager.Refresh(true);
+        }
+
+        void BadRequest(IDictionary<string, string[]> errors)
+        {
+            _photoEditError = errors.SelectMany(x => x.Value).FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(_basicDataError))
+            {
+                _photoEditSaving = false;
+            }
+        }
+        
+        _photoEditSaving = true;
+        if (_photoEditId is null)
+        {
+            _photoEditRequest.Background = _photoEditIsBackground ? _photoEditBackgroundData : null;
+            await MediaWebAPIService.PostMediaPhoto(Id.Value, _photoEditRequest, Success, BadRequest);
+        }
+        else
+        {
+            if (_photoEditIsBackground)
+            {
+                await PhotosWebAPIService.PutPhotoBackgroundData(_photoEditId.Value, _photoEditBackgroundData, Success, BadRequest);
+            }
+            else
+            {
+                await PhotosWebAPIService.DeletePhotoBackgroundData(_photoEditId.Value, Success);
+            }
+        }
+    }
+
+    private async Task LoadPhoto(InputFileChangeEventArgs args)
+    {
+        if (args.File.ContentType.StartsWith("image"))
+        {
+            Stream stream = args.File.OpenReadStream(5242880);
+            byte[] array;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                await stream.CopyToAsync(ms);
+                array = ms.ToArray();
+            }
+            
+            _photoEditRequest = new MediaPhotoRequest
+            {
+                Image = array,
+                MimeType = args.File.ContentType
+            };
+        }
+    }
+
+    private void EditPhotoFirstGradientColorChanged(ChangeEventArgs e)
+    {
+        _photoEditBackgroundData.FirstGradientColor = Convert.FromHexString(e.Value.ToString().Replace("#", string.Empty));
+    }
+
+    private void EditPhotoSecondGradientColorChanged(ChangeEventArgs e)
+    {
+        _photoEditBackgroundData.SecondGradientColor = Convert.FromHexString(e.Value.ToString().Replace("#", string.Empty));
+    }
+
+    #endregion
+    
     #endregion
 }

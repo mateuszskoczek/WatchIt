@@ -1,12 +1,31 @@
-﻿using WatchIt.Database.Model.Media;
+﻿using System.Diagnostics.CodeAnalysis;
+using WatchIt.Common.Model.Photos;
+using WatchIt.Database.Model.Media;
 
 namespace WatchIt.Common.Model.Media;
 
-public class MediaPhotoRequest : MediaPhoto
+public class MediaPhotoRequest : Photo
 {
-    public MediaPhotoImage CreateMediaPhotoImage() => new MediaPhotoImage
+    #region CONSTRUCTORS
+    
+    public MediaPhotoRequest() {}
+
+    [SetsRequiredMembers]
+    public MediaPhotoRequest(PhotoResponse response)
     {
-        MediaId = MediaId,
+        Image = response.Image;
+        MimeType = response.MimeType;
+    }
+    
+    #endregion
+    
+    
+    
+    #region PUBLIC METHODS
+
+    public MediaPhotoImage CreateMediaPhotoImage(long mediaId) => new MediaPhotoImage
+    {
+        MediaId = mediaId,
         Image = Image,
         MimeType = MimeType
     };
@@ -18,22 +37,6 @@ public class MediaPhotoRequest : MediaPhoto
         FirstGradientColor = Background.FirstGradientColor,
         SecondGradientColor = Background.SecondGradientColor
     };
-    
-    public void UpdateMediaPhotoImage(MediaPhotoImage item)
-    {
-        item.MediaId = MediaId;
-        item.Image = Image;
-        item.MimeType = MimeType;
-        item.UploadDate = DateTime.Now;
-    }
 
-    public void UpdateMediaPhotoImageBackground(MediaPhotoImageBackground item)
-    {
-        if (Background is not null)
-        {
-            item.IsUniversalBackground = Background.IsUniversalBackground;
-            item.FirstGradientColor = Background.FirstGradientColor;
-            item.SecondGradientColor = Background.SecondGradientColor;
-        }
-    }
+    #endregion
 }
