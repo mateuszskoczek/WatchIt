@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -38,7 +39,12 @@ public abstract class QueryParameters
             FromQueryAttribute? attribute = property.GetCustomAttributes<FromQueryAttribute>(true).FirstOrDefault();
             if (value is not null && attribute is not null)
             {
-                string query = $"{attribute.Name}={value}";
+                string valueString = (value switch
+                {
+                    decimal d => d.ToString(CultureInfo.InvariantCulture),
+                    _ => value.ToString()
+                })!;
+                string query = $"{attribute.Name}={valueString}";
                 queries.Add(query);
             }
         }
@@ -92,7 +98,7 @@ public abstract class QueryParameters
             (
                 property is not null
                 &&
-                property.CompareTo(from) > 0
+                property.CompareTo(from) >= 0
             )
         )
         &&

@@ -9,7 +9,7 @@ public class RatingResponse
     #region PROPERTIES
     
     [JsonPropertyName("average")]
-    public required double Average { get; set; }
+    public required decimal Average { get; set; }
     
     [JsonPropertyName("count")]
     public required long Count { get; set; }
@@ -24,10 +24,10 @@ public class RatingResponse
     public RatingResponse() {}
 
     [SetsRequiredMembers]
-    public RatingResponse(IEnumerable<RatingMedia> ratingMedia) : this(ratingMedia.Any() ? ratingMedia.Average(x => x.Rating) : 0, ratingMedia.Count()) {}
+    public RatingResponse(IEnumerable<RatingMedia> ratingMedia) : this(ratingMedia.Any() ? (decimal)ratingMedia.Average(x => x.Rating) : 0, ratingMedia.Count()) {}
 
     [SetsRequiredMembers]
-    public RatingResponse(double ratingAverage, long ratingCount)
+    public RatingResponse(decimal ratingAverage, long ratingCount)
     {
         Average = ratingAverage;
         Count = ratingCount;

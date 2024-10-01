@@ -33,10 +33,10 @@
                                         else
                                         {
                                             <Dropdown>
-                                                <DropdownToggle Color="Color.Default" Size="Size.Small" ToggleIconVisible="false">Lists</DropdownToggle>
+                                                <DropdownToggle Color="Color.Default" Size="Size.Small" ToggleIconVisible="false">Database</DropdownToggle>
                                                 <DropdownMenu>
-                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/lists/movies"))">Movies</DropdownItem>
-                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/lists/series"))">TV Series</DropdownItem>
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/database/movies"))">Movies</DropdownItem>
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/database/series"))">TV Series</DropdownItem>
                                                 </DropdownMenu>
                                             </Dropdown>
                                             <button type="button" class="btn btn-sm" @onclick="@(() => _searchbarVisible = true)">⌕</button>

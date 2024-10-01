@@ -44,22 +44,22 @@ public class MovieQueryParameters : QueryParameters<MovieResponse>
     public decimal? BudgetTo { get; set; }
 
     [FromQuery(Name = "rating_average")]
-    public double? RatingAverage { get; set; }
+    public decimal? RatingAverage { get; set; }
 
     [FromQuery(Name = "rating_average_from")]
-    public double? RatingAverageFrom { get; set; }
+    public decimal? RatingAverageFrom { get; set; }
 
     [FromQuery(Name = "rating_average_to")]
-    public double? RatingAverageTo { get; set; }
+    public decimal? RatingAverageTo { get; set; }
 
     [FromQuery(Name = "rating_count")]
-    public double? RatingCount { get; set; }
+    public long? RatingCount { get; set; }
 
     [FromQuery(Name = "rating_count_from")]
-    public double? RatingCountFrom { get; set; }
+    public long? RatingCountFrom { get; set; }
 
     [FromQuery(Name = "rating_count_to")]
-    public double? RatingCountTo { get; set; }
+    public long? RatingCountTo { get; set; }
 
     #endregion
     

@@ -107,10 +107,8 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         {
             return RequestResult.NotFound();
         }
-
-        double ratingAverage = item.RatingMedia.Any() ? item.RatingMedia.Average(x => x.Rating) : 0;
-        long ratingCount = item.RatingMedia.Count();
-        RatingResponse ratingResponse = new RatingResponse(ratingAverage, ratingCount);
+        
+        RatingResponse ratingResponse = new RatingResponse(item.RatingMedia);
         
         return RequestResult.Ok(ratingResponse);
     }
