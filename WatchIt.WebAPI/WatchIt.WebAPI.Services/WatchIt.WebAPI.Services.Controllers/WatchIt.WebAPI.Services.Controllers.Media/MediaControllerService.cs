@@ -108,7 +108,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
             return RequestResult.NotFound();
         }
         
-        RatingResponse ratingResponse = new RatingResponse(item.RatingMedia);
+        RatingResponse ratingResponse = RatingResponse.Create(item.RatingMedia);
         
         return RequestResult.Ok(ratingResponse);
     }

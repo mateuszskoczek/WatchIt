@@ -122,7 +122,7 @@ public abstract class QueryParameters<T> : QueryParameters where T : IQueryOrder
 {
     #region PUBLIC METHODS
 
-    public abstract bool IsMeetingConditions(T item);
+    protected abstract bool IsMeetingConditions(T item);
 
     public IEnumerable<T> PrepareData(IEnumerable<T> data)
     {

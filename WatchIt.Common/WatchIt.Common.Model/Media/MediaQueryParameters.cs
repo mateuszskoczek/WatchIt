@@ -59,9 +59,9 @@ public class MediaQueryParameters : QueryParameters<MediaResponse>
     
     
     
-    #region PUBLIC METHODS
+    #region PRIVATE METHODS
 
-    public override bool IsMeetingConditions(MediaResponse item) =>
+    protected override bool IsMeetingConditions(MediaResponse item) =>
     (
         Test(item.Type, Type)
         &&
