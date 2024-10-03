@@ -25,5 +25,15 @@ public class PersonRequest : Person
         GenderId = GenderId,
     };
 
+    public void UpdatePerson(Database.Model.Person.Person person)
+    {
+        person.Name = Name;
+        person.FullName = FullName;
+        person.Description = Description;
+        person.BirthDate = BirthDate;
+        person.DeathDate = DeathDate;
+        person.GenderId = GenderId;
+    }
+
     #endregion
 }

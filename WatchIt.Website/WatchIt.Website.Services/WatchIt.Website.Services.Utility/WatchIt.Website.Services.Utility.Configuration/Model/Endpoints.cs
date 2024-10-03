@@ -9,4 +9,5 @@ public class Endpoints
     public Movies Movies { get; set; }
     public Series Series { get; set; }
     public Photos Photos { get; set; }
+    public Persons Persons { get; set; }
 }
