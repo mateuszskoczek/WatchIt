@@ -17,9 +17,9 @@ public class GenreQueryParameters : QueryParameters<GenreResponse>
     
     
     
-    #region PUBLIC METHODS
+    #region PRIVATE METHODS
 
-    public override bool IsMeetingConditions(GenreResponse item) =>
+    protected override bool IsMeetingConditions(GenreResponse item) =>
     (
         TestStringWithRegex(item.Name, Name)
         &&

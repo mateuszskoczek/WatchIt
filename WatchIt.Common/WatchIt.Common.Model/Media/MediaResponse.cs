@@ -51,7 +51,7 @@ public class MediaResponse : Media, IQueryOrderable<MediaResponse>
         ReleaseDate = media.ReleaseDate;
         Length = media.Length;
         Type = mediaType;
-        Rating = new RatingResponse(media.RatingMedia);
+        Rating = RatingResponse.Create(media.RatingMedia);
     }
 
     #endregion

@@ -59,9 +59,9 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
     
     
     
-    #region PUBLIC METHODS
+    #region PRIVATE METHODS
 
-    public override bool IsMeetingConditions(SeriesResponse item) =>
+    protected override bool IsMeetingConditions(SeriesResponse item) =>
     (
         TestStringWithRegex(item.Title, Title)
         &&

@@ -50,7 +50,7 @@ public class MovieResponse : Movie, IQueryOrderable<MovieResponse>
         ReleaseDate = mediaMovie.Media.ReleaseDate;
         Length = mediaMovie.Media.Length;
         Budget = mediaMovie.Budget;
-        Rating = new RatingResponse(mediaMovie.Media.RatingMedia);
+        Rating = RatingResponse.Create(mediaMovie.Media.RatingMedia);
     }
 
     #endregion

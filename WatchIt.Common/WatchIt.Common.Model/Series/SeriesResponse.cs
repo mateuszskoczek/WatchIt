@@ -50,7 +50,7 @@ public class SeriesResponse : Series, IQueryOrderable<SeriesResponse>
         ReleaseDate = mediaSeries.Media.ReleaseDate;
         Length = mediaSeries.Media.Length;
         HasEnded = mediaSeries.HasEnded;
-        Rating = new RatingResponse(mediaSeries.Media.RatingMedia);
+        Rating = RatingResponse.Create(mediaSeries.Media.RatingMedia);
     }
 
     #endregion
