@@ -139,6 +139,53 @@ public class PersonsWebAPIService : BaseWebAPIService, IPersonsWebAPIService
     }
 
     #endregion
+    
+    #region Photo
+    
+    public async Task GetPersonPhoto(long id, Action<PersonPhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Persons.GetPersonPhoto, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+
+    public async Task PutPersonPhoto(long id, PersonPhotoRequest data, Action<PersonPhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Persons.PutPersonPhoto, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Put, url)
+        {
+            Body = data
+        };
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .ExecuteAction();
+    }
+    
+    public async Task DeletePersonPhoto(long id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Persons.DeletePersonPhoto, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .ExecuteAction();
+    }
+
+    #endregion
 
     #endregion
     

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WatchIt.Common.Model.Persons;
 using WatchIt.Database;
+using WatchIt.Database.Model.Person;
 using WatchIt.WebAPI.Services.Controllers.Common;
 using WatchIt.WebAPI.Services.Utility.User;
 using Person = WatchIt.Database.Model.Person.Person;
@@ -140,6 +141,81 @@ public class PersonsControllerService : IPersonsControllerService
         return RequestResult.Ok(data);
     }
 
+    #endregion
+    
+    #region Photo
+    
+    public async Task<RequestResult> GetPersonPhoto(long id)
+    {
+        Person? person = await _database.Persons.FirstOrDefaultAsync(x => x.Id == id);
+        if (person is null)
+        {
+            return RequestResult.BadRequest();
+        }
+
+        PersonPhotoImage? photo = person.PersonPhoto;
+        if (photo is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        PersonPhotoResponse data = new PersonPhotoResponse(photo);
+        return RequestResult.Ok(data);
+    }
+
+    public async Task<RequestResult> PutPersonPhoto(long id, PersonPhotoRequest data)
+    {
+        UserValidator validator = _userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        Person? person = await _database.Persons.FirstOrDefaultAsync(x => x.Id == id);
+        if (person is null)
+        {
+            return RequestResult.BadRequest();
+        }
+
+        if (person.PersonPhoto is null)
+        {
+            PersonPhotoImage image = data.CreatePersonPhotoImage();
+            await _database.PersonPhotoImages.AddAsync(image);
+            await _database.SaveChangesAsync();
+
+            person.PersonPhotoId = image.Id;
+        }
+        else
+        {
+            data.UpdatePersonPhotoImage(person.PersonPhoto);
+        }
+        
+        await _database.SaveChangesAsync();
+
+        PersonPhotoResponse returnData = new PersonPhotoResponse(person.PersonPhoto);
+        return RequestResult.Ok(returnData);
+    }
+
+    public async Task<RequestResult> DeletePersonPhoto(long id)
+    {
+        UserValidator validator = _userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        Person? person = await _database.Persons.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (person?.PersonPhoto != null)
+        {
+            _database.PersonPhotoImages.Attach(person.PersonPhoto);
+            _database.PersonPhotoImages.Remove(person.PersonPhoto);
+            await _database.SaveChangesAsync();
+        }
+
+        return RequestResult.NoContent();
+    }
+    
     #endregion
     
     #endregion

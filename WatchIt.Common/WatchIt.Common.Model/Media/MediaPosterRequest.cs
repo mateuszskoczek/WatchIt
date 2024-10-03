@@ -10,10 +10,10 @@ public class MediaPosterRequest : MediaPoster
     public MediaPosterRequest() {}
 
     [SetsRequiredMembers]
-    public MediaPosterRequest(MediaPosterResponse response)
+    public MediaPosterRequest(Picture image)
     {
-        Image = response.Image;
-        MimeType = response.MimeType;
+        Image = image.Image;
+        MimeType = image.MimeType;
     }
     
     #endregion

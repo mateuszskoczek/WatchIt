@@ -80,5 +80,31 @@ public class PersonsController : ControllerBase
     
     #endregion
     
+    #region Photo
+    
+    [HttpGet("{id}/photo")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(PersonPhotoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetPersonPhoto([FromRoute] long id) => await _personsControllerService.GetPersonPhoto(id);
+    
+    [HttpPut("{id}/photo")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(PersonPhotoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> PutPersonPhoto([FromRoute]long id, [FromBody]PersonPhotoRequest body) => await _personsControllerService.PutPersonPhoto(id, body);
+    
+    [HttpDelete("{id}/photo")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> DeletePersonPhoto([FromRoute]long id) => await _personsControllerService.DeletePersonPhoto(id);
+    
+    #endregion
+    
     #endregion
 }
