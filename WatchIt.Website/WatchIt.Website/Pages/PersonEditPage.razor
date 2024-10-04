@@ -11,7 +11,7 @@
         <div class="container-grid">
             <div class="row">
                 <div class="col">
-                    <div class="rounded-3 panel panel-regular p-3">
+                    <div class="rounded-3 panel panel-regular p-2 px-3">
                         <h3 class="m-0 p-0">@(Id is not null ? "Edit" : "Create new") person @(_person is not null ? $" \"{_person.Name}\"" : string.Empty)</h3>
                     </div>
                 </div>
@@ -25,7 +25,8 @@
                                             Class="h-100"/>
                 </div>
                 <div class="col">
-                    <div class="rounded-3 panel panel-regular p-2 h-100"></div>
+                    <PersonEditFormComponent Id="@(Id)" 
+                                             Class="h-100"/>
                 </div>
             </div>
         </div>
