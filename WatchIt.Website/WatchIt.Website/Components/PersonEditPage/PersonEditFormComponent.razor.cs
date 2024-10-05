@@ -80,7 +80,7 @@ public partial class PersonEditFormComponent : ComponentBase
 
         void PostSuccess(PersonResponse data)
         {
-            NavigationManager.NavigateTo($"person/{data.Id}/edit");
+            NavigationManager.NavigateTo($"person/{data.Id}/edit", true);
         }
 
         void BadRequest(IDictionary<string, string[]> errors)

@@ -10,6 +10,7 @@ public partial class PersonEditPage : ComponentBase
 {
     #region SERVICES
 
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
     [Inject] private IAuthenticationService AuthenticationService { get; set; } = default!;
     [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
 
@@ -61,7 +62,7 @@ public partial class PersonEditPage : ComponentBase
             {
                 endTasks.AddRange(
                 [
-                    PersonsWebAPIService.GetPerson(Id.Value, data => _person = data)
+                    PersonsWebAPIService.GetPerson(Id.Value, data => _person = data, () => NavigationManager.NavigateTo("/person/new", true))
                 ]);
             }
             
