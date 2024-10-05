@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace WatchIt.Common.Model;
 
-public abstract class Picture
+public class Picture
 {
     #region PROPERTIES
     

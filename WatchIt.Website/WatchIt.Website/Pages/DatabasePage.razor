@@ -7,12 +7,17 @@
 
 
 <PageTitle>
+    @("WatchIt - ")
     @switch (Type)
     {
-        case "movies": @("Movies"); break;
-        case "series": @("Series"); break;    
+        case "movies":
+            @("Movies");
+            break;
+        case "series":
+            @("Series");
+            break;
     }
-    @(" database - WatchIt")
+    @(" database")
 </PageTitle>
 
 

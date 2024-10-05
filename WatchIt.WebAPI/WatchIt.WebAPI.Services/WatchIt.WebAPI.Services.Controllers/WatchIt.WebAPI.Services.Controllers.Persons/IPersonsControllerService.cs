@@ -10,5 +10,10 @@ public interface IPersonsControllerService
     Task<RequestResult> PostPerson(PersonRequest data);
     Task<RequestResult> PutPerson(long id, PersonRequest data);
     Task<RequestResult> DeletePerson(long id);
+    
     Task<RequestResult> GetPersonsViewRank(int first, int days);
+
+    Task<RequestResult> GetPersonPhoto(long id);
+    Task<RequestResult> PutPersonPhoto(long id, PersonPhotoRequest data);
+    Task<RequestResult> DeletePersonPhoto(long id);
 }

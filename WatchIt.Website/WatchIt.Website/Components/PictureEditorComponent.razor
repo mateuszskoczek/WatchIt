@@ -1,0 +1,65 @@
+<div class="rounded-3 panel panel-regular p-3 @(Class)">
+    @if (_loaded)
+    {
+        <div class="vstack gap-3">
+            <img class="rounded-2 shadow object-fit-cover picture-aspect-ratio" src="@(_pictureSelected is not null ? _pictureSelected.ToString() : PicturePlaceholder)" alt="poster" width="@(ContentWidth)"/>
+            <InputFile class="form-control content-width" OnChange="Load" disabled="@(!Id.HasValue)" autocomplete="off"/>
+            @if (_pictureChanged || _pictureSaved is not null)
+            {
+                <div class="d-flex gap-1 content-width">
+                    @if (_pictureChanged)
+                    {
+                        <div class="flex-fill">
+                            <button type="button" class="btn btn-secondary btn-block btn-stretch-x" @onclick="Save" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">
+                                @if (!_pictureSaving)
+                                {
+                                    <span>Save</span>
+                                }
+                                else
+                                {
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    <span>Saving...</span>
+                                }
+                            </button>
+                        </div>
+                        <div class="flex-fill">
+                            <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="Cancel" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">Drop changes</button>
+                        </div>
+                    }
+                    else if (_pictureSaved is not null)
+                    {
+                        <div class="flex-fill">
+                            <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="Delete" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">
+                                @if (!_pictureSaving)
+                                {
+                                    <span>Delete</span>
+                                }
+                                else
+                                {
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    <span>Deleting...</span>
+                                }
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="d-flex align-items-center justify-content-center h-100 content-width">
+            <LoadingComponent/>
+        </div>
+    }
+</div>
+
+
+
+<style>
+    /* CLASSES */
+    
+    .content-width {
+        width: @(ContentWidth);
+    }
+</style>

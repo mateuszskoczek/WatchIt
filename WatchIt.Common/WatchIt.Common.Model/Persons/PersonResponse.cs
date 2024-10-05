@@ -40,6 +40,9 @@ public class PersonResponse : Person, IQueryOrderable<PersonResponse>
 
     #region CONSTRUCTORS
 
+    [JsonConstructor]
+    public PersonResponse() { }
+    
     [SetsRequiredMembers]
     public PersonResponse(Database.Model.Person.Person person)
     {
