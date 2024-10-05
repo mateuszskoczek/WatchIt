@@ -14,6 +14,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\WatchIt.Common\WatchIt.Common.Model\WatchIt.Common.Model.csproj" />
       <ProjectReference Include="..\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Accounts\WatchIt.WebAPI.Services.Controllers.Accounts.csproj" />
+      <ProjectReference Include="..\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Genders\WatchIt.WebAPI.Services.Controllers.Genders.csproj" />
       <ProjectReference Include="..\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Genres\WatchIt.WebAPI.Services.Controllers.Genres.csproj" />
       <ProjectReference Include="..\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Media\WatchIt.WebAPI.Services.Controllers.Media.csproj" />
       <ProjectReference Include="..\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Movies\WatchIt.WebAPI.Services.Controllers.Movies.csproj" />

@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using WatchIt.Database;
 using WatchIt.WebAPI.Services.Controllers.Accounts;
+using WatchIt.WebAPI.Services.Controllers.Genders;
 using WatchIt.WebAPI.Services.Controllers.Genres;
 using WatchIt.WebAPI.Services.Controllers.Media;
 using WatchIt.WebAPI.Services.Controllers.Movies;
@@ -154,6 +155,7 @@ public static class Program
         
         // Controller
         builder.Services.AddTransient<IAccountsControllerService, AccountsControllerService>();
+        builder.Services.AddTransient<IGendersControllerService, GendersControllerService>();
         builder.Services.AddTransient<IGenresControllerService, GenresControllerService>();
         builder.Services.AddTransient<IMoviesControllerService, MoviesControllerService>();
         builder.Services.AddTransient<IMediaControllerService, MediaControllerService>();
