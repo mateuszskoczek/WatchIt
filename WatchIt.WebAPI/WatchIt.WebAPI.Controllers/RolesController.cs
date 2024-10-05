@@ -8,7 +8,7 @@ using WatchIt.WebAPI.Services.Controllers.Roles;
 namespace WatchIt.WebAPI.Controllers;
 
 [ApiController]
-[Route("persons")]
+[Route("roles")]
 public class RolesController : ControllerBase
 {
     #region SERVICES
