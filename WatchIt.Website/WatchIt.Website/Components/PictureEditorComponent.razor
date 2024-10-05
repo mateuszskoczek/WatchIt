@@ -6,41 +6,43 @@
             <InputFile class="form-control content-width" OnChange="Load" disabled="@(!Id.HasValue)" autocomplete="off"/>
             @if (_pictureChanged || _pictureSaved is not null)
             {
-                <div class="d-flex gap-1 content-width">
+                <div class="content-width">
                     @if (_pictureChanged)
                     {
-                        <div class="flex-fill">
-                            <button type="button" class="btn btn-secondary btn-block btn-stretch-x" @onclick="Save" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">
-                                @if (!_pictureSaving)
-                                {
-                                    <span>Save</span>
-                                }
-                                else
-                                {
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                    <span>Saving...</span>
-                                }
-                            </button>
-                        </div>
-                        <div class="flex-fill">
-                            <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="Cancel" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">Drop changes</button>
+                        <div class="container-grid">
+                            <div class="row gx-1">
+                                <div class="col">
+                                    <button type="button" class="btn btn-secondary btn-block btn-stretch-x" @onclick="Save" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">
+                                        @if (!_pictureSaving)
+                                        {
+                                            <span>Save</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <span>Saving...</span>
+                                        }
+                                    </button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="Cancel" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">Drop changes</button>
+                                </div>
+                            </div>
                         </div>
                     }
                     else if (_pictureSaved is not null)
                     {
-                        <div class="flex-fill">
-                            <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="Delete" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">
-                                @if (!_pictureSaving)
-                                {
-                                    <span>Delete</span>
-                                }
-                                else
-                                {
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                    <span>Deleting...</span>
-                                }
-                            </button>
-                        </div>
+                        <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="Delete" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">
+                            @if (!_pictureSaving)
+                            {
+                                <span>Delete</span>
+                            }
+                            else
+                            {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span>Deleting...</span>
+                            }
+                        </button>
                     }
                 </div>
             }
@@ -60,6 +62,6 @@
     /* CLASSES */
     
     .content-width {
-        width: @(ContentWidth);
+        width: @(ContentWidth)px;
     }
 </style>
