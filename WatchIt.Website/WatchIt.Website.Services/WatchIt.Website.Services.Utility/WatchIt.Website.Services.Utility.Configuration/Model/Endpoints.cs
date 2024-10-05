@@ -11,4 +11,5 @@ public class Endpoints
     public Series Series { get; set; }
     public Photos Photos { get; set; }
     public Persons Persons { get; set; }
+    public Roles Roles { get; set; }
 }
