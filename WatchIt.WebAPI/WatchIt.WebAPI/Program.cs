@@ -16,6 +16,7 @@ using WatchIt.WebAPI.Services.Controllers.Media;
 using WatchIt.WebAPI.Services.Controllers.Movies;
 using WatchIt.WebAPI.Services.Controllers.Persons;
 using WatchIt.WebAPI.Services.Controllers.Photos;
+using WatchIt.WebAPI.Services.Controllers.Roles;
 using WatchIt.WebAPI.Services.Controllers.Series;
 using WatchIt.WebAPI.Services.Utility.Configuration;
 using WatchIt.WebAPI.Services.Utility.Tokens;
@@ -162,6 +163,7 @@ public static class Program
         builder.Services.AddTransient<ISeriesControllerService, SeriesControllerService>();
         builder.Services.AddTransient<IPhotosControllerService, PhotosControllerService>();
         builder.Services.AddTransient<IPersonsControllerService, PersonsControllerService>();
+        builder.Services.AddTransient<IRolesControllerService, RolesControllerService>();
         
         return builder;
     }

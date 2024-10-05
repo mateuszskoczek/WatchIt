@@ -20,6 +20,7 @@
       <ProjectReference Include="..\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Movies\WatchIt.WebAPI.Services.Controllers.Movies.csproj" />
       <ProjectReference Include="..\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Persons\WatchIt.WebAPI.Services.Controllers.Persons.csproj" />
       <ProjectReference Include="..\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Photos\WatchIt.WebAPI.Services.Controllers.Photos.csproj" />
+      <ProjectReference Include="..\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Roles\WatchIt.WebAPI.Services.Controllers.Roles.csproj" />
       <ProjectReference Include="..\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Series\WatchIt.WebAPI.Services.Controllers.Series.csproj" />
     </ItemGroup>
 
