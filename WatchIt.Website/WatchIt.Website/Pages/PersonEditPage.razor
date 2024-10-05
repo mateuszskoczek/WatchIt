@@ -4,6 +4,35 @@
 @page "/person/new"
 
 
+
+<PageTitle>
+    WatchIt -
+    @if (_loaded)
+    {
+        if (string.IsNullOrWhiteSpace(_error) && _user?.IsAdmin == true)
+        {
+            if (_person is not null)
+            {
+                @("Edit \"")@(_person.Name)@("\"")
+            }
+            else
+            {
+                @("Create new person")
+            }
+        }
+        else
+        {
+            @("Error")
+        }
+    }
+    else
+    {
+        @("Loading")
+    }
+</PageTitle>
+
+
+
 @if (_loaded)
 {
     if (_user?.IsAdmin == true)

@@ -23,6 +23,9 @@ public class GenderResponse : Gender, IQueryOrderable<GenderResponse>
     
     
     #region CONSTRUCTORS
+    
+    [JsonConstructor]
+    public GenderResponse() { }
 
     [SetsRequiredMembers]
     public GenderResponse(Database.Model.Common.Gender gender)

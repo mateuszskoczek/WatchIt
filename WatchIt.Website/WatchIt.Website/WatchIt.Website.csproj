@@ -20,6 +20,7 @@
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.Utility\WatchIt.Website.Services.Utility.Configuration\WatchIt.Website.Services.Utility.Configuration.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.Utility\WatchIt.Website.Services.Utility.Tokens\WatchIt.Website.Services.Utility.Tokens.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Accounts\WatchIt.Website.Services.WebAPI.Accounts.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Genders\WatchIt.Website.Services.WebAPI.Genders.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Media\WatchIt.Website.Services.WebAPI.Media.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Movies\WatchIt.Website.Services.WebAPI.Movies.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Persons\WatchIt.Website.Services.WebAPI.Persons.csproj" />

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Genders;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Website.Services.WebAPI.Genders;
 using WatchIt.Website.Services.WebAPI.Persons;
 
 namespace WatchIt.Website.Components.PersonEditPage;
@@ -9,7 +10,9 @@ public partial class PersonEditFormComponent : ComponentBase
 {
     #region SERVICES
 
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
     [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
+    [Inject] private IGendersWebAPIService GendersWebAPIService { get; set; } = default!;
     
     #endregion
     
@@ -27,6 +30,8 @@ public partial class PersonEditFormComponent : ComponentBase
     #region FIELDS
 
     private bool _loaded;
+    private bool _saving;
+    private string? _error;
 
     private IEnumerable<GenderResponse> _genders = [];
     
@@ -47,7 +52,7 @@ public partial class PersonEditFormComponent : ComponentBase
             // STEP 0
             endTasks.AddRange(
             [
-                // TODO: Add gender fetch
+                GendersWebAPIService.GetAllGenders(successAction: data => _genders = data)
             ]);
             if (Id.HasValue)
             {
@@ -62,6 +67,42 @@ public partial class PersonEditFormComponent : ComponentBase
             
             _loaded = true;
             StateHasChanged();
+        }
+    }
+
+    private async Task Save()
+    {
+        void PutSuccess()
+        {
+            _error = null;
+            _saving = false;
+        }
+
+        void PostSuccess(PersonResponse data)
+        {
+            NavigationManager.NavigateTo($"person/{data.Id}/edit");
+        }
+
+        void BadRequest(IDictionary<string, string[]> errors)
+        {
+            _error = errors.SelectMany(x => x.Value).FirstOrDefault() ?? "Unknown error";
+            _saving = false;
+        }
+
+        void AuthError()
+        {
+            _error = "Authentication error";
+            _saving = false;
+        }
+        
+        _saving = true;
+        if (Id.HasValue)
+        {
+            await PersonsWebAPIService.PutPerson(Id.Value, _person, PutSuccess, BadRequest, AuthError, AuthError);
+        }
+        else
+        {
+            await PersonsWebAPIService.PostPerson(_person, PostSuccess, BadRequest, AuthError, AuthError);
         }
     }
 

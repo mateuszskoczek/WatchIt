@@ -45,6 +45,27 @@
                         </InputSelect>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col align-self-center">
+                        @if (!string.IsNullOrWhiteSpace(_error))
+                        {
+                            <span class="text-danger">@(_error)</span>
+                        }
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-secondary" disabled="@(_saving)" @onclick="@(Save)">
+                            @if (!_saving)
+                            {
+                                <span>Save</span>
+                            }
+                            else
+                            {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span>Saving...</span>
+                            }
+                        </button>
+                    </div>
+                </div>
             </div>
         </EditForm>
     }
