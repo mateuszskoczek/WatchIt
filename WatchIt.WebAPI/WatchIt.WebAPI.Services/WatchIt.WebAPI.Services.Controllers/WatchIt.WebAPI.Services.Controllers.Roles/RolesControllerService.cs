@@ -34,6 +34,59 @@ public class RolesControllerService : IRolesControllerService
     
     #region Actor
     
+    public async Task<RequestResult> GetActorRole(Guid id)
+    {
+        PersonActorRole? item = await _database.PersonActorRoles.FirstOrDefaultAsync(x => x.Id == id);
+        if (item is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        ActorRoleResponse data = new ActorRoleResponse(item);
+        return RequestResult.Ok(data);
+    }
+    
+    public async Task<RequestResult> PutActorRole(Guid id, ActorRoleRequest data)
+    {
+        UserValidator validator = _userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        PersonActorRole? item = await _database.PersonActorRoles.FirstOrDefaultAsync(x => x.Id == id);
+        if (item is null)
+        {
+            return RequestResult.NotFound();
+        }
+        
+        data.UpdateActorRole(item);
+        await _database.SaveChangesAsync();
+        
+        return RequestResult.Ok();
+    }
+    
+    public async Task<RequestResult> DeleteActorRole(Guid id)
+    {
+        UserValidator validator = _userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        PersonActorRole? item = await _database.PersonActorRoles.FirstOrDefaultAsync(x => x.Id == id);
+        if (item is null)
+        {
+            return RequestResult.NoContent();
+        }
+
+        _database.PersonActorRoles.Attach(item);
+        _database.PersonActorRoles.Remove(item);
+        await _database.SaveChangesAsync();
+        
+        return RequestResult.NoContent();
+    }
+    
     public async Task<RequestResult> GetAllActorRoleTypes(RoleTypeQueryParameters query)
     {
         IEnumerable<PersonActorRoleType> rawData = await _database.PersonActorRoleTypes.ToListAsync();
@@ -92,9 +145,60 @@ public class RolesControllerService : IRolesControllerService
     
     #endregion
     
-    
-    
     #region Creator
+    
+    public async Task<RequestResult> GetCreatorRole(Guid id)
+    {
+        PersonCreatorRole? item = await _database.PersonCreatorRoles.FirstOrDefaultAsync(x => x.Id == id);
+        if (item is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        CreatorRoleResponse data = new CreatorRoleResponse(item);
+        return RequestResult.Ok(data);
+    }
+    
+    public async Task<RequestResult> PutCreatorRole(Guid id, CreatorRoleRequest data)
+    {
+        UserValidator validator = _userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        PersonCreatorRole? item = await _database.PersonCreatorRoles.FirstOrDefaultAsync(x => x.Id == id);
+        if (item is null)
+        {
+            return RequestResult.NotFound();
+        }
+        
+        data.UpdateCreatorRole(item);
+        await _database.SaveChangesAsync();
+        
+        return RequestResult.Ok();
+    }
+    
+    public async Task<RequestResult> DeleteCreatorRole(Guid id)
+    {
+        UserValidator validator = _userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        PersonCreatorRole? item = await _database.PersonCreatorRoles.FirstOrDefaultAsync(x => x.Id == id);
+        if (item is null)
+        {
+            return RequestResult.NoContent();
+        }
+
+        _database.PersonCreatorRoles.Attach(item);
+        _database.PersonCreatorRoles.Remove(item);
+        await _database.SaveChangesAsync();
+        
+        return RequestResult.NoContent();
+    }
     
     public async Task<RequestResult> GetAllCreatorRoleTypes(RoleTypeQueryParameters query)
     {

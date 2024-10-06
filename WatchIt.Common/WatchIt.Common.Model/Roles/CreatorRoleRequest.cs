@@ -24,6 +24,13 @@ public class CreatorRoleRequest : CreatorRole, ICreatorRoleMediaRequest, ICreato
         PersonId = PersonId,
         PersonCreatorRoleTypeId = TypeId,
     };
+    
+    public void UpdateCreatorRole(PersonCreatorRole item)
+    {
+        item.MediaId = MediaId;
+        item.PersonId = PersonId;
+        item.PersonCreatorRoleTypeId = TypeId;
+    }
 
     #endregion
 }

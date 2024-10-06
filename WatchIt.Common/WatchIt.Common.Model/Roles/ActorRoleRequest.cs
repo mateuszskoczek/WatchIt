@@ -25,6 +25,14 @@ public class ActorRoleRequest : ActorRole, IActorRoleMediaRequest, IActorRolePer
         PersonActorRoleTypeId = TypeId,
         RoleName = Name,
     };
+    
+    public void UpdateActorRole(PersonActorRole item)
+    {
+        item.MediaId = MediaId;
+        item.PersonId = PersonId;
+        item.PersonActorRoleTypeId = TypeId;
+        item.RoleName = Name;
+    }
 
     #endregion
 }
