@@ -5,13 +5,13 @@ namespace WatchIt.WebAPI.Services.Controllers.Roles;
 
 public interface IRolesControllerService
 {
-    Task<RequestResult> GetAllActorRoles(RoleQueryParameters query);
-    Task<RequestResult> GetActorRole(short id);
-    Task<RequestResult> PostActorRole(RoleRequest data);
-    Task<RequestResult> DeleteActorRole(short id);
+    Task<RequestResult> GetAllActorRoleTypes(RoleTypeQueryParameters query);
+    Task<RequestResult> GetActorRoleType(short id);
+    Task<RequestResult> PostActorRoleType(RoleTypeRequest data);
+    Task<RequestResult> DeleteActorRoleType(short id);
     
-    Task<RequestResult> GetAllCreatorRoles(RoleQueryParameters query);
-    Task<RequestResult> GetCreatorRole(short id);
-    Task<RequestResult> PostCreatorRole(RoleRequest data);
-    Task<RequestResult> DeleteCreatorRole(short id);
+    Task<RequestResult> GetAllCreatorRoleTypes(RoleTypeQueryParameters query);
+    Task<RequestResult> GetCreatorRoleType(short id);
+    Task<RequestResult> PostCreatorRoleType(RoleTypeRequest data);
+    Task<RequestResult> DeleteCreatorRoleType(short id);
 }

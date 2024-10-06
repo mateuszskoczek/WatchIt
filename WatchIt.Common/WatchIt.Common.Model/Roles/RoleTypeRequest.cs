@@ -1,6 +1,6 @@
 namespace WatchIt.Common.Model.Roles;
 
-public class RoleRequest : Role
+public class RoleTypeRequest : RoleType
 {
     #region PUBLIC METHODS
 

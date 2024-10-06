@@ -34,15 +34,15 @@ public class RolesControllerService : IRolesControllerService
     
     #region Actor
     
-    public async Task<RequestResult> GetAllActorRoles(RoleQueryParameters query)
+    public async Task<RequestResult> GetAllActorRoleTypes(RoleTypeQueryParameters query)
     {
         IEnumerable<PersonActorRoleType> rawData = await _database.PersonActorRoleTypes.ToListAsync();
-        IEnumerable<RoleResponse> data = rawData.Select(x => new RoleResponse(x));
+        IEnumerable<RoleTypeResponse> data = rawData.Select(x => new RoleTypeResponse(x));
         data = query.PrepareData(data);
         return RequestResult.Ok(data);
     }
 
-    public async Task<RequestResult> GetActorRole(short id)
+    public async Task<RequestResult> GetActorRoleType(short id)
     {
         PersonActorRoleType? item = await _database.PersonActorRoleTypes.FirstOrDefaultAsync(x => x.Id == id);
         if (item is null)
@@ -50,11 +50,11 @@ public class RolesControllerService : IRolesControllerService
             return RequestResult.NotFound();
         }
 
-        RoleResponse data = new RoleResponse(item);
+        RoleTypeResponse data = new RoleTypeResponse(item);
         return RequestResult.Ok(data);
     }
 
-    public async Task<RequestResult> PostActorRole(RoleRequest data)
+    public async Task<RequestResult> PostActorRoleType(RoleTypeRequest data)
     {
         UserValidator validator = _userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -66,10 +66,10 @@ public class RolesControllerService : IRolesControllerService
         await _database.PersonActorRoleTypes.AddAsync(item);
         await _database.SaveChangesAsync();
         
-        return RequestResult.Created($"roles/actor/{item.Id}", new RoleResponse(item));
+        return RequestResult.Created($"roles/actor/{item.Id}", new RoleTypeResponse(item));
     }
     
-    public async Task<RequestResult> DeleteActorRole(short id)
+    public async Task<RequestResult> DeleteActorRoleType(short id)
     {
         UserValidator validator = _userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -96,15 +96,15 @@ public class RolesControllerService : IRolesControllerService
     
     #region Creator
     
-    public async Task<RequestResult> GetAllCreatorRoles(RoleQueryParameters query)
+    public async Task<RequestResult> GetAllCreatorRoleTypes(RoleTypeQueryParameters query)
     {
         IEnumerable<PersonCreatorRoleType> rawData = await _database.PersonCreatorRoleTypes.ToListAsync();
-        IEnumerable<RoleResponse> data = rawData.Select(x => new RoleResponse(x));
+        IEnumerable<RoleTypeResponse> data = rawData.Select(x => new RoleTypeResponse(x));
         data = query.PrepareData(data);
         return RequestResult.Ok(data);
     }
 
-    public async Task<RequestResult> GetCreatorRole(short id)
+    public async Task<RequestResult> GetCreatorRoleType(short id)
     {
         PersonCreatorRoleType? item = await _database.PersonCreatorRoleTypes.FirstOrDefaultAsync(x => x.Id == id);
         if (item is null)
@@ -112,11 +112,11 @@ public class RolesControllerService : IRolesControllerService
             return RequestResult.NotFound();
         }
 
-        RoleResponse data = new RoleResponse(item);
+        RoleTypeResponse data = new RoleTypeResponse(item);
         return RequestResult.Ok(data);
     }
 
-    public async Task<RequestResult> PostCreatorRole(RoleRequest data)
+    public async Task<RequestResult> PostCreatorRoleType(RoleTypeRequest data)
     {
         UserValidator validator = _userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -128,10 +128,10 @@ public class RolesControllerService : IRolesControllerService
         await _database.PersonCreatorRoleTypes.AddAsync(item);
         await _database.SaveChangesAsync();
         
-        return RequestResult.Created($"roles/creator/{item.Id}", new RoleResponse(item));
+        return RequestResult.Created($"roles/creator/{item.Id}", new RoleTypeResponse(item));
     }
     
-    public async Task<RequestResult> DeleteCreatorRole(short id)
+    public async Task<RequestResult> DeleteCreatorRoleType(short id)
     {
         UserValidator validator = _userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)

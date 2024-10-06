@@ -34,61 +34,61 @@ public class RolesController : ControllerBase
     
     #region Actor
     
-    [HttpGet("actor")]
+    [HttpGet("actor/type")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(IEnumerable<RoleResponse>), StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetAllActorRoles(RoleQueryParameters query) => await _rolesControllerService.GetAllActorRoles(query);
+    [ProducesResponseType(typeof(IEnumerable<RoleTypeResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetAllActorRoleTypes(RoleTypeQueryParameters query) => await _rolesControllerService.GetAllActorRoleTypes(query);
     
-    [HttpGet("actor/{id}")]
+    [HttpGet("actor/type/{id}")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(RoleResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RoleTypeResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetActorRole([FromRoute]short id) => await _rolesControllerService.GetActorRole(id);
+    public async Task<ActionResult> GetActorRoleType([FromRoute]short id) => await _rolesControllerService.GetActorRoleType(id);
     
-    [HttpPost("actor")]
+    [HttpPost("actor/type")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [ProducesResponseType(typeof(RoleResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(RoleTypeResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> PostActorRoles([FromBody]RoleRequest body) => await _rolesControllerService.PostActorRole(body);
+    public async Task<ActionResult> PostActorRoleType([FromBody]RoleTypeRequest body) => await _rolesControllerService.PostActorRoleType(body);
     
-    [HttpDelete("actor/{id}")]
+    [HttpDelete("actor/type/{id}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> DeleteActorRoles([FromRoute]short id) => await _rolesControllerService.DeleteActorRole(id);
+    public async Task<ActionResult> DeleteActorRoleType([FromRoute]short id) => await _rolesControllerService.DeleteActorRoleType(id);
     
     #endregion
     
     #region Creator
     
-    [HttpGet("creator")]
+    [HttpGet("creator/type")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(IEnumerable<RoleResponse>), StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetAllCreatorRoles(RoleQueryParameters query) => await _rolesControllerService.GetAllCreatorRoles(query);
+    [ProducesResponseType(typeof(IEnumerable<RoleTypeResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetAllCreatorRoleTypes(RoleTypeQueryParameters query) => await _rolesControllerService.GetAllCreatorRoleTypes(query);
     
-    [HttpGet("creator/{id}")]
+    [HttpGet("creator/type/{id}")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(RoleResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RoleTypeResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetCreatorRole([FromRoute]short id) => await _rolesControllerService.GetCreatorRole(id);
+    public async Task<ActionResult> GetCreatorRoleType([FromRoute]short id) => await _rolesControllerService.GetCreatorRoleType(id);
     
-    [HttpPost("creator")]
+    [HttpPost("creator/type")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [ProducesResponseType(typeof(RoleResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(RoleTypeResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> PostCreatorRoles([FromBody]RoleRequest body) => await _rolesControllerService.PostCreatorRole(body);
+    public async Task<ActionResult> PostCreatorRoleType([FromBody]RoleTypeRequest body) => await _rolesControllerService.PostCreatorRoleType(body);
     
-    [HttpDelete("creator/{id}")]
+    [HttpDelete("creator/type/{id}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult> DeleteCreatorRoles([FromRoute]short id) => await _rolesControllerService.DeleteCreatorRole(id);
+    public async Task<ActionResult> DeleteCreatorRoleType([FromRoute]short id) => await _rolesControllerService.DeleteCreatorRoleType(id);
     
     #endregion
     

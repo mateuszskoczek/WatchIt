@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace WatchIt.Common.Model.Roles;
 
-public class Role
+public class RoleType
 {
     #region PROPERTIES
 

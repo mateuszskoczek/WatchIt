@@ -3,7 +3,7 @@ using WatchIt.Common.Query;
 
 namespace WatchIt.Common.Model.Roles;
 
-public class RoleQueryParameters : QueryParameters<RoleResponse>
+public class RoleTypeQueryParameters : QueryParameters<RoleTypeResponse>
 {
     #region PROPERTIES
     
@@ -16,7 +16,7 @@ public class RoleQueryParameters : QueryParameters<RoleResponse>
     
     #region PRIVATE METHODS
 
-    protected override bool IsMeetingConditions(RoleResponse item) => TestStringWithRegex(item.Name, Name);
+    protected override bool IsMeetingConditions(RoleTypeResponse item) => TestStringWithRegex(item.Name, Name);
 
     #endregion
 }

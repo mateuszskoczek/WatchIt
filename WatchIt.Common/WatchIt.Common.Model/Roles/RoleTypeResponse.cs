@@ -4,12 +4,12 @@ using WatchIt.Common.Query;
 
 namespace WatchIt.Common.Model.Roles;
 
-public class RoleResponse : Role, IQueryOrderable<RoleResponse>
+public class RoleTypeResponse : RoleType, IQueryOrderable<RoleTypeResponse>
 {
     #region PROPERTIES
 
     [JsonIgnore]
-    public static IDictionary<string, Func<RoleResponse, IComparable>> OrderableProperties { get; } = new Dictionary<string, Func<RoleResponse, IComparable>>
+    public static IDictionary<string, Func<RoleTypeResponse, IComparable>> OrderableProperties { get; } = new Dictionary<string, Func<RoleTypeResponse, IComparable>>
     {
         { "name", item => item.Name }
     };
@@ -25,17 +25,17 @@ public class RoleResponse : Role, IQueryOrderable<RoleResponse>
     #region CONSTRUCTORS
     
     [JsonConstructor]
-    public RoleResponse() { }
+    public RoleTypeResponse() { }
 
     [SetsRequiredMembers]
-    public RoleResponse(Database.Model.Person.PersonCreatorRoleType creatorRoleType)
+    public RoleTypeResponse(Database.Model.Person.PersonCreatorRoleType creatorRoleType)
     {
         Id = creatorRoleType.Id;
         Name = creatorRoleType.Name;
     }
 
     [SetsRequiredMembers]
-    public RoleResponse(Database.Model.Person.PersonActorRoleType actorRoleType)
+    public RoleTypeResponse(Database.Model.Person.PersonActorRoleType actorRoleType)
     {
         Id = actorRoleType.Id;
         Name = actorRoleType.Name;
