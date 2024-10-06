@@ -8,7 +8,13 @@ public class ActorRoleRequest : ActorRole, IActorRoleMediaRequest, IActorRolePer
 
     PersonActorRole IActorRoleMediaRequest.CreateActorRole(long mediaId)
     {
-        this.MediaId = mediaId;
+        MediaId = mediaId;
+        return CreateActorRole();
+    }
+    
+    PersonActorRole IActorRolePersonRequest.CreateActorRole(long personId)
+    {
+        PersonId = personId;
         return CreateActorRole();
     }
     

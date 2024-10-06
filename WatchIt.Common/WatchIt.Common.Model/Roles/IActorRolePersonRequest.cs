@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using WatchIt.Database.Model.Person;
 
 namespace WatchIt.Common.Model.Roles;
 
@@ -15,5 +16,13 @@ public interface IActorRolePersonRequest
     [JsonPropertyName("name")]
     string Name { get; set; }
     
+    #endregion
+    
+    
+    
+    #region PUBLIC METHODS
+
+    PersonActorRole CreateActorRole(long personId);
+
     #endregion
 }

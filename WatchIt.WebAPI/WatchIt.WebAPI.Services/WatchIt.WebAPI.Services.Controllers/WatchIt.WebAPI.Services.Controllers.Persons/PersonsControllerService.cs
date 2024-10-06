@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Roles;
 using WatchIt.Database;
 using WatchIt.Database.Model.Person;
 using WatchIt.WebAPI.Services.Controllers.Common;
@@ -214,6 +215,80 @@ public class PersonsControllerService : IPersonsControllerService
         }
 
         return RequestResult.NoContent();
+    }
+    
+    #endregion
+    
+    #region Roles
+    
+    public async Task<RequestResult> GetPersonAllActorRoles(long personId, ActorRolePersonQueryParameters queryParameters)
+    {
+        Database.Model.Person.Person? person = await _database.Persons.FirstOrDefaultAsync(x => x.Id == personId);
+        if (person is null)
+        {
+            return RequestResult.NotFound();
+        }
+            
+        IEnumerable<PersonActorRole> dataRaw = await _database.PersonActorRoles.Where(x => x.PersonId == personId).ToListAsync();
+        IEnumerable<ActorRoleResponse> data = dataRaw.Select(x => new ActorRoleResponse(x));
+        data = queryParameters.PrepareData(data);
+        return RequestResult.Ok(data);
+    }
+    
+    public async Task<RequestResult> PostPersonActorRole(long personId, IActorRolePersonRequest data)
+    {
+        UserValidator validator = _userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        Database.Model.Person.Person? person = await _database.Persons.FirstOrDefaultAsync(x => x.Id == personId);
+        if (person is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        PersonActorRole item = data.CreateActorRole(personId);
+        await _database.PersonActorRoles.AddAsync(item);
+        await _database.SaveChangesAsync();
+        
+        return RequestResult.Created($"roles/actor/{item.Id}", new ActorRoleResponse(item));
+    }
+    
+    public async Task<RequestResult> GetPersonAllCreatorRoles(long personId, CreatorRolePersonQueryParameters queryParameters)
+    {
+        Database.Model.Person.Person? media = await _database.Persons.FirstOrDefaultAsync(x => x.Id == personId);
+        if (media is null)
+        {
+            return RequestResult.NotFound();
+        }
+            
+        IEnumerable<PersonCreatorRole> dataRaw = await _database.PersonCreatorRoles.Where(x => x.PersonId == personId).ToListAsync();
+        IEnumerable<CreatorRoleResponse> data = dataRaw.Select(x => new CreatorRoleResponse(x));
+        data = queryParameters.PrepareData(data);
+        return RequestResult.Ok(data);
+    }
+    
+    public async Task<RequestResult> PostPersonCreatorRole(long personId, ICreatorRolePersonRequest data)
+    {
+        UserValidator validator = _userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        Database.Model.Person.Person? media = await _database.Persons.FirstOrDefaultAsync(x => x.Id == personId);
+        if (media is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        PersonCreatorRole item = data.CreateCreatorRole(personId);
+        await _database.PersonCreatorRoles.AddAsync(item);
+        await _database.SaveChangesAsync();
+        
+        return RequestResult.Created($"roles/creator/{item.Id}", new CreatorRoleResponse(item));
     }
     
     #endregion

@@ -8,7 +8,13 @@ public class CreatorRoleRequest : CreatorRole, ICreatorRoleMediaRequest, ICreato
 
     PersonCreatorRole ICreatorRoleMediaRequest.CreateCreatorRole(long mediaId)
     {
-        this.MediaId = mediaId;
+        MediaId = mediaId;
+        return CreateCreatorRole();
+    }
+    
+    PersonCreatorRole ICreatorRolePersonRequest.CreateCreatorRole(long personId)
+    {
+        PersonId = personId;
         return CreateCreatorRole();
     }
     
