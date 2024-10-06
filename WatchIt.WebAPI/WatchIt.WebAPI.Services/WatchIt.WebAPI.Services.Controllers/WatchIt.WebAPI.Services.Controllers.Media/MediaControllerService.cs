@@ -4,8 +4,10 @@ using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Rating;
+using WatchIt.Common.Model.Roles;
 using WatchIt.Database;
 using WatchIt.Database.Model.Media;
+using WatchIt.Database.Model.Person;
 using WatchIt.Database.Model.Rating;
 using WatchIt.Database.Model.ViewCount;
 using WatchIt.WebAPI.Services.Controllers.Common;
@@ -267,7 +269,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         
         await database.SaveChangesAsync();
 
-        MediaPosterResponse returnData = new MediaPosterResponse(media.MediaPosterImage);
+        MediaPosterResponse returnData = new MediaPosterResponse(media.MediaPosterImage!);
         return RequestResult.Ok(returnData);
     }
 
@@ -347,6 +349,80 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         }
         
         return RequestResult.Created($"photos/{item.Id}", new PhotoResponse(item));
+    }
+    
+    #endregion
+    
+    #region Roles
+    
+    public async Task<RequestResult> GetMediaAllActorRoles(long mediaId, ActorRoleMediaQueryParameters queryParameters)
+    {
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
+        if (media is null)
+        {
+            return RequestResult.NotFound();
+        }
+            
+        IEnumerable<PersonActorRole> dataRaw = await database.PersonActorRoles.Where(x => x.MediaId == mediaId).ToListAsync();
+        IEnumerable<ActorRoleResponse> data = dataRaw.Select(x => new ActorRoleResponse(x));
+        data = queryParameters.PrepareData(data);
+        return RequestResult.Ok(data);
+    }
+    
+    public async Task<RequestResult> PostMediaActorRole(long mediaId, IActorRoleMediaRequest data)
+    {
+        UserValidator validator = userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
+        if (media is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        PersonActorRole item = data.CreateActorRole(mediaId);
+        await database.PersonActorRoles.AddAsync(item);
+        await database.SaveChangesAsync();
+        
+        return RequestResult.Created($"roles/actor/{item.Id}", new ActorRoleResponse(item));
+    }
+    
+    public async Task<RequestResult> GetMediaAllCreatorRoles(long mediaId, CreatorRoleMediaQueryParameters queryParameters)
+    {
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
+        if (media is null)
+        {
+            return RequestResult.NotFound();
+        }
+            
+        IEnumerable<PersonCreatorRole> dataRaw = await database.PersonCreatorRoles.Where(x => x.MediaId == mediaId).ToListAsync();
+        IEnumerable<CreatorRoleResponse> data = dataRaw.Select(x => new CreatorRoleResponse(x));
+        data = queryParameters.PrepareData(data);
+        return RequestResult.Ok(data);
+    }
+    
+    public async Task<RequestResult> PostMediaCreatorRole(long mediaId, ICreatorRoleMediaRequest data)
+    {
+        UserValidator validator = userService.GetValidator().MustBeAdmin();
+        if (!validator.IsValid)
+        {
+            return RequestResult.Forbidden();
+        }
+        
+        Database.Model.Media.Media? media = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
+        if (media is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        PersonCreatorRole item = data.CreateCreatorRole(mediaId);
+        await database.PersonCreatorRoles.AddAsync(item);
+        await database.SaveChangesAsync();
+        
+        return RequestResult.Created($"roles/creator/{item.Id}", new CreatorRoleResponse(item));
     }
     
     #endregion
