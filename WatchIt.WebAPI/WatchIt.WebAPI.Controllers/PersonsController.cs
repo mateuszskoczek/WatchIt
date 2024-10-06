@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Roles;
 using WatchIt.WebAPI.Services.Controllers.Persons;
 
 namespace WatchIt.WebAPI.Controllers;
@@ -104,6 +105,40 @@ public class PersonsController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> DeletePersonPhoto([FromRoute]long id) => await _personsControllerService.DeletePersonPhoto(id);
     
+    #endregion
+
+    #region Roles
+
+    [HttpGet("{id}/roles/actor")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<ActorRoleResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetPersonAllActorRoles([FromRoute]long id, ActorRolePersonQueryParameters query) => await _personsControllerService.GetPersonAllActorRoles(id, query);
+    
+    [HttpPost("{id}/roles/actor")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(ActorRoleResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> PostPersonActorRole([FromRoute]long id, [FromBody]IActorRolePersonRequest body) => await _personsControllerService.PostPersonActorRole(id, body);
+    
+    [HttpGet("{id}/roles/creator")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<CreatorRoleResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetPersonAllCreatorRoles([FromRoute]long id, CreatorRolePersonQueryParameters query) => await _personsControllerService.GetPersonAllCreatorRoles(id, query);
+    
+    [HttpPost("{id}/roles/creator")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(CreatorRoleResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> PostPersonCreatorRole([FromRoute]long id, [FromBody]ICreatorRolePersonRequest body) => await _personsControllerService.PostPersonCreatorRole(id, body);
+
     #endregion
     
     #endregion

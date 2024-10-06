@@ -2,6 +2,7 @@
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Rating;
+using WatchIt.Common.Model.Roles;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Utility.Configuration;
 using WatchIt.Website.Services.Utility.Configuration.Model;
@@ -256,6 +257,64 @@ public class MediaWebAPIService : BaseWebAPIService, IMediaWebAPIService
                 .ExecuteAction();
     }
 
+    #endregion
+    
+    #region Roles
+    
+    public async Task GetMediaAllActorRoles(long id, ActorRoleMediaQueryParameters? query = null, Action<IEnumerable<ActorRoleResponse>>? successAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.GetMediaAllActorRoles, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        request.Query = query;
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .ExecuteAction();
+    }
+    
+    public async Task PostMediaActorRole(long id, IActorRoleMediaRequest data, Action<ActorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.PostMediaActorRole, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
+        request.Body = data;
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .ExecuteAction();
+    }
+    
+    public async Task GetMediaAllCreatorRoles(long id, CreatorRoleMediaQueryParameters? query = null, Action<IEnumerable<CreatorRoleResponse>>? successAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.GetMediaAllCreatorRoles, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        request.Query = query;
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .ExecuteAction();
+    }
+    
+    public async Task PostMediaCreatorRole(long id, ICreatorRoleMediaRequest data, Action<CreatorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.PostMediaCreatorRole, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
+        request.Body = data;
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .ExecuteAction();
+    }
+    
     #endregion
     
     #endregion

@@ -33,6 +33,8 @@ public class GendersControllerService : IGendersControllerService
 
     #region PUBLIC METHODS
     
+    #region Main
+    
     public async Task<RequestResult> GetAllGenders(GenderQueryParameters query)
     {
         IEnumerable<Gender> rawData = await _database.Genders.ToListAsync();
@@ -88,6 +90,8 @@ public class GendersControllerService : IGendersControllerService
         
         return RequestResult.NoContent();
     }
+    
+    #endregion
     
     #endregion
 }

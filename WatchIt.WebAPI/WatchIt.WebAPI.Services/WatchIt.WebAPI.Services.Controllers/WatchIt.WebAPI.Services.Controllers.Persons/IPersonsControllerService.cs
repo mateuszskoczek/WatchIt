@@ -1,4 +1,5 @@
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Roles;
 using WatchIt.WebAPI.Services.Controllers.Common;
 
 namespace WatchIt.WebAPI.Services.Controllers.Persons;
@@ -16,4 +17,9 @@ public interface IPersonsControllerService
     Task<RequestResult> GetPersonPhoto(long id);
     Task<RequestResult> PutPersonPhoto(long id, PersonPhotoRequest data);
     Task<RequestResult> DeletePersonPhoto(long id);
+
+    Task<RequestResult> GetPersonAllActorRoles(long personId, ActorRolePersonQueryParameters queryParameters);
+    Task<RequestResult> PostPersonActorRole(long personId, IActorRolePersonRequest data);
+    Task<RequestResult> GetPersonAllCreatorRoles(long personId, CreatorRolePersonQueryParameters queryParameters);
+    Task<RequestResult> PostPersonCreatorRole(long personId, ICreatorRolePersonRequest data);
 }

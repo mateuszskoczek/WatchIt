@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Primitives;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Roles;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Utility.Configuration;
 using WatchIt.Website.Services.WebAPI.Common;
@@ -185,6 +186,64 @@ public class PersonsWebAPIService : BaseWebAPIService, IPersonsWebAPIService
                 .ExecuteAction();
     }
 
+    #endregion
+    
+    #region Roles
+    
+    public async Task GetPersonAllActorRoles(long id, ActorRolePersonQueryParameters? query = null, Action<IEnumerable<ActorRoleResponse>>? successAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Persons.GetPersonAllActorRoles, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        request.Query = query;
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .ExecuteAction();
+    }
+    
+    public async Task PostPersonActorRole(long id, IActorRolePersonRequest data, Action<ActorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Persons.PostPersonActorRole, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
+        request.Body = data;
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .ExecuteAction();
+    }
+    
+    public async Task GetPersonAllCreatorRoles(long id, CreatorRolePersonQueryParameters? query = null, Action<IEnumerable<CreatorRoleResponse>>? successAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Persons.GetPersonAllCreatorRoles, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        request.Query = query;
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .ExecuteAction();
+    }
+    
+    public async Task PostPersonCreatorRole(long id, ICreatorRolePersonRequest data, Action<CreatorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Persons.PostPersonCreatorRole, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
+        request.Body = data;
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .ExecuteAction();
+    }
+    
     #endregion
 
     #endregion
