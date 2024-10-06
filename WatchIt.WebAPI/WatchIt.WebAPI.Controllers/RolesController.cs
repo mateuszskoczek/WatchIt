@@ -37,6 +37,7 @@ public class RolesController : ControllerBase
     [HttpGet("actor/{id}")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(IEnumerable<ActorRoleResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetActorRole([FromRoute]Guid id) => await _rolesControllerService.GetActorRole(id);
     
     [HttpPut("actor/{id}")]

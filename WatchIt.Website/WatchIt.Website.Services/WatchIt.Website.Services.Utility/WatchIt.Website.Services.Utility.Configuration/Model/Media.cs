@@ -18,4 +18,8 @@ public class Media
     public string GetMediaPhotos { get; set; }
     public string GetMediaPhotoRandomBackground { get; set; }
     public string PostMediaPhoto { get; set; }
+    public string GetMediaAllActorRoles { get; set; }
+    public string PostMediaActorRole { get; set; }
+    public string GetMediaAllCreatorRoles { get; set; }
+    public string PostMediaCreatorRole { get; set; }
 }

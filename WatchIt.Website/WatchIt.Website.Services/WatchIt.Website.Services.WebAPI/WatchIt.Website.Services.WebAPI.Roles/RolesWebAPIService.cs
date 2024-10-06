@@ -29,6 +29,47 @@ public class RolesWebAPIService : BaseWebAPIService, IRolesWebAPIService
     #region PUBLIC METHODS
     
     #region Actor
+    
+    public async Task GetActorRole(Guid id, Action<ActorRoleResponse>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.GetActorRole, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task PutActorRole(Guid id, ActorRoleRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.PutActorRole, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Put, url);
+        request.Body = data;
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task DeleteActorRole(Guid id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.DeleteActorRole, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .ExecuteAction();
+    }
 
     public async Task GetAllActorRoleTypes(RoleTypeQueryParameters? query = null, Action<IEnumerable<RoleTypeResponse>>? successAction = null)
     {
@@ -42,9 +83,9 @@ public class RolesWebAPIService : BaseWebAPIService, IRolesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task GetActorRoleType(long id, Action<RoleTypeResponse>? successAction = null, Action? notFoundAction = null)
+    public async Task GetActorRoleType(long typeId, Action<RoleTypeResponse>? successAction = null, Action? notFoundAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Roles.GetActorRoleType, id);
+        string url = GetUrl(EndpointsConfiguration.Roles.GetActorRoleType, typeId);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         
@@ -69,9 +110,9 @@ public class RolesWebAPIService : BaseWebAPIService, IRolesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task DeleteActorRoleType(long id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task DeleteActorRoleType(long typeId, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Roles.DeleteActorRoleType, id);
+        string url = GetUrl(EndpointsConfiguration.Roles.DeleteActorRoleType, typeId);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
         
@@ -86,6 +127,47 @@ public class RolesWebAPIService : BaseWebAPIService, IRolesWebAPIService
     
     #region Creator
 
+    public async Task GetCreatorRole(Guid id, Action<CreatorRoleResponse>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.GetCreatorRole, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task PutCreatorRole(Guid id, CreatorRoleRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.PutCreatorRole, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Put, url);
+        request.Body = data;
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task DeleteCreatorRole(Guid id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.DeleteCreatorRole, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor403Forbidden(forbiddenAction)
+                .ExecuteAction();
+    }
+    
     public async Task GetAllCreatorRoleTypes(RoleTypeQueryParameters? query = null, Action<IEnumerable<RoleTypeResponse>>? successAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Roles.GetAllCreatorRoleTypes);
@@ -98,9 +180,9 @@ public class RolesWebAPIService : BaseWebAPIService, IRolesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task GetCreatorRoleType(long id, Action<RoleTypeResponse>? successAction = null, Action? notFoundAction = null)
+    public async Task GetCreatorRoleType(long typeId, Action<RoleTypeResponse>? successAction = null, Action? notFoundAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Roles.GetCreatorRoleType, id);
+        string url = GetUrl(EndpointsConfiguration.Roles.GetCreatorRoleType, typeId);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         
@@ -125,9 +207,9 @@ public class RolesWebAPIService : BaseWebAPIService, IRolesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task DeleteCreatorRoleType(long id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task DeleteCreatorRoleType(long typeId, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Roles.DeleteCreatorRoleType, id);
+        string url = GetUrl(EndpointsConfiguration.Roles.DeleteCreatorRoleType, typeId);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
         

@@ -12,4 +12,8 @@ public class Persons
     public string GetPersonPhoto { get; set; }
     public string PutPersonPhoto { get; set; }
     public string DeletePersonPhoto { get; set; }
+    public string GetPersonAllActorRoles { get; set; }
+    public string PostPersonActorRole { get; set; }
+    public string GetPersonAllCreatorRoles { get; set; }
+    public string PostPersonCreatorRole { get; set; }
 }
