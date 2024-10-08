@@ -17,6 +17,12 @@ public class CreatorRoleResponse : CreatorRole, IQueryOrderable<CreatorRoleRespo
     
     [JsonPropertyName("id")]
     public required Guid Id { get; set; }
+    
+    [JsonPropertyName("media_id")]
+    public long MediaId { get; set; }
+    
+    [JsonPropertyName("person_id")]
+    public long PersonId { get; set; }
 
     #endregion
     

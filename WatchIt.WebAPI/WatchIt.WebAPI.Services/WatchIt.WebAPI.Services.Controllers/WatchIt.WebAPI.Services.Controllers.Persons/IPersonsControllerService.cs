@@ -19,7 +19,7 @@ public interface IPersonsControllerService
     Task<RequestResult> DeletePersonPhoto(long id);
 
     Task<RequestResult> GetPersonAllActorRoles(long personId, ActorRolePersonQueryParameters queryParameters);
-    Task<RequestResult> PostPersonActorRole(long personId, IActorRolePersonRequest data);
+    Task<RequestResult> PostPersonActorRole(long personId, ActorRolePersonRequest data);
     Task<RequestResult> GetPersonAllCreatorRoles(long personId, CreatorRolePersonQueryParameters queryParameters);
-    Task<RequestResult> PostPersonCreatorRole(long personId, ICreatorRolePersonRequest data);
+    Task<RequestResult> PostPersonCreatorRole(long personId, CreatorRolePersonRequest data);
 }

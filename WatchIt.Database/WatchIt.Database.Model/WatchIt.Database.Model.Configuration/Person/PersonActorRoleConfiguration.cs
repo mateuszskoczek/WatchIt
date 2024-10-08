@@ -34,5 +34,9 @@ public class PersonActorRoleConfiguration : IEntityTypeConfiguration<PersonActor
                .IsRequired();
         builder.Property(x => x.PersonActorRoleTypeId)
                .IsRequired();
+        
+        builder.Property(x => x.RoleName)
+               .HasMaxLength(100)
+               .IsRequired();
     }
 }

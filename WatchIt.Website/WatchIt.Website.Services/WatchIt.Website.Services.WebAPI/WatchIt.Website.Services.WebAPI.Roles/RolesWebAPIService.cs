@@ -42,7 +42,7 @@ public class RolesWebAPIService : BaseWebAPIService, IRolesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task PutActorRole(Guid id, ActorRoleRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
+    public async Task PutActorRole(Guid id, ActorRoleUniversalRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Roles.PutActorRole, id);
         
@@ -139,7 +139,7 @@ public class RolesWebAPIService : BaseWebAPIService, IRolesWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task PutCreatorRole(Guid id, CreatorRoleRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
+    public async Task PutCreatorRole(Guid id, CreatorRoleUniversalRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Roles.PutCreatorRole, id);
         

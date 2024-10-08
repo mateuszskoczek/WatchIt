@@ -183,7 +183,7 @@ public class MediaController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PostMediaActorRole([FromRoute]long id, [FromBody]IActorRoleMediaRequest body) => await _mediaControllerService.PostMediaActorRole(id, body);
+    public async Task<ActionResult> PostMediaActorRole([FromRoute]long id, [FromBody]ActorRoleMediaRequest body) => await _mediaControllerService.PostMediaActorRole(id, body);
     
     [HttpGet("{id}/roles/creator")]
     [AllowAnonymous]
@@ -198,7 +198,7 @@ public class MediaController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PostMediaCreatorRole([FromRoute]long id, [FromBody]ICreatorRoleMediaRequest body) => await _mediaControllerService.PostMediaCreatorRole(id, body);
+    public async Task<ActionResult> PostMediaCreatorRole([FromRoute]long id, [FromBody]CreatorRoleMediaRequest body) => await _mediaControllerService.PostMediaCreatorRole(id, body);
 
     #endregion
     

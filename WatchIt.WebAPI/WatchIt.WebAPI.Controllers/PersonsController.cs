@@ -122,7 +122,7 @@ public class PersonsController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PostPersonActorRole([FromRoute]long id, [FromBody]IActorRolePersonRequest body) => await _personsControllerService.PostPersonActorRole(id, body);
+    public async Task<ActionResult> PostPersonActorRole([FromRoute]long id, [FromBody]ActorRolePersonRequest body) => await _personsControllerService.PostPersonActorRole(id, body);
     
     [HttpGet("{id}/roles/creator")]
     [AllowAnonymous]
@@ -137,7 +137,7 @@ public class PersonsController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PostPersonCreatorRole([FromRoute]long id, [FromBody]ICreatorRolePersonRequest body) => await _personsControllerService.PostPersonCreatorRole(id, body);
+    public async Task<ActionResult> PostPersonCreatorRole([FromRoute]long id, [FromBody]CreatorRolePersonRequest body) => await _personsControllerService.PostPersonCreatorRole(id, body);
 
     #endregion
     

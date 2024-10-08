@@ -235,7 +235,7 @@ public class PersonsControllerService : IPersonsControllerService
         return RequestResult.Ok(data);
     }
     
-    public async Task<RequestResult> PostPersonActorRole(long personId, IActorRolePersonRequest data)
+    public async Task<RequestResult> PostPersonActorRole(long personId, ActorRolePersonRequest data)
     {
         UserValidator validator = _userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -243,7 +243,7 @@ public class PersonsControllerService : IPersonsControllerService
             return RequestResult.Forbidden();
         }
         
-        Database.Model.Person.Person? person = await _database.Persons.FirstOrDefaultAsync(x => x.Id == personId);
+        Person? person = await _database.Persons.FirstOrDefaultAsync(x => x.Id == personId);
         if (person is null)
         {
             return RequestResult.NotFound();
@@ -258,7 +258,7 @@ public class PersonsControllerService : IPersonsControllerService
     
     public async Task<RequestResult> GetPersonAllCreatorRoles(long personId, CreatorRolePersonQueryParameters queryParameters)
     {
-        Database.Model.Person.Person? media = await _database.Persons.FirstOrDefaultAsync(x => x.Id == personId);
+        Person? media = await _database.Persons.FirstOrDefaultAsync(x => x.Id == personId);
         if (media is null)
         {
             return RequestResult.NotFound();
@@ -270,7 +270,7 @@ public class PersonsControllerService : IPersonsControllerService
         return RequestResult.Ok(data);
     }
     
-    public async Task<RequestResult> PostPersonCreatorRole(long personId, ICreatorRolePersonRequest data)
+    public async Task<RequestResult> PostPersonCreatorRole(long personId, CreatorRolePersonRequest data)
     {
         UserValidator validator = _userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -278,7 +278,7 @@ public class PersonsControllerService : IPersonsControllerService
             return RequestResult.Forbidden();
         }
         
-        Database.Model.Person.Person? media = await _database.Persons.FirstOrDefaultAsync(x => x.Id == personId);
+        Person? media = await _database.Persons.FirstOrDefaultAsync(x => x.Id == personId);
         if (media is null)
         {
             return RequestResult.NotFound();

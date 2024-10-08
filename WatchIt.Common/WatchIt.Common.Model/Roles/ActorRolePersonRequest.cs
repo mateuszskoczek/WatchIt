@@ -3,23 +3,20 @@ using WatchIt.Database.Model.Person;
 
 namespace WatchIt.Common.Model.Roles;
 
-public interface ICreatorRolePersonRequest
+public class ActorRolePersonRequest : ActorRoleRequest, IActorRolePersonRequest
 {
     #region PROPERTIES
     
     [JsonPropertyName("media_id")]
-    long MediaId { get; set; }
-    
-    [JsonPropertyName("type_id")]
-    short TypeId { get; set; }
+    public long MediaId { get; set; }
     
     #endregion
-    
-    
-    
+
+
+
     #region PUBLIC METHODS
 
-    PersonCreatorRole CreateCreatorRole(long personId);
+    public PersonActorRole CreateActorRole(long personId) => base.CreateActorRole(MediaId, personId);
 
     #endregion
 }

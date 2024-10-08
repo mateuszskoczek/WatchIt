@@ -46,7 +46,7 @@ public class RolesControllerService : IRolesControllerService
         return RequestResult.Ok(data);
     }
     
-    public async Task<RequestResult> PutActorRole(Guid id, ActorRoleRequest data)
+    public async Task<RequestResult> PutActorRole(Guid id, ActorRoleUniversalRequest data)
     {
         UserValidator validator = _userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -159,7 +159,7 @@ public class RolesControllerService : IRolesControllerService
         return RequestResult.Ok(data);
     }
     
-    public async Task<RequestResult> PutCreatorRole(Guid id, CreatorRoleRequest data)
+    public async Task<RequestResult> PutCreatorRole(Guid id, CreatorRoleUniversalRequest data)
     {
         UserValidator validator = _userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)

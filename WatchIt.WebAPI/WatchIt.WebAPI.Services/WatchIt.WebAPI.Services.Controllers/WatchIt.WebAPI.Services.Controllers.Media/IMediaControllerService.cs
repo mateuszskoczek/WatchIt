@@ -31,7 +31,7 @@ public interface IMediaControllerService
     Task<RequestResult> PostMediaPhoto(long mediaId, MediaPhotoRequest data);
 
     Task<RequestResult> GetMediaAllActorRoles(long mediaId, ActorRoleMediaQueryParameters queryParameters);
-    Task<RequestResult> PostMediaActorRole(long mediaId, IActorRoleMediaRequest data);
+    Task<RequestResult> PostMediaActorRole(long mediaId, ActorRoleMediaRequest data);
     Task<RequestResult> GetMediaAllCreatorRoles(long mediaId, CreatorRoleMediaQueryParameters queryParameters);
-    Task<RequestResult> PostMediaCreatorRole(long mediaId, ICreatorRoleMediaRequest data);
+    Task<RequestResult> PostMediaCreatorRole(long mediaId, CreatorRoleMediaRequest data);
 }

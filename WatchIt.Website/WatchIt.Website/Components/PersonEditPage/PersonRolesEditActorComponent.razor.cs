@@ -38,7 +38,7 @@ public partial class PersonRolesEditActorComponent : ComponentBase
 
 
     private Guid? _editedId;
-    private IActorRolePersonRequest _editedModel = new ActorRoleRequest();
+    private IActorRolePersonRequest? _editedModel;
     
     private bool _editingMode;
     private bool _saving;
@@ -67,6 +67,7 @@ public partial class PersonRolesEditActorComponent : ComponentBase
 
             // END
             await Task.WhenAll(endTasks);
+            _roles = _roles.OrderBy(x => Media.First(y => y.Key == x.Value.Data.MediaId).Value.ReleaseDate).ToDictionary(x => x.Key, x => x.Value);
             
             _loaded = true;
             StateHasChanged();
@@ -78,15 +79,49 @@ public partial class PersonRolesEditActorComponent : ComponentBase
         _editingMode = false;
     }
     
-    private void SaveEdit()
+    private async Task SaveEdit()
     {
+        void SuccessPost(ActorRoleResponse data)
+        {
+            _roles[data.Id] = (data, false);
+            _roles = _roles.OrderBy(x => Media.First(y => y.Key == x.Value.Data.MediaId).Value.ReleaseDate).ToDictionary(x => x.Key, x => x.Value);
+            
+            _saving = false;
+            _editingMode = false;
+        }
+
+        void SuccessPut()
+        {
+            ActorRoleResponse temp = _roles[_editedId!.Value].Data;
+            temp.MediaId = _editedModel.MediaId;
+            temp.TypeId = _editedModel.TypeId;
+            temp.Name = _editedModel.Name;
+            
+            _roles[_editedId!.Value] = (temp, false);
+            _roles = _roles.OrderBy(x => Media.First(y => y.Key == x.Value.Data.MediaId).Value.ReleaseDate).ToDictionary(x => x.Key, x => x.Value);
+            
+            _saving = false;
+            _editingMode = false;
+        }
         
+        _saving = true;
+        if (_editedId.HasValue)
+        {
+            await RolesWebAPIService.PutActorRole(_editedId.Value, _editedModel as ActorRoleUniversalRequest, SuccessPut);
+        }
+        else
+        {
+            await PersonsWebAPIService.PostPersonActorRole(Id!.Value, _editedModel as ActorRolePersonRequest, SuccessPost);
+        }
     }
 
     private void ActivateEdit(Guid? id = null)
     {
         _editedId = id;
-        _editedModel = id.HasValue ? new ActorRoleRequest(_roles[id.Value].Data) : new ActorRoleRequest();
+        _editedModel = id.HasValue ? new ActorRoleUniversalRequest(_roles[id.Value].Data) : new ActorRolePersonRequest()
+        {
+            TypeId = _roleTypes.Keys.First()
+        };
         _editingMode = true;
     }
 

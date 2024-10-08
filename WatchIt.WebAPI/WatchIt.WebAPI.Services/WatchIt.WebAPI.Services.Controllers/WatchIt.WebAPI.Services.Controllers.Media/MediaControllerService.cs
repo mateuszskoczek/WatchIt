@@ -377,7 +377,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         return RequestResult.Ok(data);
     }
     
-    public async Task<RequestResult> PostMediaActorRole(long mediaId, IActorRoleMediaRequest data)
+    public async Task<RequestResult> PostMediaActorRole(long mediaId, ActorRoleMediaRequest data)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -412,7 +412,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         return RequestResult.Ok(data);
     }
     
-    public async Task<RequestResult> PostMediaCreatorRole(long mediaId, ICreatorRoleMediaRequest data)
+    public async Task<RequestResult> PostMediaCreatorRole(long mediaId, CreatorRoleMediaRequest data)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
