@@ -32,6 +32,7 @@ public partial class PersonRolesEditActorComponent : ComponentBase
     #region FIELDS
 
     private bool _loaded;
+    private string? _error;
 
     private Dictionary<Guid, (ActorRoleResponse Data, bool Deleting)> _roles = [];
     private Dictionary<short, string> _roleTypes = [];
@@ -76,6 +77,7 @@ public partial class PersonRolesEditActorComponent : ComponentBase
 
     private void CancelEdit()
     {
+        _error = null;
         _editingMode = false;
     }
     
@@ -99,19 +101,32 @@ public partial class PersonRolesEditActorComponent : ComponentBase
             
             _roles[_editedId!.Value] = (temp, false);
             _roles = _roles.OrderBy(x => Media.First(y => y.Key == x.Value.Data.MediaId).Value.ReleaseDate).ToDictionary(x => x.Key, x => x.Value);
-            
+
             _saving = false;
             _editingMode = false;
         }
+
+        void BadRequest(IDictionary<string, string[]> errors)
+        {
+            _error = errors.SelectMany(x => x.Value).FirstOrDefault() ?? "Unknown error";
+            _saving = false;
+        }
+
+        void Unauthorized()
+        {
+            _error = "You do not have permission to do this";
+            _saving = false;
+        }
         
+        _error = null;
         _saving = true;
         if (_editedId.HasValue)
         {
-            await RolesWebAPIService.PutActorRole(_editedId.Value, _editedModel as ActorRoleUniversalRequest, SuccessPut);
+            await RolesWebAPIService.PutActorRole(_editedId.Value, _editedModel as ActorRoleUniversalRequest, SuccessPut, BadRequest, Unauthorized);
         }
         else
         {
-            await PersonsWebAPIService.PostPersonActorRole(Id!.Value, _editedModel as ActorRolePersonRequest, SuccessPost);
+            await PersonsWebAPIService.PostPersonActorRole(Id!.Value, _editedModel as ActorRolePersonRequest, SuccessPost, BadRequest, Unauthorized);
         }
     }
 
