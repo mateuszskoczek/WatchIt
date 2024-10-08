@@ -8,6 +8,7 @@ namespace WatchIt.Website.Services.WebAPI.Media;
 
 public interface IMediaWebAPIService
 {
+    Task GetAllMedia(MediaQueryParameters? query = null, Action<IEnumerable<MediaResponse>>? successAction = null);
     Task GetMedia(long mediaId, Action<MediaResponse>? successAction = null, Action? notFoundAction = null);
     
     Task GetMediaGenres(long mediaId, Action<IEnumerable<GenreResponse>>? successAction = null, Action? notFoundAction = null);

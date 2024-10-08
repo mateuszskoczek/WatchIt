@@ -25,6 +25,7 @@
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Movies\WatchIt.Website.Services.WebAPI.Movies.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Persons\WatchIt.Website.Services.WebAPI.Persons.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Photos\WatchIt.Website.Services.WebAPI.Photos.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Roles\WatchIt.Website.Services.WebAPI.Roles.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Series\WatchIt.Website.Services.WebAPI.Series.csproj" />
     </ItemGroup>
 
@@ -46,6 +47,7 @@
 
     <ItemGroup>
       <PackageReference Include="Blazorise.Bootstrap5" Version="1.6.1" />
+      <PackageReference Include="Blazorise.Components" Version="1.6.1" />
       <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.6.1" />
     </ItemGroup>
 

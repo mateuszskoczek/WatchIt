@@ -1,0 +1,117 @@
+@using Blazorise.Extensions
+@using WatchIt.Common.Model.Roles
+
+
+
+<div class="rounded-3 panel panel-regular p-3 @(Class)">
+    @if (_loaded)
+    {
+        <div class="vstack gap-3">
+            <div class="container-grid">
+                <div class="row gx-2">
+                    <div class="col align-self-center">
+                        <h3 class="m-0"><strong>Actor roles</strong></h3>
+                    </div>
+                    @if (!_editingMode)
+                    {
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary" disabled="@(!Id.HasValue)" @onclick="@(() => ActivateEdit())">Add</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary" @onclick="@(CancelEdit)">Cancel</button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-secondary" disabled="@(_saving)" @onclick="@(SaveEdit)">
+                                @if (!_saving)
+                                {
+                                    <span>Save</span>
+                                }
+                                else
+                                {
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    <span>Saving...</span>
+                                }
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+            @if (!_editingMode)
+            {
+                if (_roles.IsNullOrEmpty())
+                {
+                    <span class="text-center">No items</span>
+                }
+                else
+                {
+                    <table class="table table-sm table-transparent">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    Media name
+                                </th>
+                                <th scope="col">
+                                    Media type
+                                </th>
+                                <th scope="col">
+                                    Role type
+                                </th>
+                                <th scope="col">
+                                    Role name
+                                </th>
+                                <th class="table-cell-fit" scope="col">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @foreach (Guid roleId in _roles.Keys)
+                            {
+                                <tr>
+                                    <td class="align-middle">
+                                        @(Media[_roles[roleId].Data.MediaId].Title)@(Media[_roles[roleId].Data.MediaId].ReleaseDate.HasValue ? $" ({Media[_roles[roleId].Data.MediaId].ReleaseDate!.Value.Year})" : string.Empty)
+                                    </td>
+                                    <td class="align-middle">
+                                        @(Media[_roles[roleId].Data.MediaId].Type == MediaType.Movie ? $"Movie" : "TV Series")
+                                    </td>
+                                    <td class="align-middle">
+                                        @(_roleTypes[_roles[roleId].Data.TypeId])
+                                    </td>
+                                    <td class="align-middle">
+                                        @(_roles[roleId].Data.Name)
+                                    </td>
+                                    <td class="align-middle table-cell-fit">
+                                        <div class="hstack gap-1">
+                                            <button class="btn btn-outline-secondary btn-sm" type="button" disabled="@(!Id.HasValue || _roles[roleId].Deleting)" @onclick="@(() => ActivateEdit(roleId))"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-outline-danger btn-sm" type="button" disabled="@(!Id.HasValue || _roles[roleId].Deleting)" @onclick="@(() => Delete(roleId))">
+                                                @if (_roles[roleId].Deleting)
+                                                {
+                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa-solid fa-trash"></i>
+                                                }
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+            else
+            {
+                
+            }
+        </div>
+    }
+    else
+    {
+        <LoadingComponent Color="white"/>
+    }
+</div>

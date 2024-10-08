@@ -16,7 +16,7 @@ public class RoleTypeResponse : RoleType, IQueryOrderable<RoleTypeResponse>
 
     
     [JsonPropertyName("id")]
-    public required short? Id { get; set; }
+    public required short Id { get; set; }
 
     #endregion
     

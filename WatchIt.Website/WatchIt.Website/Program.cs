@@ -14,6 +14,7 @@ using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
 using WatchIt.Website.Services.WebAPI.Persons;
 using WatchIt.Website.Services.WebAPI.Photos;
+using WatchIt.Website.Services.WebAPI.Roles;
 using WatchIt.Website.Services.WebAPI.Series;
 
 namespace WatchIt.Website;
@@ -79,6 +80,7 @@ public static class Program
         builder.Services.AddSingleton<ISeriesWebAPIService, SeriesWebAPIService>();
         builder.Services.AddSingleton<IPhotosWebAPIService, PhotosWebAPIService>();
         builder.Services.AddSingleton<IPersonsWebAPIService, PersonsWebAPIService>();
+        builder.Services.AddSingleton<IRolesWebAPIService, RolesWebAPIService>();
         
         return builder;
     }

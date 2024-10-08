@@ -8,6 +8,7 @@ namespace WatchIt.WebAPI.Services.Controllers.Media;
 
 public interface IMediaControllerService
 {
+    Task<RequestResult> GetAllMedia(MediaQueryParameters query);
     Task<RequestResult> GetMedia(long mediaId);
     
     Task<RequestResult> GetMediaGenres(long mediaId);

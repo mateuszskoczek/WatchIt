@@ -1,9 +1,27 @@
+using System.Diagnostics.CodeAnalysis;
 using WatchIt.Database.Model.Person;
 
 namespace WatchIt.Common.Model.Roles;
 
 public class ActorRoleRequest : ActorRole, IActorRoleMediaRequest, IActorRolePersonRequest
 {
+    #region CONSTRUCTORS
+
+    [SetsRequiredMembers]
+    public ActorRoleRequest(ActorRoleResponse data)
+    {
+        Name = data.Name;
+        PersonId = data.PersonId;
+        MediaId = data.MediaId;
+        TypeId = data.TypeId;
+    }
+    
+    public ActorRoleRequest() {}
+    
+    #endregion
+    
+    
+    
     #region PUBLIC METHODS
 
     PersonActorRole IActorRoleMediaRequest.CreateActorRole(long mediaId)

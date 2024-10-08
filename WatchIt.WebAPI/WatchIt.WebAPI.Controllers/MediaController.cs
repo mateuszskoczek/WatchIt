@@ -38,6 +38,11 @@ public class MediaController : ControllerBase
     
     #region Main
     
+    [HttpGet]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<MediaResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetAllMedia(MediaQueryParameters query) => await _mediaControllerService.GetAllMedia(query);
+    
     [HttpGet("{id}")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(MediaResponse), StatusCodes.Status200OK)]
