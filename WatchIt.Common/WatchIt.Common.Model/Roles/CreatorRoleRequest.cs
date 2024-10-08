@@ -2,7 +2,7 @@ using WatchIt.Database.Model.Person;
 
 namespace WatchIt.Common.Model.Roles;
 
-public abstract class CreatorRoleRequest : CreatorRole
+public abstract class CreatorRoleRequest : CreatorRole, ICreatorRoleRequest
 {
     #region PUBLIC METHODS
     

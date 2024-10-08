@@ -3,7 +3,7 @@ using WatchIt.Database.Model.Person;
 
 namespace WatchIt.Common.Model.Roles;
 
-public abstract class ActorRoleRequest : ActorRole
+public abstract class ActorRoleRequest : ActorRole, IActorRoleRequest
 {
     #region PUBLIC METHODS
     

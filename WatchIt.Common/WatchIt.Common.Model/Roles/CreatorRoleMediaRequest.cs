@@ -3,7 +3,7 @@ using WatchIt.Database.Model.Person;
 
 namespace WatchIt.Common.Model.Roles;
 
-public class CreatorRoleMediaRequest : CreatorRoleRequest
+public class CreatorRoleMediaRequest : CreatorRoleRequest, ICreatorRoleMediaRequest
 {
     #region PROPERTIES
     

@@ -3,12 +3,12 @@ using WatchIt.Database.Model.Person;
 
 namespace WatchIt.Common.Model.Roles;
 
-public class CreatorRolePersonRequest : CreatorRoleRequest
+public class CreatorRolePersonRequest : CreatorRoleRequest, ICreatorRolePersonRequest
 {
     #region PROPERTIES
     
     [JsonPropertyName("media_id")]
-    public required long MediaId { get; set; }
+    public long MediaId { get; set; }
     
     #endregion
     
