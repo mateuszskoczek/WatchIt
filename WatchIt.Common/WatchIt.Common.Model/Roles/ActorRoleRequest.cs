@@ -1,35 +1,24 @@
+using System.Diagnostics.CodeAnalysis;
 using WatchIt.Database.Model.Person;
 
 namespace WatchIt.Common.Model.Roles;
 
-public class ActorRoleRequest : ActorRole, IActorRoleMediaRequest, IActorRolePersonRequest
+public abstract class ActorRoleRequest : ActorRole, IActorRoleRequest
 {
     #region PUBLIC METHODS
-
-    PersonActorRole IActorRoleMediaRequest.CreateActorRole(long mediaId)
-    {
-        MediaId = mediaId;
-        return CreateActorRole();
-    }
     
-    PersonActorRole IActorRolePersonRequest.CreateActorRole(long personId)
+    public PersonActorRole CreateActorRole(long mediaId, long personId) => new PersonActorRole
     {
-        PersonId = personId;
-        return CreateActorRole();
-    }
-    
-    public PersonActorRole CreateActorRole() => new PersonActorRole
-    {
-        MediaId = MediaId,
-        PersonId = PersonId,
+        MediaId = mediaId,
+        PersonId = personId,
         PersonActorRoleTypeId = TypeId,
         RoleName = Name,
     };
     
-    public void UpdateActorRole(PersonActorRole item)
+    public void UpdateActorRole(PersonActorRole item, long mediaId, long personId)
     {
-        item.MediaId = MediaId;
-        item.PersonId = PersonId;
+        item.MediaId = mediaId;
+        item.PersonId = personId;
         item.PersonActorRoleTypeId = TypeId;
         item.RoleName = Name;
     }

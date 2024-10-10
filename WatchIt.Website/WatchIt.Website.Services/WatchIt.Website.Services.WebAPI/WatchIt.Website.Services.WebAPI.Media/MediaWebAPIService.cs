@@ -35,6 +35,18 @@ public class MediaWebAPIService : BaseWebAPIService, IMediaWebAPIService
     
     #region Main
     
+    public async Task GetAllMedia(MediaQueryParameters? query = null, Action<IEnumerable<MediaResponse>>? successAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Media.GetAllMedia);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        request.Query = query;
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .ExecuteAction();
+    }
+    
     public async Task GetMedia(long mediaId, Action<MediaResponse>? successAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Media.GetMedia, mediaId);
@@ -273,7 +285,7 @@ public class MediaWebAPIService : BaseWebAPIService, IMediaWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task PostMediaActorRole(long id, IActorRoleMediaRequest data, Action<ActorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task PostMediaActorRole(long id, ActorRoleMediaRequest data, Action<ActorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Media.PostMediaActorRole, id);
         
@@ -300,7 +312,7 @@ public class MediaWebAPIService : BaseWebAPIService, IMediaWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task PostMediaCreatorRole(long id, ICreatorRoleMediaRequest data, Action<CreatorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task PostMediaCreatorRole(long id, CreatorRoleMediaRequest data, Action<CreatorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Media.PostMediaCreatorRole, id);
         

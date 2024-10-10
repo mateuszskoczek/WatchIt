@@ -47,7 +47,7 @@ public class RolesController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PutActorRole([FromRoute]Guid id, [FromBody]ActorRoleRequest body) => await _rolesControllerService.PutActorRole(id, body);
+    public async Task<ActionResult> PutActorRole([FromRoute]Guid id, [FromBody]ActorRoleUniversalRequest body) => await _rolesControllerService.PutActorRole(id, body);
     
     [HttpDelete("actor/{id}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -98,7 +98,7 @@ public class RolesController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PutCreatorRole([FromRoute]Guid id, [FromBody]CreatorRoleRequest body) => await _rolesControllerService.PutCreatorRole(id, body);
+    public async Task<ActionResult> PutCreatorRole([FromRoute]Guid id, [FromBody]CreatorRoleUniversalRequest body) => await _rolesControllerService.PutCreatorRole(id, body);
     
     [HttpDelete("creator/{id}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

@@ -202,7 +202,7 @@ public class PersonsWebAPIService : BaseWebAPIService, IPersonsWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task PostPersonActorRole(long id, IActorRolePersonRequest data, Action<ActorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task PostPersonActorRole(long id, ActorRolePersonRequest data, Action<ActorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Persons.PostPersonActorRole, id);
         
@@ -229,7 +229,7 @@ public class PersonsWebAPIService : BaseWebAPIService, IPersonsWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task PostPersonCreatorRole(long id, ICreatorRolePersonRequest data, Action<CreatorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
+    public async Task PostPersonCreatorRole(long id, CreatorRolePersonRequest data, Action<CreatorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Persons.PostPersonCreatorRole, id);
         

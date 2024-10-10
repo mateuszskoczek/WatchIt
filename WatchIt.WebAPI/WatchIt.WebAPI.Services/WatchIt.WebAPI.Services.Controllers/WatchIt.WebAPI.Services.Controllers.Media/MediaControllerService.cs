@@ -21,6 +21,14 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
 
     #region Main
 
+    public async Task<RequestResult> GetAllMedia(MediaQueryParameters query)
+    {
+        IEnumerable<Database.Model.Media.Media> rawData = await database.Media.ToListAsync();
+        IEnumerable<MediaResponse> data = rawData.Select(x => new MediaResponse(x, database.MediaMovies.Any(y => y.Id == x.Id) ? MediaType.Movie : MediaType.Series));
+        data = query.PrepareData(data);
+        return RequestResult.Ok(data);
+    }
+    
     public async Task<RequestResult> GetMedia(long mediaId)
     {
         Database.Model.Media.Media? item = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
@@ -369,7 +377,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         return RequestResult.Ok(data);
     }
     
-    public async Task<RequestResult> PostMediaActorRole(long mediaId, IActorRoleMediaRequest data)
+    public async Task<RequestResult> PostMediaActorRole(long mediaId, ActorRoleMediaRequest data)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -404,7 +412,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         return RequestResult.Ok(data);
     }
     
-    public async Task<RequestResult> PostMediaCreatorRole(long mediaId, ICreatorRoleMediaRequest data)
+    public async Task<RequestResult> PostMediaCreatorRole(long mediaId, CreatorRoleMediaRequest data)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)

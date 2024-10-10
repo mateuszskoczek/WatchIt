@@ -8,6 +8,7 @@ namespace WatchIt.Website.Services.WebAPI.Media;
 
 public interface IMediaWebAPIService
 {
+    Task GetAllMedia(MediaQueryParameters? query = null, Action<IEnumerable<MediaResponse>>? successAction = null);
     Task GetMedia(long mediaId, Action<MediaResponse>? successAction = null, Action? notFoundAction = null);
     
     Task GetMediaGenres(long mediaId, Action<IEnumerable<GenreResponse>>? successAction = null, Action? notFoundAction = null);
@@ -30,7 +31,7 @@ public interface IMediaWebAPIService
     Task PostMediaPhoto(long mediaId, MediaPhotoRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null, Action? notFoundAction = null);
     
     Task GetMediaAllActorRoles(long id, ActorRoleMediaQueryParameters? query = null, Action<IEnumerable<ActorRoleResponse>>? successAction = null);
-    Task PostMediaActorRole(long id, IActorRoleMediaRequest data, Action<ActorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
+    Task PostMediaActorRole(long id, ActorRoleMediaRequest data, Action<ActorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
     Task GetMediaAllCreatorRoles(long id, CreatorRoleMediaQueryParameters? query = null, Action<IEnumerable<CreatorRoleResponse>>? successAction = null);
-    Task PostMediaCreatorRole(long id, ICreatorRoleMediaRequest data, Action<CreatorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
+    Task PostMediaCreatorRole(long id, CreatorRoleMediaRequest data, Action<CreatorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
 }

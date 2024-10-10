@@ -59,6 +59,18 @@
                                              Class="h-100"/>
                 </div>
             </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <PersonRolesEditActorComponent Id="@(Id)"
+                                                   Media="@(_media)"/>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <PersonRolesEditCreatorComponent Id="@(Id)"
+                                                     Media="@(_media)"/>
+                </div>
+            </div>
         </div>
     }
     else

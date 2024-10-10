@@ -2,33 +2,21 @@ using WatchIt.Database.Model.Person;
 
 namespace WatchIt.Common.Model.Roles;
 
-public class CreatorRoleRequest : CreatorRole, ICreatorRoleMediaRequest, ICreatorRolePersonRequest
+public abstract class CreatorRoleRequest : CreatorRole, ICreatorRoleRequest
 {
     #region PUBLIC METHODS
-
-    PersonCreatorRole ICreatorRoleMediaRequest.CreateCreatorRole(long mediaId)
-    {
-        MediaId = mediaId;
-        return CreateCreatorRole();
-    }
     
-    PersonCreatorRole ICreatorRolePersonRequest.CreateCreatorRole(long personId)
+    public PersonCreatorRole CreateCreatorRole(long mediaId, long personId) => new PersonCreatorRole
     {
-        PersonId = personId;
-        return CreateCreatorRole();
-    }
-    
-    public PersonCreatorRole CreateCreatorRole() => new PersonCreatorRole
-    {
-        MediaId = MediaId,
-        PersonId = PersonId,
+        MediaId = mediaId,
+        PersonId = personId,
         PersonCreatorRoleTypeId = TypeId,
     };
     
-    public void UpdateCreatorRole(PersonCreatorRole item)
+    public void UpdateCreatorRole(PersonCreatorRole item, long mediaId, long personId)
     {
-        item.MediaId = MediaId;
-        item.PersonId = PersonId;
+        item.MediaId = mediaId;
+        item.PersonId = personId;
         item.PersonCreatorRoleTypeId = TypeId;
     }
 

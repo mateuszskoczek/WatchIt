@@ -42,7 +42,14 @@ body, html {
     -webkit-text-fill-color: transparent;
 }
 
+.table-transparent {
+    --bs-table-bg: transparent !important;
+}
 
+.table td.table-cell-fit, .table th.table-cell-fit {
+    white-space: nowrap;
+    width: 1%;
+}
 
 
 

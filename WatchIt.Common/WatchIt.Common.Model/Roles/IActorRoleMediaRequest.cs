@@ -1,28 +1,10 @@
-using System.Text.Json.Serialization;
-using WatchIt.Database.Model.Person;
-
 namespace WatchIt.Common.Model.Roles;
 
-public interface IActorRoleMediaRequest
+public interface IActorRoleMediaRequest : IActorRoleRequest
 {
     #region PROPERTIES
     
-    [JsonPropertyName("person_id")]
-    long PersonId { get; set; }
+    public long PersonId { get; set; }
     
-    [JsonPropertyName("type_id")]
-    short TypeId { get; set; }
-    
-    [JsonPropertyName("name")]
-    string Name { get; set; }
-    
-    #endregion
-    
-    
-    
-    #region PUBLIC METHODS
-
-    PersonActorRole CreateActorRole(long mediaId);
-
     #endregion
 }

@@ -1,0 +1,161 @@
+@using Blazorise.Extensions
+@using WatchIt.Common.Model.Roles
+@using Blazorise.Components
+
+
+
+<div class="rounded-3 panel panel-regular p-3 @(Class)">
+    @if (_loaded)
+    {
+        <div class="vstack gap-3">
+            <div class="container-grid">
+                <div class="row gx-2">
+                    <div class="col align-self-center">
+                        <h4 class="m-0"><strong>Actor roles</strong></h4>
+                    </div>
+                    @if (!_editingMode)
+                    {
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary" disabled="@(!Id.HasValue)" @onclick="@(() => ActivateEdit())">Add</button>
+                        </div>
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrWhiteSpace(_error))
+                        {
+                            <div class="col-auto align-self-center">
+                                <span class="text-danger">@(_error)</span>
+                            </div>
+                        }
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary" @onclick="@(CancelEdit)">Cancel</button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-secondary" disabled="@(_saving)" @onclick="@(SaveEdit)">
+                                @if (!_saving)
+                                {
+                                    <span>Save</span>
+                                }
+                                else
+                                {
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    <span>Saving...</span>
+                                }
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+            @if (!_editingMode)
+            {
+                if (_roles.IsNullOrEmpty())
+                {
+                    <span class="text-center">No items</span>
+                }
+                else
+                {
+                    <table class="table table-sm table-transparent">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    Media name
+                                </th>
+                                <th scope="col">
+                                    Media type
+                                </th>
+                                <th scope="col">
+                                    Role type
+                                </th>
+                                <th scope="col">
+                                    Role name
+                                </th>
+                                <th class="table-cell-fit" scope="col">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @foreach (Guid roleId in _roles.Keys)
+                            {
+                                <tr>
+                                    <td class="align-middle">
+                                        @(Media[_roles[roleId].Data.MediaId].Title)@(Media[_roles[roleId].Data.MediaId].ReleaseDate.HasValue ? $" ({Media[_roles[roleId].Data.MediaId].ReleaseDate!.Value.Year})" : string.Empty)
+                                    </td>
+                                    <td class="align-middle">
+                                        @(Media[_roles[roleId].Data.MediaId].Type == MediaType.Movie ? $"Movie" : "TV Series")
+                                    </td>
+                                    <td class="align-middle">
+                                        @(_roleTypes[_roles[roleId].Data.TypeId])
+                                    </td>
+                                    <td class="align-middle">
+                                        @(_roles[roleId].Data.Name)
+                                    </td>
+                                    <td class="align-middle table-cell-fit">
+                                        <div class="hstack gap-1">
+                                            <button class="btn btn-outline-secondary btn-sm" type="button" disabled="@(!Id.HasValue || _roles[roleId].Deleting)" @onclick="@(() => ActivateEdit(roleId))"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-outline-danger btn-sm" type="button" disabled="@(!Id.HasValue || _roles[roleId].Deleting)" @onclick="@(() => Delete(roleId))">
+                                                @if (_roles[roleId].Deleting)
+                                                {
+                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa-solid fa-trash"></i>
+                                                }
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+            else
+            {
+                <EditForm Model="@(_editedModel)">
+                    <AntiforgeryToken/>
+                    <div class="container-grid">
+                        <div class="row form-group mb-1">
+                            <label for="actorFormMedia" class="col-1 col-form-label">Media:</label>
+                            <div class="col">
+                                <Autocomplete ElementId="actorFormMedia" 
+                                              TItem="MediaResponse"
+                                              TValue="long"
+                                              Data="@(Media.Values)"
+                                              TextField="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                                              ValueField="@(item => item.Id)"
+                                              @bind-SelectedValue="@(_editedModel.MediaId)"
+                                              Placeholder="Search..."
+                                              Filter="AutocompleteFilter.Contains">
+                                    <NotFoundContent Context="not_found_context"> Sorry... @not_found_context was not found</NotFoundContent>
+                                </Autocomplete>
+                            </div>
+                        </div>
+                        <div class="row form-group my-1">
+                            <label for="actorFormType" class="col-1 col-form-label">Type:</label>
+                            <div class="col">
+                                <InputSelect id="actorFormType" class="form-control" TValue="short" @bind-Value="@(_editedModel.TypeId)">
+                                    @foreach (KeyValuePair<short, string> type in _roleTypes)
+                                    {
+                                        <option value="@(type.Key)">@(type.Value)</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="row form-group my-1">
+                            <label for="actorFormName" class="col-1 col-form-label">Name:</label>
+                            <div class="col">
+                                <InputText id="actorFormName" class="form-control" @bind-Value="@(_editedModel.Name)"/>
+                            </div>
+                        </div>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    }
+    else
+    {
+        <LoadingComponent Color="white"/>
+    }
+</div>

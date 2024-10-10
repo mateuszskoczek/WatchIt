@@ -18,7 +18,7 @@ public interface IPersonsWebAPIService
     Task DeletePersonPhoto(long id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
 
     Task GetPersonAllActorRoles(long id, ActorRolePersonQueryParameters? query = null, Action<IEnumerable<ActorRoleResponse>>? successAction = null);
-    Task PostPersonActorRole(long id, IActorRolePersonRequest data, Action<ActorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
+    Task PostPersonActorRole(long id, ActorRolePersonRequest data, Action<ActorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
     Task GetPersonAllCreatorRoles(long id, CreatorRolePersonQueryParameters? query = null, Action<IEnumerable<CreatorRoleResponse>>? successAction = null);
-    Task PostPersonCreatorRole(long id, ICreatorRolePersonRequest data, Action<CreatorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
+    Task PostPersonCreatorRole(long id, CreatorRolePersonRequest data, Action<CreatorRoleResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
 }
