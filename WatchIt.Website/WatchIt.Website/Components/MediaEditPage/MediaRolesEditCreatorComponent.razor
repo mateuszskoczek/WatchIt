@@ -1,7 +1,6 @@
 @using Blazorise.Extensions
-@using WatchIt.Common.Model.Roles
 @using Blazorise.Components
-
+@using WatchIt.Common.Model.Persons
 
 
 <div class="rounded-3 panel panel-regular p-3 @(Class)">
@@ -11,7 +10,7 @@
             <div class="container-grid">
                 <div class="row gx-2">
                     <div class="col align-self-center">
-                        <h4 class="m-0"><strong>Actor roles</strong></h4>
+                        <h4 class="m-0"><strong>Creator roles</strong></h4>
                     </div>
                     @if (!_editingMode)
                     {
@@ -58,16 +57,10 @@
                         <thead>
                             <tr>
                                 <th scope="col">
-                                    Media name
-                                </th>
-                                <th scope="col">
-                                    Media type
+                                    Person
                                 </th>
                                 <th scope="col">
                                     Role type
-                                </th>
-                                <th scope="col">
-                                    Role name
                                 </th>
                                 <th class="table-cell-fit" scope="col">
                                     Actions
@@ -79,16 +72,10 @@
                             {
                                 <tr>
                                     <td class="align-middle">
-                                        @(Media[_roles[roleId].Data.MediaId].Title)@(Media[_roles[roleId].Data.MediaId].ReleaseDate.HasValue ? $" ({Media[_roles[roleId].Data.MediaId].ReleaseDate!.Value.Year})" : string.Empty)
-                                    </td>
-                                    <td class="align-middle">
-                                        @(Media[_roles[roleId].Data.MediaId].Type == MediaType.Movie ? $"Movie" : "TV Series")
+                                        @(Persons[_roles[roleId].Data.PersonId].Name)
                                     </td>
                                     <td class="align-middle">
                                         @(_roleTypes[_roles[roleId].Data.TypeId])
-                                    </td>
-                                    <td class="align-middle">
-                                        @(_roles[roleId].Data.Name)
                                     </td>
                                     <td class="align-middle table-cell-fit">
                                         <div class="hstack gap-1">
@@ -117,15 +104,15 @@
                     <AntiforgeryToken/>
                     <div class="container-grid">
                         <div class="row form-group mb-1">
-                            <label for="actorFormMedia" class="col-1 col-form-label">Media:</label>
+                            <label for="creatorFormPerson" class="col-1 col-form-label">Media:</label>
                             <div class="col">
-                                <Autocomplete ElementId="actorFormMedia" 
-                                              TItem="MediaResponse"
+                                <Autocomplete ElementId="creatorFormPerson" 
+                                              TItem="PersonResponse"
                                               TValue="long"
-                                              Data="@(Media.Values)"
-                                              TextField="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                                              Data="@(Persons.Values)"
+                                              TextField="@(item => item.Name)"
                                               ValueField="@(item => item.Id)"
-                                              @bind-SelectedValue="@(_editedModel.MediaId)"
+                                              @bind-SelectedValue="@(_editedModel.PersonId)"
                                               Placeholder="Search..."
                                               Filter="AutocompleteFilter.Contains">
                                     <NotFoundContent Context="not_found_context"> Sorry... @not_found_context was not found</NotFoundContent>
@@ -133,20 +120,14 @@
                             </div>
                         </div>
                         <div class="row form-group my-1">
-                            <label for="actorFormType" class="col-1 col-form-label">Type:</label>
+                            <label for="creatorFormType" class="col-1 col-form-label">Type:</label>
                             <div class="col">
-                                <InputSelect id="actorFormType" class="form-control" TValue="short" @bind-Value="@(_editedModel.TypeId)">
+                                <InputSelect id="creatorFormType" class="form-control" TValue="short" @bind-Value="@(_editedModel.TypeId)">
                                     @foreach (KeyValuePair<short, string> type in _roleTypes)
                                     {
                                         <option value="@(type.Key)">@(type.Value)</option>
                                     }
                                 </InputSelect>
-                            </div>
-                        </div>
-                        <div class="row form-group my-1">
-                            <label for="actorFormName" class="col-1 col-form-label">Name:</label>
-                            <div class="col">
-                                <InputText id="actorFormName" class="form-control" @bind-Value="@(_editedModel.Name)"/>
                             </div>
                         </div>
                     </div>

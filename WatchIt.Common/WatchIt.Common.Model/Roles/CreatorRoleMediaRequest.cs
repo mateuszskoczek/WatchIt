@@ -8,7 +8,7 @@ public class CreatorRoleMediaRequest : CreatorRoleRequest, ICreatorRoleMediaRequ
     #region PROPERTIES
     
     [JsonPropertyName("person_id")]
-    public required long PersonId { get; set; }
+    public long PersonId { get; set; }
     
     #endregion
     

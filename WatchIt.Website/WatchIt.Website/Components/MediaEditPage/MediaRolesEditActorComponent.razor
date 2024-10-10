@@ -1,6 +1,7 @@
 @using Blazorise.Extensions
 @using WatchIt.Common.Model.Roles
 @using Blazorise.Components
+@using WatchIt.Common.Model.Persons
 
 
 
@@ -58,10 +59,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">
-                                    Media name
-                                </th>
-                                <th scope="col">
-                                    Media type
+                                    Person
                                 </th>
                                 <th scope="col">
                                     Role type
@@ -79,10 +77,7 @@
                             {
                                 <tr>
                                     <td class="align-middle">
-                                        @(Media[_roles[roleId].Data.MediaId].Title)@(Media[_roles[roleId].Data.MediaId].ReleaseDate.HasValue ? $" ({Media[_roles[roleId].Data.MediaId].ReleaseDate!.Value.Year})" : string.Empty)
-                                    </td>
-                                    <td class="align-middle">
-                                        @(Media[_roles[roleId].Data.MediaId].Type == MediaType.Movie ? $"Movie" : "TV Series")
+                                        @(Persons[_roles[roleId].Data.PersonId].Name)
                                     </td>
                                     <td class="align-middle">
                                         @(_roleTypes[_roles[roleId].Data.TypeId])
@@ -117,15 +112,15 @@
                     <AntiforgeryToken/>
                     <div class="container-grid">
                         <div class="row form-group mb-1">
-                            <label for="actorFormMedia" class="col-1 col-form-label">Media:</label>
+                            <label for="actorFormPerson" class="col-1 col-form-label">Person:</label>
                             <div class="col">
-                                <Autocomplete ElementId="actorFormMedia" 
-                                              TItem="MediaResponse"
+                                <Autocomplete ElementId="actorFormPerson" 
+                                              TItem="PersonResponse"
                                               TValue="long"
-                                              Data="@(Media.Values)"
-                                              TextField="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                                              Data="@(Persons.Values)"
+                                              TextField="@(item => item.Name)"
                                               ValueField="@(item => item.Id)"
-                                              @bind-SelectedValue="@(_editedModel.MediaId)"
+                                              @bind-SelectedValue="@(_editedModel.PersonId)"
                                               Placeholder="Search..."
                                               Filter="AutocompleteFilter.Contains">
                                     <NotFoundContent Context="not_found_context"> Sorry... @not_found_context was not found</NotFoundContent>
