@@ -4,7 +4,7 @@ using WatchIt.Common.Query;
 
 namespace WatchIt.Common.Model.Roles;
 
-public class ActorRoleResponse : ActorRole, IQueryOrderable<ActorRoleResponse>
+public class ActorRoleResponse : ActorRole, IQueryOrderable<ActorRoleResponse>, IRoleResponse
 {
     #region PROPERTIES
 

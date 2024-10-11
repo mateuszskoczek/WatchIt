@@ -1,0 +1,68 @@
+/* MAIN */
+
+.panel {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(25px);
+
+    background-color: rgba(0, 0, 0, 0.6);
+
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+
+
+/* HEADER */
+
+.panel-header {
+    padding: 0 1rem !important;
+    
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+
+/* MENU */
+
+.panel-menu {
+    gap: 1rem;
+    padding: 1rem 1.5rem !important;
+    
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.panel-menu > li > a {
+    --bs-nav-pills-link-active-bg: transparent;
+    --bs-nav-link-hover-color: white;
+    --bs-nav-link-color: #a6a6a6;
+
+    --bs-nav-pills-border-radius: 1.25rem;
+    
+    padding: 0.25rem 0.5rem;
+    
+    border-style: solid;
+    border-width: 2px;
+    border-color: transparent;
+}
+
+.panel-menu > li > a.active {
+    --bs-nav-link-color: white;
+    border-color: white;
+}
+
+
+
+/* BACKGROUNDS */
+
+.panel-background-gold {
+    background-color: rgba(255, 184, 58, 0.6);
+}
+
+
+
+/* OTHERS */
+
+.panel-text-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}

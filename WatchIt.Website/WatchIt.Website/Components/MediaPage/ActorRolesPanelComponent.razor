@@ -1,0 +1,14 @@
+@using WatchIt.Common.Model.Roles
+<div class="panel panel-padding-regular panel-radius-regular panel-background-regular @(Class)">
+    <div class="vstack">
+        <span class="panel-text-title">Actors</span>
+        @if (_loaded)
+        {
+            <RoleListComponent TRole="ActorRoleResponse"/>
+        }
+        else
+        {
+            <LoadingComponent/>
+        }
+    </div>
+</div>
