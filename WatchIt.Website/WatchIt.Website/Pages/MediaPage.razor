@@ -190,6 +190,31 @@ else
                     </div>
                 </div>
             </div>
+            <div class="row mt-over-panel-menu">
+                <div class="col">
+                    <Tabs Pills
+                          RenderMode="TabsRenderMode.LazyLoad"
+                          SelectedTab="actors"
+                          Class="panel panel-menu panel-background-menu">
+                        <Items>
+                            <Tab Name="actors">Actors</Tab>
+                            <Tab Name="creators">Creators</Tab>
+                        </Items>
+                        <Content>
+                            <TabPanel Name="actors">
+                                <div class="mt-default">
+                                    <ActorRolesPanelComponent Id="@(Id)"/>
+                                </div>
+                            </TabPanel>
+                            <TabPanel Name="creators">
+                                <div class="mt-default">
+                                    <CreatorRolesPanelComponent Id="@(Id)"/>
+                                </div>
+                            </TabPanel>
+                        </Content>
+                    </Tabs>
+                </div>
+            </div>
         }
         else
         {

@@ -42,7 +42,14 @@ public static class Program
 
         using (IServiceScope scope = app.Services.CreateScope())
         {
-            scope.ServiceProvider.GetService<DatabaseContext>().Database.Migrate();
+            DatabaseContext dbContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+
+            while (!dbContext.Database.CanConnect())
+            {
+                Thread.Sleep(1000);
+            }
+            
+            dbContext.Database.Migrate();
         }
         
         if (app.Environment.IsDevelopment())

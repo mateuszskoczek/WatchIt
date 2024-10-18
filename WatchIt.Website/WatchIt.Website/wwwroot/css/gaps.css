@@ -1,0 +1,17 @@
+/* DEFAULT */
+
+.mt-default {
+    margin-top: 1rem !important;
+}
+
+.gx-default {
+    --bs-gutter-x: 1rem !important;
+}
+
+
+
+/* OTHERS */
+
+.mt-over-panel-menu {
+    margin-top: 3rem !important;
+}
