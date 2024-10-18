@@ -72,8 +72,8 @@ public partial class RoleListComponent<TRole, TQuery> : ComponentBase where TRol
                 {
                     Query.After = 0;
                 }
-                Query.After += _pageSize;
             }
+            Query.After += data.Count();
             _rolesFetching = false;
         });
     }

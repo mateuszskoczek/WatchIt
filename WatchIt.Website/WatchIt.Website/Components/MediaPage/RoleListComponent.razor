@@ -10,15 +10,21 @@
             {
                 <hr/>
             }
-            <RoleComponent AdditionalName="@(AdditionalTextSource is not null ? AdditionalTextSource(_roles[i]) : null)"/>
+            <a class="text-reset text-decoration-none" href="/person/@(_roles[i].PersonId)">
+                <RoleComponent TRole="TRole"
+                               Role="@(_roles[i])"/>
+            </a>
         }
-        <div class="d-flex justify-content-center">
-            <button class="btn btn-secondary" @onclick="@(async () => await GetRoles())">
-                <LoadingButtonContentComponent Content="Load more"
-                                               LoadingContent="Loading..."
-                                               IsLoading="@(_rolesFetching)"/>
-            </button>
-        </div>
+        @if (!_allItemsLoaded)
+        {
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-secondary" @onclick="@(async () => await GetRoles())">
+                    <LoadingButtonContentComponent Content="Load more"
+                                                   LoadingContent="Loading..."
+                                                   IsLoading="@(_rolesFetching)"/>
+                </button>
+            </div>
+        }
     </div>
 }
 else
