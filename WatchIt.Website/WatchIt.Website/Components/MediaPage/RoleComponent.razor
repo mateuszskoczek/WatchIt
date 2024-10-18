@@ -19,17 +19,7 @@
                             <strong>@(_person.Name)</strong>@(Role is ActorRoleResponse actor ? $" as {actor.Name}" : string.Empty)
                         }
                     </span>
-                </div><!--
-                <div class="d-inline-flex gap-2">
-                    <span id="ratingStar">★</span>
-                    <div class="d-inline-flex flex-column justify-content-center">
-                        <span id="ratingValue">@(Rating.Count > 0 ? Rating.Average : "--")/10</span>
-                        @if (Rating.Count > 0)
-                        {
-                            <span id="ratingCount">@(Rating.Count)</span>
-                        }
-                    </div>
-                </div>-->
+                </div>
             </div>
         </div>
     </div>

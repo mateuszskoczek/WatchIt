@@ -1,10 +1,30 @@
+@using WatchIt.Common.Model.Roles
+
+
+
 <div class="panel panel-padding-regular panel-radius-regular panel-background-regular @(Class)">
-    <div class="vstack gap-3">
-        <span class="panel-text-title">Actors</span>
-        <RoleListComponent Id="@(Id)" 
-                           TRole="WatchIt.Common.Model.Roles.ActorRoleResponse"
-                           TQuery="WatchIt.Common.Model.Roles.ActorRoleMediaQueryParameters"
-                           GetRolesAction="MediaWebAPIService.GetMediaAllActorRoles"
-                           AdditionalTextSource="@(data => data.Name)"/>
-    </div>
+    @if (_loaded)
+    {
+        <div class="vstack gap-3">
+            <span class="panel-text-title">Creators</span>
+            <div class="d-flex justify-content-center">
+                <RadioGroup TValue="short" Color="Color.Default" Buttons Size="Size.Small" CheckedValue="@(_query.TypeId!.Value)" CheckedValueChanged="CheckedTypeChanged">
+                    @foreach (RoleTypeResponse roleType in _roleTypes)
+                    {
+                        <Radio Value="@(roleType.Id)">@roleType.Name</Radio>
+                    }
+                </RadioGroup>
+            </div>
+            <RoleListComponent @ref=@(_roleListComponent) 
+                               Id="@(Id)"
+                               TRole="CreatorRoleResponse"
+                               TQuery="CreatorRoleMediaQueryParameters"
+                               GetRolesAction="MediaWebAPIService.GetMediaAllCreatorRoles"
+                               Query="@(_query)"/>
+        </div>
+    }
+    else
+    {
+        <LoadingComponent Color="white"/>
+    }
 </div>

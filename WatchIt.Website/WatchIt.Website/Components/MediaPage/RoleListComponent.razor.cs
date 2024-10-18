@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Roles;
 using WatchIt.Common.Query;
@@ -27,6 +28,22 @@ public partial class RoleListComponent<TRole, TQuery> : ComponentBase where TRol
     private List<TRole> _roles = new List<TRole>();
     private bool _rolesFetching;
 
+    #endregion
+    
+    
+    
+    #region PUBLIC METHODS
+
+    public async Task Refresh()
+    {
+        _loaded = false;
+        _roles.Clear();
+        Query.After = null;
+        Query.First = _pageSize;
+        await GetRoles(true);
+        _loaded = true;
+    }
+    
     #endregion
     
     
