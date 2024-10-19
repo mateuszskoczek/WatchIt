@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Components;
-using WatchIt.Website.Components.DatabasePage;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
 using WatchIt.Website.Services.WebAPI.Series;

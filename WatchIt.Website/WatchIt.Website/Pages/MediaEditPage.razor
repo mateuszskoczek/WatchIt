@@ -2,6 +2,7 @@
 @using WatchIt.Common.Model.Movies
 @using WatchIt.Common.Model.Photos
 @using WatchIt.Common.Model.Series
+@using WatchIt.Website.Components.Pages.MediaEditPage.Panels
 
 @page "/media/{id:long}/edit"
 @page "/media/new/{type?}"
@@ -60,7 +61,7 @@
                             <div class="container-grid">
                                 <div class="row">
                                     <div class="col">
-                                        <img class="rounded-2 shadow object-fit-cover" src="@(_mediaPosterRequest is not null ? _mediaPosterRequest.ToString() : "assets/poster.png")" alt="poster" width="300" height="500"/>
+                                        <img class="rounded-2 shadow object-fit-cover" src="@(_mediaPosterRequest is not null ? _mediaPosterRequest.ToString() : "assets/media_poster.png")" alt="poster" width="300" height="500"/>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -201,14 +202,14 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col">
-                        <MediaRolesEditActorComponent Id="@(Id)"
-                                                      Persons="@(_persons)"/>
+                        <MediaActorRolesEditPanelComponent Id="@(Id)"
+                                                           Persons="@(_persons)"/>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col">
-                        <MediaRolesEditCreatorComponent Id="@(Id)"
-                                                        Persons="@(_persons)"/>
+                        <MediaCreatorRolesEditPanelComponent Id="@(Id)"
+                                                             Persons="@(_persons)"/>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -376,7 +377,7 @@
             {
                 <div class="row">
                     <div class="col">
-                        <ErrorComponent ErrorMessage="You do not have permission to view this site"/>
+                        <ErrorPanelComponent ErrorMessage="You do not have permission to view this site"/>
                     </div>
                 </div>
             }
@@ -385,7 +386,7 @@
         {
             <div class="row">
                 <div class="col">
-                    <ErrorComponent ErrorMessage="@_error"/>
+                    <ErrorPanelComponent ErrorMessage="@_error"/>
                 </div>
             </div>
         }

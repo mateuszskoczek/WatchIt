@@ -1,0 +1,26 @@
+<div class="container-grid">
+    <div class="row">
+        <div class="col-auto">
+            <img id="picture" class="rounded-2 shadow object-fit-cover picture-aspect-ratio" src="@(_picture is not null ? _picture.ToString() : "assets/media_poster.png")" alt="picture" height="@(PictureHeight)"/>
+        </div>
+        <div class="col">
+            <div class="d-flex align-items-start flex-column h-100">
+                <div class="mb-auto">
+                    <span id="nameText">
+                        <strong>@(Name)</strong>@(string.IsNullOrWhiteSpace(AdditionalNameInfo) ? string.Empty : AdditionalNameInfo)
+                    </span>
+                </div>
+                <div class="d-inline-flex gap-2">
+                    <span id="ratingStar">★</span>
+                    <div class="d-inline-flex flex-column justify-content-center">
+                        <span id="ratingValue">@(Rating.Count > 0 ? Rating.Average : "--")/10</span>
+                        @if (Rating.Count > 0)
+                        {
+                            <span id="ratingCount">@(Rating.Count)</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
