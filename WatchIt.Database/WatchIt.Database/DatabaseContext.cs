@@ -66,7 +66,7 @@ public class DatabaseContext : DbContext
     // Rating
     public virtual DbSet<RatingMedia> RatingsMedia { get; set; }
     public virtual DbSet<RatingPersonActorRole> RatingsPersonActorRole { get; set; }
-    public virtual DbSet<RatingPersonActorRole> RatingsPersonCreatorRole { get; set; }
+    public virtual DbSet<RatingPersonCreatorRole> RatingsPersonCreatorRole { get; set; }
     public virtual DbSet<RatingMediaSeriesSeason> RatingsMediaSeriesSeason { get; set; }
     public virtual DbSet<RatingMediaSeriesEpisode> RatingsMediaSeriesEpisode { get; set; }
 

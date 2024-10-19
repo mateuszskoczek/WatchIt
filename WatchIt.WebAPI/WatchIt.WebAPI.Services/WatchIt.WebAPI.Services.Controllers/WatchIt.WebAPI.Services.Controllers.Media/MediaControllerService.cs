@@ -125,29 +125,17 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
 
     public async Task<RequestResult> GetMediaRatingByUser(long mediaId, long userId)
     {
-        Database.Model.Media.Media? item = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
-        if (item is null)
+        RatingMedia? rating = await database.RatingsMedia.FirstOrDefaultAsync(x => x.MediaId == mediaId && x.AccountId == userId);
+        if (rating is null)
         {
             return RequestResult.NotFound();
         }
         
-        short? rating = item.RatingMedia.FirstOrDefault(x => x.AccountId == userId)?.Rating;
-        if (!rating.HasValue)
-        {
-            return RequestResult.NotFound();
-        }
-        
-        return RequestResult.Ok(rating.Value);
+        return RequestResult.Ok(rating.Rating);
     }
     
     public async Task<RequestResult> PutMediaRating(long mediaId, RatingRequest data)
     {
-        short ratingValue = data.Rating;
-        if (ratingValue < 1 || ratingValue > 10)
-        {
-            return RequestResult.BadRequest();
-        }
-            
         Database.Model.Media.Media? item = await database.Media.FirstOrDefaultAsync(x => x.Id == mediaId);
         if (item is null)
         {
@@ -159,7 +147,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
         RatingMedia? rating = item.RatingMedia.FirstOrDefault(x => x.AccountId == userId);
         if (rating is not null)
         {
-            rating.Rating = ratingValue;
+            rating.Rating = data.Rating;
         }
         else
         {
@@ -167,7 +155,7 @@ public class MediaControllerService(DatabaseContext database, IUserService userS
             {
                 AccountId = userId,
                 MediaId = mediaId,
-                Rating = ratingValue
+                Rating = data.Rating
             };
             await database.RatingsMedia.AddAsync(rating);
         }

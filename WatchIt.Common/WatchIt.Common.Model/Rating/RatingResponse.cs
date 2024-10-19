@@ -33,7 +33,13 @@ public class RatingResponse
 
     public static RatingResponse Create(long ratingSum, long ratingCount) => new RatingResponse(ratingSum, ratingCount);
     
-    public static RatingResponse Create(IEnumerable<RatingMedia> ratingMedia) => new RatingResponse(ratingMedia.Sum(x => x.Rating), ratingMedia.Count());
+    public static RatingResponse Create(IEnumerable<RatingMedia> ratingMedia) => Create(ratingMedia, x => x.Rating);
+    
+    public static RatingResponse Create(IEnumerable<RatingPersonActorRole> ratingPersonActorRoles) => Create(ratingPersonActorRoles, x => x.Rating);
+    
+    public static RatingResponse Create(IEnumerable<RatingPersonCreatorRole> ratingPersonCreatorRoles) => Create(ratingPersonCreatorRoles, x => x.Rating);
+    
+    public static RatingResponse Create<T>(IEnumerable<T> ratingList, Func<T, short> ratingSelector) => new RatingResponse(ratingList.Sum(x => ratingSelector(x)), ratingList.Count());
 
     public static RatingResponse Create(IEnumerable<PersonActorRole> personActorRoles, IEnumerable<PersonCreatorRole> personCreatorRoles)
     {

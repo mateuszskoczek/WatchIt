@@ -1,4 +1,5 @@
-﻿using WatchIt.Common.Model.Roles;
+﻿using WatchIt.Common.Model.Rating;
+using WatchIt.Common.Model.Roles;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Utility.Configuration;
 using WatchIt.Website.Services.WebAPI.Common;
@@ -68,6 +69,59 @@ public class RolesWebAPIService : BaseWebAPIService, IRolesWebAPIService
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor401Unauthorized(unauthorizedAction)
                 .RegisterActionFor403Forbidden(forbiddenAction)
+                .ExecuteAction();
+    }
+    
+    public async Task GetActorRoleRating(Guid id, Action<RatingResponse>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.GetActorRoleRating, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+
+    public async Task GetActorRoleRatingByUser(Guid id, long userId, Action<short>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.GetActorRoleRatingByUser, id, userId);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+
+    public async Task PutActorRoleRating(Guid id, RatingRequest body, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.PutActorRoleRating, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Put, url)
+        {
+            Body = body
+        };
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task DeleteActorRoleRating(Guid id, Action? successAction = null, Action? unauthorizedAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.DeleteActorRoleRating, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
                 .ExecuteAction();
     }
 
@@ -165,6 +219,59 @@ public class RolesWebAPIService : BaseWebAPIService, IRolesWebAPIService
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor401Unauthorized(unauthorizedAction)
                 .RegisterActionFor403Forbidden(forbiddenAction)
+                .ExecuteAction();
+    }
+    
+    public async Task GetCreatorRoleRating(Guid id, Action<RatingResponse>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.GetCreatorRoleRating, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+
+    public async Task GetCreatorRoleRatingByUser(Guid id, long userId, Action<short>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.GetCreatorRoleRatingByUser, id, userId);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+
+    public async Task PutCreatorRoleRating(Guid id, RatingRequest body, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.PutCreatorRoleRating, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Put, url)
+        {
+            Body = body
+        };
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task DeleteCreatorRoleRating(Guid id, Action? successAction = null, Action? unauthorizedAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Roles.DeleteCreatorRoleRating, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
                 .ExecuteAction();
     }
     
