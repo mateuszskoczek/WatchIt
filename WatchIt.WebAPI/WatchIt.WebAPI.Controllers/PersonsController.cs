@@ -77,7 +77,13 @@ public class PersonsController : ControllerBase
     [AllowAnonymous]
     [ProducesResponseType(typeof(IEnumerable<PersonResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> GetMoviesViewRank([FromQuery] int first = 5, [FromQuery] int days = 7) => await _personsControllerService.GetPersonsViewRank(first, days);
+    public async Task<ActionResult> GetPersonsViewRank([FromQuery] int first = 5, [FromQuery] int days = 7) => await _personsControllerService.GetPersonsViewRank(first, days);
+    
+    [HttpPost("{id}/view")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> PostPersonsView([FromRoute] long id) => await _personsControllerService.PostPersonsView(id);
     
     #endregion
     

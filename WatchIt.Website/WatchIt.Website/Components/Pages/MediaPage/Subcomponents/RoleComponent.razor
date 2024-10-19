@@ -1,0 +1,26 @@
+@using WatchIt.Common.Model.Roles
+@typeparam TRole where TRole : WatchIt.Common.Model.Roles.IRoleResponse
+
+<div class="container-grid">
+    <div class="row">
+        <div class="col-auto">
+            <PictureComponent Picture="@(_picture)" Placeholder="/assets/person_poster.png" AlternativeText="poster" Height="100"/>
+        </div>
+        <div class="col">
+            <div class="d-flex align-items-start flex-column h-100">
+                <div class="mb-auto">
+                    <span id="nameText">
+                        @if (_person is null)
+                        {
+                            <span>Loading...</span>
+                        }
+                        else
+                        {
+                            <strong>@(_person.Name)</strong>@(Role is ActorRoleResponse actor ? $" as {actor.Name}" : string.Empty)
+                        }
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

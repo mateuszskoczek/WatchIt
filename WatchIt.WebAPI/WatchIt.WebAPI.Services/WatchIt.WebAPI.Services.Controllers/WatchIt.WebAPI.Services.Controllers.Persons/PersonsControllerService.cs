@@ -3,6 +3,7 @@ using WatchIt.Common.Model.Persons;
 using WatchIt.Common.Model.Roles;
 using WatchIt.Database;
 using WatchIt.Database.Model.Person;
+using WatchIt.Database.Model.ViewCount;
 using WatchIt.WebAPI.Services.Controllers.Common;
 using WatchIt.WebAPI.Services.Utility.User;
 using Person = WatchIt.Database.Model.Person.Person;
@@ -140,6 +141,35 @@ public class PersonsControllerService : IPersonsControllerService
         IEnumerable<PersonResponse> data = rawData.Select(x => new PersonResponse(x));
         
         return RequestResult.Ok(data);
+    }
+    
+    public async Task<RequestResult> PostPersonsView(long personId)
+    {
+        Database.Model.Media.Media? item = await _database.Media.FirstOrDefaultAsync(x => x.Id == personId);
+        if (item is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        DateOnly dateNow = DateOnly.FromDateTime(DateTime.Now);
+        ViewCountPerson? viewCount = await _database.ViewCountsPerson.FirstOrDefaultAsync(x => x.PersonId == personId && x.Date == dateNow);
+        if (viewCount is null)
+        {
+            viewCount = new ViewCountPerson
+            {
+                PersonId = personId,
+                Date = dateNow,
+                ViewCount = 1
+            };
+            await _database.ViewCountsPerson.AddAsync(viewCount);
+        }
+        else
+        {
+            viewCount.ViewCount++;
+        }
+        await _database.SaveChangesAsync();
+        
+        return RequestResult.Ok();
     }
 
     #endregion

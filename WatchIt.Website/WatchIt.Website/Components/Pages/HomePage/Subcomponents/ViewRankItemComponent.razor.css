@@ -1,0 +1,12 @@
+/* CLASSES */
+
+.border-2 {
+    border-width: 2px;
+}
+
+.place-circle {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    line-height: 25px;
+}

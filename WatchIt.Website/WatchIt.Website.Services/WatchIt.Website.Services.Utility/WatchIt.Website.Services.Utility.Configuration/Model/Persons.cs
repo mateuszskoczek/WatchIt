@@ -9,6 +9,7 @@ public class Persons
     public string PutPerson { get; set; }
     public string DeletePerson { get; set; }
     public string GetPersonsViewRank { get; set; }
+    public string PostPersonsView { get; set; }
     public string GetPersonPhoto { get; set; }
     public string PutPersonPhoto { get; set; }
     public string DeletePersonPhoto { get; set; }

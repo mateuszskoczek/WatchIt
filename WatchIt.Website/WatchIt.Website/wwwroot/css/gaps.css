@@ -8,6 +8,10 @@
     --bs-gutter-x: 1rem !important;
 }
 
+.gap-default {
+    gap: 1rem;
+}
+
 
 
 /* OTHERS */

@@ -1,6 +1,7 @@
 ﻿@using System.Text
 @using Microsoft.IdentityModel.Tokens
 @using WatchIt.Common.Model.Genres
+@using WatchIt.Website.Components.Pages.MediaPage.Panels
 
 @page "/media/{id:long}"
 
@@ -31,7 +32,7 @@ else
         {
             <div class="row mt-9">
                 <div class="col-auto">
-                    <img class="rounded-2 shadow object-fit-cover" src="@(_poster is not null ? _poster.ToString() : "assets/poster.png")" alt="poster" width="200" height="333"/>
+                    <PictureComponent Picture="@(_poster)" Placeholder="/assets/media_poster.png" AlternativeText="poster" Width="200"/>
                 </div>
                 <div class="col">
                     <div class="d-flex h-100">
@@ -220,7 +221,7 @@ else
         {
             <div class="row">
                 <div class="col">
-                    <ErrorComponent ErrorMessage="@_error"/>
+                    <ErrorPanelComponent ErrorMessage="@_error"/>
                 </div>
             </div>
         }

@@ -138,6 +138,18 @@ public class PersonsWebAPIService : BaseWebAPIService, IPersonsWebAPIService
                 .RegisterActionFor400BadRequest(badRequestAction)
                 .ExecuteAction();
     }
+    
+    public async Task PostPersonsView(long personId, Action? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Persons.PostPersonsView, personId);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
 
     #endregion
     
