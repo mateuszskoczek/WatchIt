@@ -57,60 +57,12 @@
                 </div>
                 <div class="row mt-3 gx-3">
                     <div class="col-auto">
-                        <div class="rounded-3 panel panel-regular p-4 h-100">
-                            <div class="container-grid">
-                                <div class="row">
-                                    <div class="col">
-                                        <img class="rounded-2 shadow object-fit-cover" src="@(_mediaPosterRequest is not null ? _mediaPosterRequest.ToString() : "assets/media_poster.png")" alt="poster" width="300" height="500"/>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col">
-                                        <InputFile class="form-control" OnChange="LoadPoster" disabled="@(_media is null)" autocomplete="off" style="width: 300px;"/>
-                                    </div>
-                                </div>
-                                @if (_mediaPosterChanged || _mediaPosterSaved is not null)
-                                {
-                                    <div class="row mt-4 gx-1" style="width: 300px;">
-                                        @if (_mediaPosterChanged)
-                                        {
-                                            <div class="col">
-                                                <button type="button" class="btn btn-secondary btn-block btn-stretch-x" @onclick="SavePoster" disabled=@(!Id.HasValue || _mediaPosterSaving || _mediaPosterDeleting) autocomplete="off">
-                                                    @if (!_mediaPosterSaving)
-                                                    {
-                                                        <span>Save poster</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                        <span>Saving...</span>
-                                                    }
-                                                </button>
-                                            </div>
-                                            <div class="col">
-                                                <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="CancelPoster" disabled=@(!Id.HasValue || _mediaPosterSaving || _mediaPosterDeleting) autocomplete="off">Drop changes</button>
-                                            </div>
-                                        }
-                                        else if (_mediaPosterSaved is not null)
-                                        {
-                                            <div class="col">
-                                                <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="DeletePoster" disabled=@(!Id.HasValue || _mediaPosterSaving || _mediaPosterDeleting) autocomplete="off">
-                                                    @if (!_mediaPosterSaving)
-                                                    {
-                                                        <span>Delete poster</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                        <span>Deleting...</span>
-                                                    }
-                                                </button>
-                                            </div>
-                                        }
-                                    </div>
-                                }
-                            </div>
-                        </div>
+                        <PictureEditorPanelComponent Id="@(Id)"
+                                                     PictureGetTask="@(async (id, action) => await MediaWebAPIService.GetMediaPoster(id, action))"
+                                                     PicturePutTask="@(async (id, data, action) => await MediaWebAPIService.PutMediaPoster(id, new MediaPosterRequest(data), action))"
+                                                     PictureDeleteTask="@(async (id, action) => await MediaWebAPIService.DeleteMediaPoster(id, action))"
+                                                     PicturePlaceholder="/assets/media_poster.png"
+                                                     Class="h-100"/>
                     </div>
                     <div class="col">
                         <div class="rounded-3 panel panel-regular p-4 h-100">
@@ -264,7 +216,7 @@
                                                         <div class="container-grid photo-container">
                                                             <div class="row">
                                                                 <div class="col">
-                                                                    <img class="rounded-1 shadow object-fit-cover photo-default-aspect-ratio" src="@(photo.ToString())" alt="photo" width="350"/>
+                                                                    <PictureComponent Picture="@(photo)" AlternativeText="photo" Width="350" Placeholder="/assets/photo.png" AspectRatio="PictureComponent.PictureComponentAspectRatio.Photo"/>
                                                                 </div>
                                                             </div>
                                                             <div class="row mt-2 gx-2">
@@ -320,7 +272,7 @@
                                                         <div class="container-grid">
                                                             <div class="row">
                                                                 <div class="col">
-                                                                    <img class="rounded-1 shadow object-fit-cover photo-default-aspect-ratio" src="@(_photoEditRequest is null ? "assets/photo.png" : _photoEditRequest.ToString())" alt="edit_photo" width="300px"/>
+                                                                    <PictureComponent Picture="@(_photoEditRequest)" Placeholder="/assets/photo.png" AlternativeText="edit_photo" Width="300" AspectRatio="PictureComponent.PictureComponentAspectRatio.Photo"/>
                                                                 </div>
                                                             </div>
                                                             @if (_photoEditId is null)

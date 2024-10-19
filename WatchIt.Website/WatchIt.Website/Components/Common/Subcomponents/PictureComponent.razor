@@ -1,4 +1,4 @@
-<img id="imgObject" class="rounded-2 shadow object-fit-cover @(Class)" src="@(Picture is not null ? Picture.ToString() : Placeholder)" alt="@(AlternativeText)"/>
+<img id="imgObject" class="rounded-2 shadow object-fit-cover @(Class)" src="@(Picture is not null ? Picture.ToString() : Placeholder)" alt="@(AlternativeText)" @attributes="@(_attributes)"/>
 
 <style>
     #imgObject {

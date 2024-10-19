@@ -32,7 +32,7 @@ else
         {
             <div class="row mt-9">
                 <div class="col-auto">
-                    <img class="rounded-2 shadow object-fit-cover" src="@(_poster is not null ? _poster.ToString() : "assets/media_poster.png")" alt="poster" width="200" height="333"/>
+                    <PictureComponent Picture="@(_poster)" Placeholder="/assets/media_poster.png" AlternativeText="poster" Width="200"/>
                 </div>
                 <div class="col">
                     <div class="d-flex h-100">

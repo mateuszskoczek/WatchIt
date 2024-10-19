@@ -12,6 +12,35 @@ public partial class PictureComponent : ComponentBase
     [Parameter] public PictureComponentAspectRatio AspectRatio { get; set; } = PictureComponentAspectRatio.Default;
     [Parameter] public string AlternativeText { get; set; } = "picture";
     [Parameter] public string Class { get; set; } = string.Empty;
+    [Parameter] public int? Height { get; set; }
+    [Parameter] public int? Width { get; set; }
+
+    #endregion
+    
+    
+    
+    #region FIELDS
+    
+    private Dictionary<string, object> _attributes = [];
+    
+    #endregion 
+    
+    
+    
+    #region PRIVATE METHODS
+
+    protected override void OnParametersSet()
+    {
+        _attributes.Clear();
+        if (Height.HasValue)
+        {
+            _attributes.Add("height", Height.Value);
+        }
+        else if (Width.HasValue)
+        {
+            _attributes.Add("width", Width.Value);
+        }
+    }
 
     #endregion
 
@@ -40,7 +69,8 @@ public partial class PictureComponent : ComponentBase
             Vertical = vertical;
         }
         
-        public static PictureComponentAspectRatio Default = new PictureComponentAspectRatio();
+        public static readonly PictureComponentAspectRatio Default = new PictureComponentAspectRatio();
+        public static readonly PictureComponentAspectRatio Photo = new PictureComponentAspectRatio(16, 9);
         
         #endregion
         

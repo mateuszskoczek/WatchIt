@@ -1,7 +1,7 @@
 <div class="container-grid">
     <div class="row">
         <div class="col-auto">
-            <img id="picture" class="rounded-2 shadow object-fit-cover picture-aspect-ratio" src="@(_picture is not null ? _picture.ToString() : "assets/media_poster.png")" alt="picture" height="@(PictureHeight)"/>
+            <PictureComponent Picture="@(_picture)" Placeholder="/assets/media_poster.png" AlternativeText="poster" Height="@(PictureHeight)"/>
         </div>
         <div class="col">
             <div class="d-flex align-items-start flex-column h-100">
