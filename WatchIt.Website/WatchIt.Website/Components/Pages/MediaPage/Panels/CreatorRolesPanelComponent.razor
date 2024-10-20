@@ -20,8 +20,12 @@
                                Id="@(Id)"
                                TRole="CreatorRoleResponse"
                                TQuery="CreatorRoleMediaQueryParameters"
+                               Query="@(_query)"
                                GetRolesAction="MediaWebAPIService.GetMediaAllCreatorRoles"
-                               Query="@(_query)"/>
+                               GetGlobalRatingAction="@((id, action) => RolesWebAPIService.GetCreatorRoleRating(id, action))"
+                               GetUserRatingAction="@(_user is not null ? (id, actionSuccess, actionNotFound) => RolesWebAPIService.GetCreatorRoleRatingByUser(id, _user.Id, actionSuccess, actionNotFound) : null)"
+                               PutRatingAction="(id, request) => RolesWebAPIService.PutActorRoleRating(id, request)"
+                               DeleteRatingAction="(id) => RolesWebAPIService.DeleteActorRoleRating(id)"/>
         </div>
     }
     else

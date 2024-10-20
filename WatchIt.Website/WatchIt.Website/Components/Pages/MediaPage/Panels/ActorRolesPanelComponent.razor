@@ -8,7 +8,11 @@
         <RoleListComponent Id="@(Id)" 
                            TRole="WatchIt.Common.Model.Roles.ActorRoleResponse"
                            TQuery="WatchIt.Common.Model.Roles.ActorRoleMediaQueryParameters"
-                           GetRolesAction="MediaWebAPIService.GetMediaAllActorRoles"
-                           AdditionalTextSource="@(data => data.Name)"/>
+                           AdditionalTextSource="@(data => data.Name)"
+                           GetRolesAction="@(MediaWebAPIService.GetMediaAllActorRoles)"
+                           GetGlobalRatingAction="@((id, action) => RolesWebAPIService.GetActorRoleRating(id, action))"
+                           GetUserRatingAction="@(_user is not null ? (id, actionSuccess, actionNotFound) => RolesWebAPIService.GetActorRoleRatingByUser(id, _user.Id, actionSuccess, actionNotFound) : null)"
+                           PutRatingAction="(id, request) => RolesWebAPIService.PutActorRoleRating(id, request)"
+                           DeleteRatingAction="(id) => RolesWebAPIService.DeleteActorRoleRating(id)"/>
     </div>
 </div>

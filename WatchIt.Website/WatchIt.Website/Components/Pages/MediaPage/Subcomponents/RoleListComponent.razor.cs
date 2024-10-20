@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using Microsoft.AspNetCore.Components;
+using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Model.Roles;
 using WatchIt.Common.Query;
 
@@ -7,12 +8,25 @@ namespace WatchIt.Website.Components.Pages.MediaPage.Subcomponents;
 
 public partial class RoleListComponent<TRole, TQuery> : ComponentBase where TRole : IRoleResponse, IQueryOrderable<TRole> where TQuery : QueryParameters<TRole>
 {
+    #region SERVICES
+    
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+    
+    #endregion
+    
+    
+    
     #region PROPERTIES
     
     [Parameter] public required long Id { get; set; }
-    [Parameter] public required Func<long, TQuery, Action<IEnumerable<TRole>>, Task> GetRolesAction { get; set; }
     [Parameter] public TQuery Query { get; set; } = Activator.CreateInstance<TQuery>();
     [Parameter] public Func<TRole, string>? AdditionalTextSource { get; set; } 
+    
+    [Parameter] public required Func<long, TQuery, Action<IEnumerable<TRole>>, Task> GetRolesAction { get; set; }
+    [Parameter] public required Func<Guid, Action<RatingResponse>, Task> GetGlobalRatingAction { get; set; }
+    [Parameter] public required Func<Guid, Action<short>, Action, Task> GetUserRatingAction { get; set; }
+    [Parameter] public required Func<Guid, RatingRequest, Task> PutRatingAction { get; set; }
+    [Parameter] public required Func<Guid, Task> DeleteRatingAction { get; set; }
 
     #endregion
     

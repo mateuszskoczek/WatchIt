@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Roles;
 using WatchIt.Website.Components.Pages.MediaPage.Subcomponents;
+using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Roles;
 
@@ -12,6 +13,7 @@ public partial class CreatorRolesPanelComponent : ComponentBase
     
     [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
     [Inject] private IRolesWebAPIService RolesWebAPIService { get; set; } = default!;
+    [Inject] private IAuthenticationService AuthenticationService { get; set; } = default!;
     
     #endregion
     
@@ -27,6 +29,8 @@ public partial class CreatorRolesPanelComponent : ComponentBase
 
 
     #region FIELDS
+    
+    private User? _user;
 
     private RoleListComponent<CreatorRoleResponse, CreatorRoleMediaQueryParameters> _roleListComponent;
 
@@ -40,6 +44,11 @@ public partial class CreatorRolesPanelComponent : ComponentBase
 
 
     #region PRIVATE METHODS
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        _user = await AuthenticationService.GetUserAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
