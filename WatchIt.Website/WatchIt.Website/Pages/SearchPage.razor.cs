@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using WatchIt.Website.Layout;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
+using WatchIt.Website.Services.WebAPI.Persons;
 using WatchIt.Website.Services.WebAPI.Series;
 
 namespace WatchIt.Website.Pages;
@@ -14,16 +15,8 @@ public partial class SearchPage : ComponentBase
     [Inject] private IMoviesWebAPIService MoviesWebAPIService { get; set; } = default!;
     [Inject] private ISeriesWebAPIService SeriesWebAPIService { get; set; } = default!;
     [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
+    [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
     
-    #endregion
-
-
-    
-    #region FIELDS
-
-    private bool _loaded;
-    private string? _error;
-
     #endregion
     
     
@@ -42,20 +35,5 @@ public partial class SearchPage : ComponentBase
     
     public string DecodedQuery => WebUtility.UrlDecode(Query);
     
-    #endregion
-
-
-
-    #region PRIVATE METHODS
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _loaded = true;
-            StateHasChanged();
-        }
-    }
-
     #endregion
 }

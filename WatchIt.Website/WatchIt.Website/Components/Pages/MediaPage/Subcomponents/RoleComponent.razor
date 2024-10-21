@@ -49,7 +49,7 @@
                     <div class="vstack">
                         <span id="ratingNameText">Your rating:</span>
                         <div class="d-inline-flex align-items-center h-100">
-                            @if (_authenticated)
+                            @if (_user is not null)
                             {
                                 <Rating Color="Color.Light" MaxValue="10" @bind-SelectedValue="@(_yourRating)" @onclick="@(RatingChanged)"/>
                             }

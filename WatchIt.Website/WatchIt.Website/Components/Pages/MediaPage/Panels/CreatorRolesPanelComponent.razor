@@ -23,7 +23,7 @@
                                Query="@(_query)"
                                GetRolesAction="MediaWebAPIService.GetMediaAllCreatorRoles"
                                GetGlobalRatingAction="@((id, action) => RolesWebAPIService.GetCreatorRoleRating(id, action))"
-                               GetUserRatingAction="@(_user is not null ? (id, actionSuccess, actionNotFound) => RolesWebAPIService.GetCreatorRoleRatingByUser(id, _user.Id, actionSuccess, actionNotFound) : null)"
+                               GetUserRatingAction="@((id, userId, actionSuccess, actionNotFound) => RolesWebAPIService.GetCreatorRoleRatingByUser(id, userId, actionSuccess, actionNotFound))"
                                PutRatingAction="(id, request) => RolesWebAPIService.PutActorRoleRating(id, request)"
                                DeleteRatingAction="(id) => RolesWebAPIService.DeleteActorRoleRating(id)"/>
         </div>
