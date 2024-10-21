@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
+using WatchIt.Website.Services.WebAPI.Persons;
 using WatchIt.Website.Services.WebAPI.Series;
 
 namespace WatchIt.Website.Pages;
@@ -13,6 +14,7 @@ public partial class DatabasePage : ComponentBase
     [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
     [Inject] private IMoviesWebAPIService MoviesWebAPIService { get; set; } = default!;
     [Inject] private ISeriesWebAPIService SeriesWebAPIService { get; set; } = default!;
+    [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
     
     #endregion
     
@@ -28,9 +30,7 @@ public partial class DatabasePage : ComponentBase
     
     #region FIELDS
 
-    private static IEnumerable<string> _databaseTypes = ["movies", "series"];
-
-    private bool _loaded;
+    private static IEnumerable<string> _databaseTypes = ["movies", "series", "people"];
     
     #endregion
     
@@ -38,18 +38,11 @@ public partial class DatabasePage : ComponentBase
     
     #region PRIVATE METHODS
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnParametersSet()
     {
-        if (firstRender)
+        if (!_databaseTypes.Contains(Type))
         {
-            // INIT
-            if (!_databaseTypes.Contains(Type))
-            {
-                NavigationManager.NavigateTo($"/database/{_databaseTypes.First()}");
-            }
-            
-            _loaded = true;
-            StateHasChanged();
+            NavigationManager.NavigateTo($"/database/{_databaseTypes.First()}");
         }
     }
 

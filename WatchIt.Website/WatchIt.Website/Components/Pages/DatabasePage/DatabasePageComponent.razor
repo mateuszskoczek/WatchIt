@@ -48,29 +48,40 @@
         {
             if (string.IsNullOrWhiteSpace(_error))
             {
-                foreach (TItem item in _items)
+                if (_items.Count > 0)
                 {
-                    <div role="button" class="rounded-3 panel panel-regular p-2" @onclick="@(() => NavigationManager.NavigateTo(string.Format(UrlIdTemplate, IdSource(item))))">
-                        <ListItemComponent Id="@(IdSource(item))"
-                                           Name="@(NameSource(item))"
-                                           AdditionalNameInfo="@(AdditionalNameInfoSource(item))"
-                                           Rating="@(RatingSource(item))"
-                                           PictureDownloadingTask="@(PictureDownloadingTask)"/>
-                    </div>
+                    foreach (TItem item in _items)
+                    {
+                        <div role="button" class="rounded-3 panel panel-regular p-2" @onclick="@(() => NavigationManager.NavigateTo(string.Format(UrlIdTemplate, IdSource(item))))">
+                            <ListItemComponent Id="@(IdSource(item))"
+                                               Name="@(NameSource(item))"
+                                               AdditionalNameInfo="@(AdditionalNameInfoSource(item))"
+                                               Rating="@(RatingSource(item))"
+                                               PictureDownloadingTask="@(PictureDownloadingTask)"/>
+                        </div>
+                    }
+                    if (!_allItemsLoaded)
+                    {
+                        <div role="button" class="rounded-3 panel panel-regular p-3" @onclick="DownloadItems">
+                            <div class="d-flex justify-content-center">
+                                @if (!_itemsLoading)
+                                {
+                                    <strong>Load more</strong>
+                                }
+                                else
+                                {
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    <strong>Loading...</strong>
+                                }
+                            </div>
+                        </div>
+                    }
                 }
-                if (!_allItemsLoaded)
+                else
                 {
-                    <div role="button" class="rounded-3 panel panel-regular p-3" @onclick="DownloadItems">
+                    <div class="panel">
                         <div class="d-flex justify-content-center">
-                            @if (!_itemsLoading)
-                            {
-                             <strong>Load more</strong>
-                            }
-                            else
-                            {
-                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                             <strong>Loading...</strong>
-                            }
+                            <span>No items found</span>
                         </div>
                     </div>
                 }
