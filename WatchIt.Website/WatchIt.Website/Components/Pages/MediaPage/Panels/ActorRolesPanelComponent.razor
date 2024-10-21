@@ -11,7 +11,7 @@
                            AdditionalTextSource="@(data => data.Name)"
                            GetRolesAction="@(MediaWebAPIService.GetMediaAllActorRoles)"
                            GetGlobalRatingAction="@((id, action) => RolesWebAPIService.GetActorRoleRating(id, action))"
-                           GetUserRatingAction="@(_user is not null ? (id, actionSuccess, actionNotFound) => RolesWebAPIService.GetActorRoleRatingByUser(id, _user.Id, actionSuccess, actionNotFound) : null)"
+                           GetUserRatingAction="@((id, userId, actionSuccess, actionNotFound) => RolesWebAPIService.GetActorRoleRatingByUser(id, userId, actionSuccess, actionNotFound))"
                            PutRatingAction="(id, request) => RolesWebAPIService.PutActorRoleRating(id, request)"
                            DeleteRatingAction="(id) => RolesWebAPIService.DeleteActorRoleRating(id)"/>
     </div>

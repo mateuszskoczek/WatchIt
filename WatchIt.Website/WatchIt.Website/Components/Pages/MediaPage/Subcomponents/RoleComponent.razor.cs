@@ -23,7 +23,7 @@ public partial class RoleComponent<TRole> : ComponentBase where TRole : IRoleRes
     
     [Parameter] public required TRole Role { get; set; }
     [Parameter] public required Func<Guid, Action<RatingResponse>, Task> GetGlobalRatingAction { get; set; }
-    [Parameter] public required Func<Guid, Action<short>, Action, Task> GetUserRatingAction { get; set; }
+    [Parameter] public required Func<Guid, long, Action<short>, Action, Task> GetUserRatingAction { get; set; }
     [Parameter] public required Func<Guid, RatingRequest, Task> PutRatingAction { get; set; }
     [Parameter] public required Func<Guid, Task> DeleteRatingAction { get; set; }
     
@@ -33,7 +33,7 @@ public partial class RoleComponent<TRole> : ComponentBase where TRole : IRoleRes
 
     #region FIELDS
 
-    private bool _authenticated;
+    private User? _user;
     private PersonResponse? _person;
     private Picture? _picture;
     private RatingResponse? _globalRating;
@@ -50,17 +50,30 @@ public partial class RoleComponent<TRole> : ComponentBase where TRole : IRoleRes
     {
         if (firstRender)
         {
+            List<Task> step1Tasks = new List<Task>();
             List<Task> endTasks = new List<Task>();
             
             // STEP 0
+            step1Tasks.AddRange(
+            [
+                Task.Run(async () => _user = await AuthenticationService.GetUserAsync()),
+            ]);
             endTasks.AddRange(
             [
-                Task.Run(async () => _authenticated = await AuthenticationService.GetAuthenticationStatusAsync()),
                 PersonsWebAPIService.GetPersonPhoto(Role.PersonId, data => _picture = data),
                 PersonsWebAPIService.GetPerson(Role.PersonId, data => _person = data),
-                GetGlobalRatingAction(Role.Id, data => _globalRating = data),
-                GetUserRatingAction(Role.Id, data => _yourRating = data, () => _yourRating = 0)
+                GetGlobalRatingAction(Role.Id, data => _globalRating = data)
             ]);
+            
+            // STEP 1
+            await Task.WhenAll(step1Tasks);
+            if (_user is not null)
+            {
+                endTasks.AddRange(
+                [
+                    GetUserRatingAction(Role.Id, _user.Id, data => _yourRating = data, () => _yourRating = 0)
+                ]);
+            }
             
             // END
             await Task.WhenAll(endTasks);

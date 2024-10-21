@@ -11,7 +11,6 @@ public partial class ActorRolesPanelComponent : ComponentBase
     
     [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
     [Inject] private IRolesWebAPIService RolesWebAPIService { get; set; } = default!;
-    [Inject] private IAuthenticationService AuthenticationService { get; set; } = default!;
     
     #endregion
     
@@ -22,24 +21,5 @@ public partial class ActorRolesPanelComponent : ComponentBase
     [Parameter] public string Class { get; set; } = string.Empty;
     [Parameter] public required long Id { get; set; }
     
-    #endregion
-    
-    
-    
-    #region FIELDS
-
-    private User? _user;
-
-    #endregion
-    
-    
-    
-    #region PRIVATE METHODS
-
-    protected override async Task OnParametersSetAsync()
-    {
-        _user = await AuthenticationService.GetUserAsync();
-    }
-
     #endregion
 }

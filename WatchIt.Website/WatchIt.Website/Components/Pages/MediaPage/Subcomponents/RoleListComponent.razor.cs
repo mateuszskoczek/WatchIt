@@ -16,7 +16,7 @@ public partial class RoleListComponent<TRole, TQuery> : ComponentBase where TRol
     
     
     
-    #region PROPERTIES
+    #region PARAMETERS
     
     [Parameter] public required long Id { get; set; }
     [Parameter] public TQuery Query { get; set; } = Activator.CreateInstance<TQuery>();
@@ -24,7 +24,7 @@ public partial class RoleListComponent<TRole, TQuery> : ComponentBase where TRol
     
     [Parameter] public required Func<long, TQuery, Action<IEnumerable<TRole>>, Task> GetRolesAction { get; set; }
     [Parameter] public required Func<Guid, Action<RatingResponse>, Task> GetGlobalRatingAction { get; set; }
-    [Parameter] public required Func<Guid, Action<short>, Action, Task> GetUserRatingAction { get; set; }
+    [Parameter] public required Func<Guid, long, Action<short>, Action, Task> GetUserRatingAction { get; set; }
     [Parameter] public required Func<Guid, RatingRequest, Task> PutRatingAction { get; set; }
     [Parameter] public required Func<Guid, Task> DeleteRatingAction { get; set; }
 
