@@ -1,0 +1,51 @@
+@using System.Text
+
+@page "/person/{id:long}"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+    
+    if (!_loaded)               { sb.Insert(0, "Loading..."); }
+    else if (_person is null)   { sb.Insert(0, "Error"); }
+    else                        { sb.Insert(0, _person.Name); }
+    
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+<div class="container-grid">
+    @if (_loaded)
+    {
+        if (_person is not null)
+        {
+            <div class="row">
+                <div class="col">
+                    <ItemPageHeaderPanelComponent Name="@(_person.Name)"
+                                                  Subname="@(_person.FullName)"
+                                                  Description="@(_person.Description)"
+                                                  PosterPlaceholder="/assets/person_poster.png"
+                                                  GetPosterMethod="@(action => PersonsWebAPIService.GetPersonPhoto(_person.Id, action))"/>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col">
+                    <ErrorPanelComponent ErrorMessage="@($"Person with ID {Id} was not found")"/>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="row">
+            <div class="col">
+                <div class="m-5">
+                    <LoadingComponent/>
+                </div>
+            </div>
+        </div>
+    }
+</div>

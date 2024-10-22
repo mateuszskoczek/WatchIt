@@ -1,7 +1,1 @@
-<img id="imgObject" class="rounded-2 shadow object-fit-cover @(Class)" src="@(Picture is not null ? Picture.ToString() : Placeholder)" alt="@(AlternativeText)" @attributes="@(_attributes)"/>
-
-<style>
-    #imgObject {
-        aspect-ratio: @(AspectRatio.ToString());
-    }
-</style>
+<img id="imgObject" class="rounded-2 shadow object-fit-cover @(Class)" src="@(Picture is not null ? Picture.ToString() : Placeholder)" alt="@(AlternativeText)" @attributes="@(_attributes)" style="aspect-ratio: @(AspectRatio.ToString());"/>

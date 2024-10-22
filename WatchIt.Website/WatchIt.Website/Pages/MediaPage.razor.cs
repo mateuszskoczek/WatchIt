@@ -90,7 +90,6 @@ public partial class MediaPage : ComponentBase
                 [
                     MediaWebAPIService.PostMediaView(Id),
                     MediaWebAPIService.GetMediaPhotoRandomBackground(Id, data => Layout.BackgroundPhoto = data),
-                    MediaWebAPIService.GetMediaPoster(Id, data => _poster = data),
                     MediaWebAPIService.GetMediaGenres(Id, data => _genres = data),
                     MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data),
                     _media.Type == MediaType.Movie ? MoviesWebAPIService.GetMovie(Id, data => _movie = data) : SeriesWebAPIService.GetSeries(Id, data => _series = data),

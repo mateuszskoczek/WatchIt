@@ -51,4 +51,9 @@
       <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.6.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Components\Pages\PersonPage\Panels\" />
+      <Folder Include="Components\Pages\PersonPage\Subcomponents\" />
+    </ItemGroup>
+
 </Project>

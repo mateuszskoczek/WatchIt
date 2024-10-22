@@ -12,6 +12,7 @@ public interface IPersonsWebAPIService
     Task DeletePerson(long id, Action? successAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);
     
     Task GetPersonsViewRank(int? first = null, int? days = null, Action<IEnumerable<PersonResponse>>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null);
+    Task PostPersonView(long personId, Action? successAction = null, Action? notFoundAction = null);
     
     Task GetPersonPhoto(long id, Action<PersonPhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null);
     Task PutPersonPhoto(long id, PersonPhotoRequest data, Action<PersonPhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? forbiddenAction = null);

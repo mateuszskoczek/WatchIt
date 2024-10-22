@@ -30,32 +30,13 @@ else
     {
         if (string.IsNullOrWhiteSpace(_error))
         {
-            <div class="row mt-9">
-                <div class="col-auto">
-                    <PictureComponent Picture="@(_poster)" Placeholder="/assets/media_poster.png" AlternativeText="poster" Width="200"/>
-                </div>
+            <div class="row">
                 <div class="col">
-                    <div class="d-flex h-100">
-                        <div class="container-grid align-self-end">
-                            <div class="row">
-                                <div class="col">
-                                    <h1 class="align-self-end title-shadow">
-                                        <strong>@_media.Title</strong>
-                                    </h1>
-                                </div>
-                            </div>
-                            @if (!string.IsNullOrWhiteSpace(_media.Description))
-                            {
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="description-shadow">
-                                            @_media.Description
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
+                    <ItemPageHeaderPanelComponent Name="@(_media.Title)"
+                                                  Subname="@(_media.OriginalTitle)"
+                                                  Description="@(_media.Description)"
+                                                  PosterPlaceholder="/assets/media_poster.png"
+                                                  GetPosterMethod="@(action => MediaWebAPIService.GetMediaPoster(_media.Id, action))"/>
                 </div>
             </div>
             <div class="row mt-3 gx-3">
@@ -68,12 +49,6 @@ else
                                         <div class="metadata-pill">
                                             <strong>@(_media.Type == MediaType.Movie ? "Movie" : "TV Series")</strong>
                                         </div>
-                                        @if (!string.IsNullOrWhiteSpace(_media.OriginalTitle))
-                                        {
-                                            <div class="metadata-pill">
-                                                <strong>Original title:</strong> @_media.OriginalTitle
-                                            </div>
-                                        }
                                         @if (_media.ReleaseDate is not null)
                                         {
                                             <div class="metadata-pill">

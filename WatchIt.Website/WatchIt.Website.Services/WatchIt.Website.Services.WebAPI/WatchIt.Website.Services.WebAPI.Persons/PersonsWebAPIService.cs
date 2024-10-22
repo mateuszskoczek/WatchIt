@@ -139,7 +139,7 @@ public class PersonsWebAPIService : BaseWebAPIService, IPersonsWebAPIService
                 .ExecuteAction();
     }
     
-    public async Task PostPersonsView(long personId, Action? successAction = null, Action? notFoundAction = null)
+    public async Task PostPersonView(long personId, Action? successAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Persons.PostPersonsView, personId);
         
