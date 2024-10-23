@@ -45,6 +45,11 @@ public class RatingResponse
     {
         IEnumerable<RatingPersonActorRole> ratingsActorRoles = personActorRoles.SelectMany(x => x.RatingPersonActorRole);
         IEnumerable<RatingPersonCreatorRole> ratingsCreatorRoles = personCreatorRoles.SelectMany(x => x.RatingPersonCreatorRole);
+        return Create(ratingsActorRoles, ratingsCreatorRoles);
+    }
+
+    public static RatingResponse Create(IEnumerable<RatingPersonActorRole> ratingsActorRoles, IEnumerable<RatingPersonCreatorRole> ratingsCreatorRoles)
+    {
         long ratingSum = ratingsActorRoles.Sum(x => x.Rating) + ratingsCreatorRoles.Sum(x => x.Rating);
         long ratingCount = ratingsActorRoles.Count() + ratingsCreatorRoles.Count(); 
         return new RatingResponse(ratingSum, ratingCount);

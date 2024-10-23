@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Model.Roles;
 using WatchIt.WebAPI.Services.Controllers.Persons;
 
@@ -144,6 +145,22 @@ public class PersonsController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> PostPersonCreatorRole([FromRoute]long id, [FromBody]CreatorRolePersonRequest body) => await _personsControllerService.PostPersonCreatorRole(id, body);
+
+    #endregion
+
+    #region Rating
+
+    [HttpGet("{id}/rating")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(RatingResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetPersonGlobalRating([FromRoute]long id) => await _personsControllerService.GetPersonGlobalRating(id);
+    
+    [HttpGet("{id}/rating/{user_id}")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(RatingResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetPersonUserRating([FromRoute]long id, [FromRoute(Name = "user_id")]long userId) => await _personsControllerService.GetPersonUserRating(id, userId);
 
     #endregion
     

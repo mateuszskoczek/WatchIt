@@ -25,28 +25,14 @@
                     </span>
                 </div>
                 <div class="d-inline-flex gap-3">
-                    <div class="vstack">
+                    <div class="vstack gap-2">
                         <span id="ratingNameText">Global rating:</span>
-                        <div class="hstack gap-2">
-                            <span id="ratingStar">★</span>
-                            <div class="d-inline-flex flex-column justify-content-center">
-                                @if (_globalRating is not null)
-                                {
-                                    <span id="ratingValue">@(_globalRating.Count > 0 ? _globalRating.Average : "--")/10</span>
-                                    if (_globalRating.Count > 0)
-                                    {
-                                        <span id="ratingCount">@(_globalRating.Count)</span>
-                                    }
-                                }
-                                else
-                                {
-                                    <div class="spinner-border spinner-border-sm text-light"></div>
-                                }
-                            </div>
-                        </div>
+                        <DisplayRatingComponent Rating="_globalRating"
+                                                EmptyMode="DisplayRatingComponent.DisplayRatingComponentEmptyMode.DoubleDash"
+                                                Scale="0.85"/>
                     </div>
                     <div class="vr"></div>
-                    <div class="vstack">
+                    <div class="vstack gap-2">
                         <span id="ratingNameText">Your rating:</span>
                         <div class="d-inline-flex align-items-center h-100">
                             @if (_user is not null)

@@ -52,7 +52,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Components\Pages\PersonPage\Panels\" />
       <Folder Include="Components\Pages\PersonPage\Subcomponents\" />
     </ItemGroup>
 

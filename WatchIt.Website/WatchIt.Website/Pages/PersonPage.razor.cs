@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Website.Components.Pages.PersonPage.Panels;
 using WatchIt.Website.Layout;
 using WatchIt.Website.Services.WebAPI.Persons;
 
@@ -28,6 +29,8 @@ public partial class PersonPage : ComponentBase
     #region FIELDS
 
     private bool _loaded;
+
+    private PersonRatingPanel _ratingPanel = default!;
     
     private PersonResponse? _person;
 
@@ -55,10 +58,13 @@ public partial class PersonPage : ComponentBase
             
             // STEP 1
             await Task.WhenAll(step1Tasks);
-            endTasks.AddRange(
-            [
-                PersonsWebAPIService.PostPersonView(Id),
-            ]);
+            if (_person is not null)
+            {
+                endTasks.AddRange(
+                [
+                    PersonsWebAPIService.PostPersonView(Id),
+                ]);
+            }
             
             // END
             await Task.WhenAll(endTasks);

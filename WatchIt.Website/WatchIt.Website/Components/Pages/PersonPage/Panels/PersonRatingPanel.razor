@@ -1,0 +1,17 @@
+<div class="panel panel-background-gold h-100 text-dark">
+    <div class="vstack">
+        <TitledDisplayRatingComponent Rating="@(Rating)" Title="Global rating:"/>
+        <hr/>
+        @if (_user is not null)
+        {
+            <TitledDisplayRatingComponent Rating="@(_userRating)" Title="Your rating:"/>
+        }
+        else
+        {
+            <div class="vstack">
+                <h4 class="fw-bold">Your rating:</h4>
+                <span>Log in to see your rating</span>
+            </div>
+        }
+    </div>
+</div>

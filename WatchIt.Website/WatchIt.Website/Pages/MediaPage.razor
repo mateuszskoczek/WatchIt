@@ -41,7 +41,7 @@ else
             </div>
             <div class="row mt-3 gx-3">
                 <div class="col">
-                    <div class="rounded-3 panel panel-regular p-4 h-100">
+                    <div class="panel panel-regular h-100">
                         <div class="container-grid">
                             <div class="row">
                                 <div class="col">
@@ -108,13 +108,11 @@ else
                     </div>
                 </div>
                 <div class="col-auto">
-                    <div class="rounded-3 panel panel-yellow p-4 h-100">
+                    <div class="panel panel-background-gold h-100 text-dark">
                         <div class="container-grid">
                             <div class="row">
                                 <div class="col">
-                                    <h4 class="text-dark">
-                                        <strong>Global rating:</strong> @(_globalRating.Count == 0 ? "no ratings" : $"{Math.Round(_globalRating.Average, 1)}/10")
-                                    </h4>
+                                    <TitledRatingComponent Rating="@(_globalRating)" Title="Global rating:"/>
                                 </div>
                             </div>
                             <div class="row">

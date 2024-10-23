@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Primitives;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Model.Roles;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Utility.Configuration;
@@ -256,6 +257,34 @@ public class PersonsWebAPIService : BaseWebAPIService, IPersonsWebAPIService
                 .ExecuteAction();
     }
     
+    #endregion
+
+    #region Rating
+
+    public async Task GetPersonGlobalRating(long id, Action<RatingResponse>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Persons.GetPersonGlobalRating, id);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task GetPersonUserRating(long id, long userId, Action<RatingResponse>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Persons.GetPersonUserRating, id, userId);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await _httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+
     #endregion
 
     #endregion

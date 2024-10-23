@@ -1,13 +1,14 @@
 @using System.Text
+@using WatchIt.Website.Components.Pages.PersonPage.Panels
 
 @page "/person/{id:long}"
 
 @{
     StringBuilder sb = new StringBuilder(" - WatchIt");
     
-    if (!_loaded)               { sb.Insert(0, "Loading..."); }
-    else if (_person is null)   { sb.Insert(0, "Error"); }
-    else                        { sb.Insert(0, _person.Name); }
+    if (!_loaded)               sb.Insert(0, "Loading...");
+    else if (_person is null)   sb.Insert(0, "Error");
+    else                        sb.Insert(0, _person.Name);
     
     <PageTitle>@(sb.ToString())</PageTitle>
 }
@@ -26,6 +27,16 @@
                                                   Description="@(_person.Description)"
                                                   PosterPlaceholder="/assets/person_poster.png"
                                                   GetPosterMethod="@(action => PersonsWebAPIService.GetPersonPhoto(_person.Id, action))"/>
+                </div>
+            </div>
+            <div class="row mt-default gx-default">
+                <div class="col">
+                    
+                </div>
+                <div class="col-auto">
+                    <PersonRatingPanel @ref="_ratingPanel" 
+                                       Id="@(_person.Id)"
+                                       Rating="@(_person.Rating)"/>
                 </div>
             </div>
         }

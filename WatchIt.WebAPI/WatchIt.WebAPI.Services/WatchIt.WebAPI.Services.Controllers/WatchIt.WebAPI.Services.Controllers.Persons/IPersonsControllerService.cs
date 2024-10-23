@@ -23,4 +23,7 @@ public interface IPersonsControllerService
     Task<RequestResult> PostPersonActorRole(long personId, ActorRolePersonRequest data);
     Task<RequestResult> GetPersonAllCreatorRoles(long personId, CreatorRolePersonQueryParameters queryParameters);
     Task<RequestResult> PostPersonCreatorRole(long personId, CreatorRolePersonRequest data);
+
+    Task<RequestResult> GetPersonGlobalRating(long id);
+    Task<RequestResult> GetPersonUserRating(long id, long userId);
 }
