@@ -28,6 +28,12 @@ public partial class DatabasePageComponent<TItem, TQuery> : ComponentBase where 
     [Parameter] public required Func<TQuery, Action<IEnumerable<TItem>>, Task> ItemDownloadingTask { get; set; }
     [Parameter] public required Dictionary<string, string> SortingOptions { get; set; }
     [Parameter] public required RenderFragment ChildContent { get; set; }
+    [Parameter] public required Func<long, Action<RatingResponse>, Task> GetGlobalRatingMethod { get; set; }
+    [Parameter] public Func<long, long, Action<short>, Action, Task>? GetUserRatingMethod { get; set; }
+    [Parameter] public Func<long, RatingRequest, Task>? PutRatingMethod { get; set; }
+    [Parameter] public Func<long, Task>? DeleteRatingMethod { get; set; }
+    [Parameter] public required string PosterPlaceholder { get; set; }
+    
 
     #endregion
     

@@ -1,0 +1,22 @@
+<div class="container-grid mt-grid">
+    <div class="row">
+        <div class="col-auto">
+            <PictureComponent Picture="@(_poster)" Placeholder="@(PosterPlaceholder)" AlternativeText="poster" Height="350"/>
+        </div>
+        <div class="col">
+            <div class="d-flex flex-column justify-content-end h-100">
+                <h1 class="fw-bold title-shadow">@(Name)</h1>
+                <div class="d-flex flex-column gap-3">
+                    @if (!string.IsNullOrWhiteSpace(Subname))
+                    {
+                        <span class="fst-italic description-shadow">@(Subname)</span>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Description))
+                    {
+                        <span class="description-shadow">@(Description)</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

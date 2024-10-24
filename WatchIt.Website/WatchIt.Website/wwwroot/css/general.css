@@ -53,6 +53,19 @@ body, html {
     width: 1%;
 }
 
+.metadata-pill {
+    border-color: gray;
+    border-width: 2px;
+    border-radius: 30px;
+    border-style: solid;
+
+    padding: 2px 10px;
+}
+
+.metadata-pill-container {
+    gap: 1rem;
+}
+
 
 
 

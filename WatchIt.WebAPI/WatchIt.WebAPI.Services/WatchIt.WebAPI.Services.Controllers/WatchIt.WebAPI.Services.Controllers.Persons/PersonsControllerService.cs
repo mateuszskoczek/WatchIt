@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Model.Roles;
 using WatchIt.Database;
 using WatchIt.Database.Model.Person;
+using WatchIt.Database.Model.Rating;
 using WatchIt.Database.Model.ViewCount;
 using WatchIt.WebAPI.Services.Controllers.Common;
 using WatchIt.WebAPI.Services.Utility.User;
@@ -321,6 +323,38 @@ public class PersonsControllerService : IPersonsControllerService
         return RequestResult.Created($"roles/creator/{item.Id}", new CreatorRoleResponse(item));
     }
     
+    #endregion
+
+    #region Rating
+
+    public async Task<RequestResult> GetPersonGlobalRating(long id)
+    {
+        Person? item = await _database.Persons.FirstOrDefaultAsync(x => x.Id == id);
+        if (item is null)
+        {
+            return RequestResult.NotFound();
+        }
+        
+        RatingResponse ratingResponse = RatingResponse.Create(item.PersonActorRoles, item.PersonCreatorRoles);
+        
+        return RequestResult.Ok(ratingResponse);
+    }
+
+    public async Task<RequestResult> GetPersonUserRating(long id, long userId)
+    {
+        Person? item = await _database.Persons.FirstOrDefaultAsync(x => x.Id == id);
+        if (item is null)
+        {
+            return RequestResult.NotFound();
+        }
+        
+        IEnumerable<RatingPersonActorRole> actorRoleRatings = item.PersonActorRoles.SelectMany(x => x.RatingPersonActorRole).Where(x => x.AccountId == userId);
+        IEnumerable<RatingPersonCreatorRole> creatorRoleRatings = item.PersonCreatorRoles.SelectMany(x => x.RatingPersonCreatorRole).Where(x => x.AccountId == userId);
+        RatingResponse ratingResponse = RatingResponse.Create(actorRoleRatings, creatorRoleRatings);
+        
+        return RequestResult.Ok(ratingResponse);
+    }
+
     #endregion
     
     #endregion

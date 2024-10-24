@@ -1,17 +1,10 @@
 /* IDS */
 
-#nameText {
-    font-size: 25px;
+#ratingNameText {
+    font-size: 14px;
+    font-weight: bold;
 }
 
-#ratingStar {
-    font-size: 30px;
-}
-
-#ratingValue {
-    font-size: 20px;
-}
-
-#ratingCount {
-    font-size: 10px;
+#ratingLoginInfoText {
+    font-size: 13px;
 }

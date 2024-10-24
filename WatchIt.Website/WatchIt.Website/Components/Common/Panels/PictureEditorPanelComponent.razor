@@ -2,7 +2,7 @@
     @if (_loaded)
     {
         <div class="vstack gap-3">
-            <PictureComponent Picture="@(_pictureSelected)" Placeholder="@(PicturePlaceholder)" AlternativeText="poster" Width="@(ContentWidth)"/>
+            <PictureComponent Picture="@(_pictureSelected)" Placeholder="@(PicturePlaceholder)" AlternativeText="poster" Width="@(ContentWidth)" AspectRatio="PictureComponent.PictureComponentAspectRatio.Default"/>
             <InputFile class="form-control content-width" OnChange="Load" disabled="@(!Id.HasValue)" autocomplete="off"/>
             @if (_pictureChanged || _pictureSaved is not null)
             {

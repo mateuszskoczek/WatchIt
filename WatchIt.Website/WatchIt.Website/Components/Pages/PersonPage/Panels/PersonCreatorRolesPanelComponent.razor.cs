@@ -1,19 +1,20 @@
 using Microsoft.AspNetCore.Components;
+using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Roles;
-using WatchIt.Website.Components.Pages.MediaPage.Subcomponents;
-using WatchIt.Website.Services.Utility.Authentication;
+using WatchIt.Website.Components.Common.Subcomponents;
 using WatchIt.Website.Services.WebAPI.Media;
+using WatchIt.Website.Services.WebAPI.Persons;
 using WatchIt.Website.Services.WebAPI.Roles;
 
-namespace WatchIt.Website.Components.Pages.MediaPage.Panels;
+namespace WatchIt.Website.Components.Pages.PersonPage.Panels;
 
-public partial class CreatorRolesPanelComponent : ComponentBase
+public partial class PersonCreatorRolesPanelComponent : ComponentBase
 {
     #region SERVICES
-    
+
+    [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
     [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
     [Inject] private IRolesWebAPIService RolesWebAPIService { get; set; } = default!;
-    [Inject] private IAuthenticationService AuthenticationService { get; set; } = default!;
     
     #endregion
     
@@ -23,32 +24,26 @@ public partial class CreatorRolesPanelComponent : ComponentBase
     
     [Parameter] public string Class { get; set; } = string.Empty;
     [Parameter] public required long Id { get; set; }
+    [Parameter] public Action? OnRatingChanged { get; set; }
     
     #endregion
 
 
 
     #region FIELDS
-    
-    private User? _user;
 
-    private RoleListComponent<CreatorRoleResponse, CreatorRoleMediaQueryParameters> _roleListComponent;
+    private RoleListComponent<CreatorRoleResponse, CreatorRolePersonQueryParameters, MediaResponse> _roleListComponent;
 
     private bool _loaded;
 
     private IEnumerable<RoleTypeResponse> _roleTypes;
-    private CreatorRoleMediaQueryParameters _query;
+    private CreatorRolePersonQueryParameters _query;
 
     #endregion
 
 
 
     #region PRIVATE METHODS
-    
-    protected override async Task OnParametersSetAsync()
-    {
-        _user = await AuthenticationService.GetUserAsync();
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -64,7 +59,7 @@ public partial class CreatorRolesPanelComponent : ComponentBase
             
             // END
             await Task.WhenAll(endTasks);
-            _query = new CreatorRoleMediaQueryParameters { TypeId = _roleTypes.First().Id };
+            _query = new CreatorRolePersonQueryParameters { TypeId = _roleTypes.First().Id };
             
             _loaded = true;
             StateHasChanged();

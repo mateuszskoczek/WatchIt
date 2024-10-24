@@ -17,4 +17,6 @@ public class Persons
     public string PostPersonActorRole { get; set; }
     public string GetPersonAllCreatorRoles { get; set; }
     public string PostPersonCreatorRole { get; set; }
+    public string GetPersonGlobalRating { get; set; }
+    public string GetPersonUserRating { get; set; }
 }
