@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Components;
-using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Roles;
 using WatchIt.Website.Components.Common.Subcomponents;
-using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Persons;
 using WatchIt.Website.Services.WebAPI.Roles;
 
-namespace WatchIt.Website.Components.Pages.MediaPage.Panels;
+namespace WatchIt.Website.Components.Pages.PersonPage.Panels;
 
-public partial class CreatorRolesPanelComponent : ComponentBase
+public partial class PersonCreatorRolesPanelComponent : ComponentBase
 {
     #region SERVICES
 
@@ -25,6 +24,7 @@ public partial class CreatorRolesPanelComponent : ComponentBase
     
     [Parameter] public string Class { get; set; } = string.Empty;
     [Parameter] public required long Id { get; set; }
+    [Parameter] public Action? OnRatingChanged { get; set; }
     
     #endregion
 
@@ -32,12 +32,12 @@ public partial class CreatorRolesPanelComponent : ComponentBase
 
     #region FIELDS
 
-    private RoleListComponent<CreatorRoleResponse, CreatorRoleMediaQueryParameters, PersonResponse> _roleListComponent;
+    private RoleListComponent<CreatorRoleResponse, CreatorRolePersonQueryParameters, MediaResponse> _roleListComponent;
 
     private bool _loaded;
 
     private IEnumerable<RoleTypeResponse> _roleTypes;
-    private CreatorRoleMediaQueryParameters _query;
+    private CreatorRolePersonQueryParameters _query;
 
     #endregion
 
@@ -59,7 +59,7 @@ public partial class CreatorRolesPanelComponent : ComponentBase
             
             // END
             await Task.WhenAll(endTasks);
-            _query = new CreatorRoleMediaQueryParameters { TypeId = _roleTypes.First().Id };
+            _query = new CreatorRolePersonQueryParameters { TypeId = _roleTypes.First().Id };
             
             _loaded = true;
             StateHasChanged();

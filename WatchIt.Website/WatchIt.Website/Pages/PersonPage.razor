@@ -52,12 +52,14 @@
                         <Content>
                             <TabPanel Name="actor">
                                 <div class="mt-default">
-                                    <!--ActorRolesPanelComponent Id="@(Id)"/-->
+                                    <PersonActorRolesPanelComponent Id="@(Id)"
+                                                                    OnRatingChanged="@(async () => await _ratingPanel.UpdateRating())"/>
                                 </div>
                             </TabPanel>
                             <TabPanel Name="creator">
                                 <div class="mt-default">
-                                    <!--CreatorRolesPanelComponent Id="@(Id)"/-->
+                                    <PersonCreatorRolesPanelComponent Id="@(Id)"
+                                                                      OnRatingChanged="@(async () => await _ratingPanel.UpdateRating())"/>
                                 </div>
                             </TabPanel>
                         </Content>

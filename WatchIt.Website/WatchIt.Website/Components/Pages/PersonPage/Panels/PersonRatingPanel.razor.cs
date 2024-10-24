@@ -37,7 +37,11 @@ public partial class PersonRatingPanel : ComponentBase
 
     #region PUBLIC METHODS
 
-    public async Task UpdateRating() => await Task.WhenAll(UpdateGlobalRating(), UpdateUserRating());
+    public async Task UpdateRating()
+    {
+        await Task.WhenAll(UpdateGlobalRating(), UpdateUserRating());
+        StateHasChanged();
+    }
 
     #endregion
     

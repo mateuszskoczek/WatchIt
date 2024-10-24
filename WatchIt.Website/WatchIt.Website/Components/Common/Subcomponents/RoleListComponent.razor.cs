@@ -84,9 +84,6 @@ public partial class RoleListComponent<TRole, TQuery, TRoleParent> : ComponentBa
             
             // END
             await Task.WhenAll(endTasks);
-            
-            _loaded = true;
-            StateHasChanged();
         }
     }
 
@@ -95,12 +92,9 @@ public partial class RoleListComponent<TRole, TQuery, TRoleParent> : ComponentBa
         _rolesFetching = true;
         await GetRolesAction(Id, Query, async data =>
         {
-            List<TRole> newRolesArray = data.ToList();
-            Dictionary<TRole, TRoleParent> newRoles = new Dictionary<TRole, TRoleParent>();
-            await Parallel.ForEachAsync(data, new ParallelOptions { MaxDegreeOfParallelism = 4 }, async (item, _) => await GetRoleParentMethod(ParentItemIdSource(item), parent => newRoles[item] = parent));
-            foreach (KeyValuePair<TRole, TRoleParent> kvp in newRoles.OrderBy(x => newRolesArray.IndexOf(x.Key)))
+            foreach (TRole item in data)
             {
-                _roles[kvp.Key] = kvp.Value;
+                await GetRoleParentMethod(ParentItemIdSource(item), parent => _roles[item] = parent);
             }
             if (data.Count() < _pageSize)
             {
@@ -115,6 +109,8 @@ public partial class RoleListComponent<TRole, TQuery, TRoleParent> : ComponentBa
             }
             Query.After += data.Count();
             _rolesFetching = false;
+            
+            _loaded = true;
             StateHasChanged();
         });
     }
