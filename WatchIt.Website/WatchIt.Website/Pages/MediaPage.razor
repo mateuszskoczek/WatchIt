@@ -45,7 +45,7 @@ else
                         <div class="container-grid">
                             <div class="row">
                                 <div class="col">
-                                    <div class="d-flex flex-wrap gap-3">
+                                    <div class="d-flex flex-wrap metadata-pill-container">
                                         <div class="metadata-pill">
                                             <strong>@(_media.Type == MediaType.Movie ? "Movie" : "TV Series")</strong>
                                         </div>
@@ -112,7 +112,7 @@ else
                         <div class="container-grid">
                             <div class="row">
                                 <div class="col">
-                                    <TitledRatingComponent Rating="@(_globalRating)" Title="Global rating:"/>
+                                    <TitledDisplayRatingComponent Rating="@(_globalRating)" Title="Global rating:"/>
                                 </div>
                             </div>
                             <div class="row">

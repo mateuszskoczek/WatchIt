@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Components;
+using WatchIt.Common.Model.Persons;
 using WatchIt.Common.Model.Roles;
-using WatchIt.Website.Components.Pages.MediaPage.Subcomponents;
+using WatchIt.Website.Components.Common.Subcomponents;
 using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.WebAPI.Media;
+using WatchIt.Website.Services.WebAPI.Persons;
 using WatchIt.Website.Services.WebAPI.Roles;
 
 namespace WatchIt.Website.Components.Pages.MediaPage.Panels;
@@ -10,10 +12,10 @@ namespace WatchIt.Website.Components.Pages.MediaPage.Panels;
 public partial class CreatorRolesPanelComponent : ComponentBase
 {
     #region SERVICES
-    
+
+    [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
     [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
     [Inject] private IRolesWebAPIService RolesWebAPIService { get; set; } = default!;
-    [Inject] private IAuthenticationService AuthenticationService { get; set; } = default!;
     
     #endregion
     
@@ -29,10 +31,8 @@ public partial class CreatorRolesPanelComponent : ComponentBase
 
 
     #region FIELDS
-    
-    private User? _user;
 
-    private RoleListComponent<CreatorRoleResponse, CreatorRoleMediaQueryParameters> _roleListComponent;
+    private RoleListComponent<CreatorRoleResponse, CreatorRoleMediaQueryParameters, PersonResponse> _roleListComponent;
 
     private bool _loaded;
 
@@ -44,11 +44,6 @@ public partial class CreatorRolesPanelComponent : ComponentBase
 
 
     #region PRIVATE METHODS
-    
-    protected override async Task OnParametersSetAsync()
-    {
-        _user = await AuthenticationService.GetUserAsync();
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

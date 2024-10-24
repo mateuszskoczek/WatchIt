@@ -31,12 +31,37 @@
             </div>
             <div class="row mt-default gx-default">
                 <div class="col">
-                    
+                    <PersonMetadataPanel Item="@(_person)"/>
                 </div>
                 <div class="col-auto">
                     <PersonRatingPanel @ref="_ratingPanel" 
                                        Id="@(_person.Id)"
                                        Rating="@(_person.Rating)"/>
+                </div>
+            </div>
+            <div class="row mt-over-panel-menu">
+                <div class="col">
+                    <Tabs Pills
+                          RenderMode="TabsRenderMode.LazyLoad"
+                          SelectedTab="actor"
+                          Class="panel panel-menu panel-background-menu">
+                        <Items>
+                            <Tab Name="actor">Actor</Tab>
+                            <Tab Name="creator">Creator</Tab>
+                        </Items>
+                        <Content>
+                            <TabPanel Name="actor">
+                                <div class="mt-default">
+                                    <!--ActorRolesPanelComponent Id="@(Id)"/-->
+                                </div>
+                            </TabPanel>
+                            <TabPanel Name="creator">
+                                <div class="mt-default">
+                                    <!--CreatorRolesPanelComponent Id="@(Id)"/-->
+                                </div>
+                            </TabPanel>
+                        </Content>
+                    </Tabs>
                 </div>
             </div>
         }

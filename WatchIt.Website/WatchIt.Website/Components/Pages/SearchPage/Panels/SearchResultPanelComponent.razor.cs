@@ -11,11 +11,18 @@ public partial class SearchResultPanelComponent<TItem, TQuery> : ComponentBase w
 
     [Parameter] public required string Title { get; set; }
     [Parameter] public required TQuery Query { get; set; }
+    
     [Parameter] public required Func<TItem, long> IdSource { get; set; }
     [Parameter] public required Func<TItem, string> NameSource { get; set; }
     [Parameter] public Func<TItem, string?> AdditionalNameInfoSource { get; set; } = _ => null;
     [Parameter] public required Func<TItem, RatingResponse> RatingSource { get; set; }
+    [Parameter] public required Func<long, Action<RatingResponse>, Task> GetGlobalRatingMethod { get; set; }
+    [Parameter] public Func<long, long, Action<short>, Action, Task>? GetUserRatingMethod { get; set; }
+    [Parameter] public Func<long, RatingRequest, Task>? PutRatingMethod { get; set; }
+    [Parameter] public Func<long, Task>? DeleteRatingMethod { get; set; }
     [Parameter] public required string UrlIdTemplate { get; set; }
+    [Parameter] public required string PosterPlaceholder { get; set; }
+    
     [Parameter] public required Func<TQuery, Action<IEnumerable<TItem>>, Task> ItemDownloadingTask { get; set; }
     [Parameter] public required Func<long, Action<Picture>, Task> PictureDownloadingTask { get; set; }
 

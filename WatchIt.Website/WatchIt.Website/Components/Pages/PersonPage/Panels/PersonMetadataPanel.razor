@@ -1,0 +1,16 @@
+<div class="panel h-100">
+    <div class="d-flex flex-wrap metadata-pill-container">
+        @if (!string.IsNullOrWhiteSpace(Item.Gender?.Name))
+        {
+            <div class="metadata-pill"><strong>Gender:</strong> @(Item.Gender?.Name)</div>
+        }
+        @if (Item.BirthDate.HasValue)
+        {
+            <div class="metadata-pill"><strong>Birth date:</strong> @(Item.BirthDate.Value.ToString())</div>
+        }
+        @if (Item.DeathDate.HasValue)
+        {
+            <div class="metadata-pill"><strong>Death date:</strong> @(Item.DeathDate.Value.ToString())</div>
+        }
+    </div>
+</div>

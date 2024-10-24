@@ -46,7 +46,12 @@
                                    { "rating.average", "Average rating" },
                                    { "title", "Title" },
                                    { "release_date", "Release date" },
-                               })">
+                               })"
+                               PosterPlaceholder="/assets/media_poster.png"
+                               GetGlobalRatingMethod="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"
+                               GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaWebAPIService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
+                               PutRatingMethod="@((id, request) => MediaWebAPIService.PutMediaRating(id, request))"
+                               DeleteRatingMethod="@(id => MediaWebAPIService.DeleteMediaRating(id))">
             <MoviesFilterFormComponent/>
         </DatabasePageComponent>
         break;
@@ -67,7 +72,12 @@
                                    { "rating.average", "Average rating" },
                                    { "title", "Title" },
                                    { "release_date", "Release date" },
-                               })">
+                               })"
+                               PosterPlaceholder="/assets/media_poster.png"
+                               GetGlobalRatingMethod="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"
+                               GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaWebAPIService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
+                               PutRatingMethod="@((id, request) => MediaWebAPIService.PutMediaRating(id, request))"
+                               DeleteRatingMethod="@(id => MediaWebAPIService.DeleteMediaRating(id))">
             <SeriesFilterFormComponent/>
         </DatabasePageComponent>
         break;
@@ -88,7 +98,9 @@
                                                    { "name", "Name" },
                                                    { "birth_date", "Birth date" },
                                                    { "death_date", "Death date" },
-                                               })">
+                                               })"
+                               PosterPlaceholder="/assets/person_poster.png"
+                               GetGlobalRatingMethod="@((id, action) => PersonsWebAPIService.GetPersonGlobalRating(id, action))">
             <PersonsFilterFormComponent/>
         </DatabasePageComponent>
         break;     

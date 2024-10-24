@@ -1,18 +1,26 @@
-@using WatchIt.Website.Components.Pages.MediaPage.Subcomponents
+@using WatchIt.Common.Model.Persons
+@using WatchIt.Common.Model.Roles
 
 
 
 <div class="panel panel-padding-regular panel-radius-regular panel-background-regular @(Class)">
     <div class="vstack gap-3">
         <span class="panel-text-title">Actors</span>
-        <RoleListComponent Id="@(Id)" 
-                           TRole="WatchIt.Common.Model.Roles.ActorRoleResponse"
-                           TQuery="WatchIt.Common.Model.Roles.ActorRoleMediaQueryParameters"
-                           AdditionalTextSource="@(data => data.Name)"
+        <RoleListComponent TRole="ActorRoleResponse"
+                           TQuery="ActorRoleMediaQueryParameters"
+                           TRoleParent="PersonResponse"
+                           Id="@(Id)"
                            GetRolesAction="@(MediaWebAPIService.GetMediaAllActorRoles)"
-                           GetGlobalRatingAction="@((id, action) => RolesWebAPIService.GetActorRoleRating(id, action))"
-                           GetUserRatingAction="@((id, userId, actionSuccess, actionNotFound) => RolesWebAPIService.GetActorRoleRatingByUser(id, userId, actionSuccess, actionNotFound))"
-                           PutRatingAction="(id, request) => RolesWebAPIService.PutActorRoleRating(id, request)"
-                           DeleteRatingAction="(id) => RolesWebAPIService.DeleteActorRoleRating(id)"/>
+                           NameSource="@((_, parent) => parent.Name)"
+                           AdditionalInfoSource="@((item, _) => $" as {item.Name}")"
+                           GetRoleParentMethod="@((id, action) => PersonsWebAPIService.GetPerson(id, action))"
+                           ParentItemIdSource="@(item => item.PersonId)"
+                           ParentUrlTemplate="/person/{0}"
+                           PosterPlaceholder="/assets/person_poster.png"
+                           PosterDownloadingTask="@((id, action) => PersonsWebAPIService.GetPersonPhoto(id, action))"
+                           GetGlobalRatingMethod="@((id, action) => RolesWebAPIService.GetActorRoleRating(id, action))"
+                           GetUserRatingMethod="@((id, userId, actionSuccess, actionNotFound) => RolesWebAPIService.GetActorRoleRatingByUser(id, userId, actionSuccess, actionNotFound))"
+                           PutRatingMethod="@((id, request) => RolesWebAPIService.PutActorRoleRating(id, request))"
+                           DeleteRatingMethod="@(id => RolesWebAPIService.DeleteActorRoleRating(id))"/>
     </div>
 </div>

@@ -1,5 +1,5 @@
+@using WatchIt.Common.Model.Persons
 @using WatchIt.Common.Model.Roles
-@using WatchIt.Website.Components.Pages.MediaPage.Subcomponents
 
 
 
@@ -16,16 +16,23 @@
                     }
                 </RadioGroup>
             </div>
-            <RoleListComponent @ref=@(_roleListComponent) 
-                               Id="@(Id)"
+            <RoleListComponent @ref=@(_roleListComponent)
                                TRole="CreatorRoleResponse"
                                TQuery="CreatorRoleMediaQueryParameters"
+                               TRoleParent="PersonResponse"
+                               Id="@(Id)"
                                Query="@(_query)"
-                               GetRolesAction="MediaWebAPIService.GetMediaAllCreatorRoles"
-                               GetGlobalRatingAction="@((id, action) => RolesWebAPIService.GetCreatorRoleRating(id, action))"
-                               GetUserRatingAction="@((id, userId, actionSuccess, actionNotFound) => RolesWebAPIService.GetCreatorRoleRatingByUser(id, userId, actionSuccess, actionNotFound))"
-                               PutRatingAction="(id, request) => RolesWebAPIService.PutActorRoleRating(id, request)"
-                               DeleteRatingAction="(id) => RolesWebAPIService.DeleteActorRoleRating(id)"/>
+                               GetRolesAction="@(MediaWebAPIService.GetMediaAllCreatorRoles)"
+                               NameSource="@((_, parent) => parent.Name)"
+                               GetRoleParentMethod="@((id, action) => PersonsWebAPIService.GetPerson(id, action))"
+                               ParentItemIdSource="@(item => item.PersonId)"
+                               ParentUrlTemplate="/person/{0}"
+                               PosterPlaceholder="/assets/person_poster.png"
+                               PosterDownloadingTask="@((id, action) => PersonsWebAPIService.GetPersonPhoto(id, action))"
+                               GetGlobalRatingMethod="@((id, action) => RolesWebAPIService.GetCreatorRoleRating(id, action))"
+                               GetUserRatingMethod="@((id, userId, actionSuccess, actionNotFound) => RolesWebAPIService.GetCreatorRoleRatingByUser(id, userId, actionSuccess, actionNotFound))"
+                               PutRatingMethod="@((id, request) => RolesWebAPIService.PutCreatorRoleRating(id, request))"
+                               DeleteRatingMethod="@((id) => RolesWebAPIService.DeleteCreatorRoleRating(id))"/>
         </div>
     }
     else

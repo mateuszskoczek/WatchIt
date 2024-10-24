@@ -52,6 +52,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Components\Pages\MediaPage\Subcomponents\" />
       <Folder Include="Components\Pages\PersonPage\Subcomponents\" />
     </ItemGroup>
 

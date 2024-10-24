@@ -52,12 +52,19 @@
                 {
                     foreach (TItem item in _items)
                     {
-                        <div role="button" class="rounded-3 panel panel-regular p-2" @onclick="@(() => NavigationManager.NavigateTo(string.Format(UrlIdTemplate, IdSource(item))))">
-                            <ListItemComponent Id="@(IdSource(item))"
-                                               Name="@(NameSource(item))"
-                                               AdditionalNameInfo="@(AdditionalNameInfoSource(item))"
-                                               Rating="@(RatingSource(item))"
-                                               PictureDownloadingTask="@(PictureDownloadingTask)"/>
+                        long id = IdSource(item);
+                        string url = string.Format(UrlIdTemplate, id);
+                        <div class="panel p-2">
+                            <ListItemComponent Name="@(NameSource(item))"
+                                               AdditionalInfo="@(AdditionalNameInfoSource(item))"
+                                               PosterPlaceholder="@(PosterPlaceholder)"
+                                               PosterDownloadingTask="@(action => PictureDownloadingTask(id, action))"
+                                               GlobalRating="@(RatingSource(item))"
+                                               GetGlobalRatingMethod="@(action => GetGlobalRatingMethod(id, action))"
+                                               GetUserRatingMethod="@(GetUserRatingMethod is not null ? (user, actionSuccess, actionNotFound) => GetUserRatingMethod(id, user, actionSuccess, actionNotFound) : null)"
+                                               PutRatingMethod="@(PutRatingMethod is not null ? (request) => PutRatingMethod(id, request) : null)"
+                                               DeleteRatingMethod="@(DeleteRatingMethod is not null ? () => DeleteRatingMethod(id) : null)"
+                                               ItemUrl="@(url)"/>
                         </div>
                     }
                     if (!_allItemsLoaded)

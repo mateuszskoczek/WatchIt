@@ -28,13 +28,21 @@
                     }
                     <div class="row">
                         <div class="col">
-                            <a class="text-reset text-decoration-none" href="@(string.Format(UrlIdTemplate, IdSource(_items[i])))">
-                                <ListItemComponent Id="@(IdSource(_items[i]))"
-                                                   Name="@(NameSource(_items[i]))"
-                                                   AdditionalNameInfo="@(AdditionalNameInfoSource(_items[i]))"
-                                                   Rating="@(RatingSource(_items[i]))"
-                                                   PictureDownloadingTask="@(PictureDownloadingTask)"/>
-                            </a>
+                            @{
+                                int iCopy = i;
+                                long id = IdSource(_items[iCopy]);
+                                string url = string.Format(UrlIdTemplate, id);
+                            }
+                            <ListItemComponent Name="@(NameSource(_items[i]))"
+                                               AdditionalInfo="@(AdditionalNameInfoSource(_items[i]))"
+                                               PosterPlaceholder="@(PosterPlaceholder)"
+                                               PosterDownloadingTask="@(action => PictureDownloadingTask(id, action))"
+                                               GlobalRating="@(RatingSource(_items[i]))"
+                                               GetGlobalRatingMethod="@(action => GetGlobalRatingMethod(id, action))"
+                                               GetUserRatingMethod="@(GetUserRatingMethod is not null ? (user, actionSuccess, actionNotFound) => GetUserRatingMethod(id, user, actionSuccess, actionNotFound) : null)"
+                                               PutRatingMethod="@(PutRatingMethod is not null ? (request) => PutRatingMethod(id, request) : null)"
+                                               DeleteRatingMethod="@(DeleteRatingMethod is not null ? () => DeleteRatingMethod(id) : null)"
+                                               ItemUrl="@(url)"/>
                         </div>
                     </div>
                 }
