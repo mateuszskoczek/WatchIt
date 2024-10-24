@@ -65,9 +65,9 @@ public class MovieQueryParameters : QueryParameters<MovieResponse>
     
     
     
-    #region PUBLIC METHODS
+    #region PRIVATE METHODS
 
-    public override bool IsMeetingConditions(MovieResponse item) =>
+    protected override bool IsMeetingConditions(MovieResponse item) =>
     (
         TestStringWithRegex(item.Title, Title)
         &&

@@ -10,10 +10,13 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using WatchIt.Database;
 using WatchIt.WebAPI.Services.Controllers.Accounts;
+using WatchIt.WebAPI.Services.Controllers.Genders;
 using WatchIt.WebAPI.Services.Controllers.Genres;
 using WatchIt.WebAPI.Services.Controllers.Media;
 using WatchIt.WebAPI.Services.Controllers.Movies;
+using WatchIt.WebAPI.Services.Controllers.Persons;
 using WatchIt.WebAPI.Services.Controllers.Photos;
+using WatchIt.WebAPI.Services.Controllers.Roles;
 using WatchIt.WebAPI.Services.Controllers.Series;
 using WatchIt.WebAPI.Services.Utility.Configuration;
 using WatchIt.WebAPI.Services.Utility.Tokens;
@@ -39,7 +42,14 @@ public static class Program
 
         using (IServiceScope scope = app.Services.CreateScope())
         {
-            scope.ServiceProvider.GetService<DatabaseContext>().Database.Migrate();
+            DatabaseContext dbContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+
+            while (!dbContext.Database.CanConnect())
+            {
+                Thread.Sleep(1000);
+            }
+            
+            dbContext.Database.Migrate();
         }
         
         if (app.Environment.IsDevelopment())
@@ -153,11 +163,14 @@ public static class Program
         
         // Controller
         builder.Services.AddTransient<IAccountsControllerService, AccountsControllerService>();
+        builder.Services.AddTransient<IGendersControllerService, GendersControllerService>();
         builder.Services.AddTransient<IGenresControllerService, GenresControllerService>();
         builder.Services.AddTransient<IMoviesControllerService, MoviesControllerService>();
         builder.Services.AddTransient<IMediaControllerService, MediaControllerService>();
         builder.Services.AddTransient<ISeriesControllerService, SeriesControllerService>();
         builder.Services.AddTransient<IPhotosControllerService, PhotosControllerService>();
+        builder.Services.AddTransient<IPersonsControllerService, PersonsControllerService>();
+        builder.Services.AddTransient<IRolesControllerService, RolesControllerService>();
         
         return builder;
     }

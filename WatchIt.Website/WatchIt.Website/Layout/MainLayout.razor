@@ -12,7 +12,7 @@
         <div class="container-xl">
             <div class="row sticky-top top-3 mb-2rem">
                 <div class="col">
-                    <div class="panel panel-header rounded-3 px-3">
+                    <div class="panel panel-header">
                         <div class="container-grid">
                             <div class="row align-items-center">
                                 <div class="col">
@@ -37,6 +37,7 @@
                                                 <DropdownMenu>
                                                     <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/database/movies"))">Movies</DropdownItem>
                                                     <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/database/series"))">TV Series</DropdownItem>
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/database/people"))">People</DropdownItem>
                                                 </DropdownMenu>
                                             </Dropdown>
                                             <button type="button" class="btn btn-sm" @onclick="@(() => _searchbarVisible = true)">⌕</button>

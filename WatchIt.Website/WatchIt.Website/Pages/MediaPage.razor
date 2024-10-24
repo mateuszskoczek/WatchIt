@@ -1,6 +1,7 @@
 ﻿@using System.Text
 @using Microsoft.IdentityModel.Tokens
 @using WatchIt.Common.Model.Genres
+@using WatchIt.Website.Components.Pages.MediaPage.Panels
 
 @page "/media/{id:long}"
 
@@ -29,50 +30,25 @@ else
     {
         if (string.IsNullOrWhiteSpace(_error))
         {
-            <div class="row mt-9">
-                <div class="col-auto">
-                    <img class="rounded-2 shadow object-fit-cover" src="@(_poster is not null ? _poster.ToString() : "assets/poster.png")" alt="poster" width="200" height="333"/>
-                </div>
+            <div class="row">
                 <div class="col">
-                    <div class="d-flex h-100">
-                        <div class="container-grid align-self-end">
-                            <div class="row">
-                                <div class="col">
-                                    <h1 class="align-self-end title-shadow">
-                                        <strong>@_media.Title</strong>
-                                    </h1>
-                                </div>
-                            </div>
-                            @if (!string.IsNullOrWhiteSpace(_media.Description))
-                            {
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="description-shadow">
-                                            @_media.Description
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
+                    <ItemPageHeaderPanelComponent Name="@(_media.Title)"
+                                                  Subname="@(_media.OriginalTitle)"
+                                                  Description="@(_media.Description)"
+                                                  PosterPlaceholder="/assets/media_poster.png"
+                                                  GetPosterMethod="@(action => MediaWebAPIService.GetMediaPoster(_media.Id, action))"/>
                 </div>
             </div>
             <div class="row mt-3 gx-3">
                 <div class="col">
-                    <div class="rounded-3 panel panel-regular p-4 h-100">
+                    <div class="panel panel-regular h-100">
                         <div class="container-grid">
                             <div class="row">
                                 <div class="col">
-                                    <div class="d-flex flex-wrap gap-3">
+                                    <div class="d-flex flex-wrap metadata-pill-container">
                                         <div class="metadata-pill">
                                             <strong>@(_media.Type == MediaType.Movie ? "Movie" : "TV Series")</strong>
                                         </div>
-                                        @if (!string.IsNullOrWhiteSpace(_media.OriginalTitle))
-                                        {
-                                            <div class="metadata-pill">
-                                                <strong>Original title:</strong> @_media.OriginalTitle
-                                            </div>
-                                        }
                                         @if (_media.ReleaseDate is not null)
                                         {
                                             <div class="metadata-pill">
@@ -132,13 +108,11 @@ else
                     </div>
                 </div>
                 <div class="col-auto">
-                    <div class="rounded-3 panel panel-yellow p-4 h-100">
+                    <div class="panel panel-background-gold h-100 text-dark">
                         <div class="container-grid">
                             <div class="row">
                                 <div class="col">
-                                    <h4 class="text-dark">
-                                        <strong>Global rating:</strong> @(_globalRating.Count == 0 ? "no ratings" : $"{Math.Round(_globalRating.Average, 1)}/10")
-                                    </h4>
+                                    <TitledDisplayRatingComponent Rating="@(_globalRating)" Title="Global rating:"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -190,12 +164,37 @@ else
                     </div>
                 </div>
             </div>
+            <div class="row mt-over-panel-menu">
+                <div class="col">
+                    <Tabs Pills
+                          RenderMode="TabsRenderMode.LazyLoad"
+                          SelectedTab="actors"
+                          Class="panel panel-menu panel-background-menu">
+                        <Items>
+                            <Tab Name="actors">Actors</Tab>
+                            <Tab Name="creators">Creators</Tab>
+                        </Items>
+                        <Content>
+                            <TabPanel Name="actors">
+                                <div class="mt-default">
+                                    <MediaActorRolesPanelComponent Id="@(Id)"/>
+                                </div>
+                            </TabPanel>
+                            <TabPanel Name="creators">
+                                <div class="mt-default">
+                                    <MediaCreatorRolesPanelComponent Id="@(Id)"/>
+                                </div>
+                            </TabPanel>
+                        </Content>
+                    </Tabs>
+                </div>
+            </div>
         }
         else
         {
             <div class="row">
                 <div class="col">
-                    <ErrorComponent ErrorMessage="@_error"/>
+                    <ErrorPanelComponent ErrorMessage="@_error"/>
                 </div>
             </div>
         }

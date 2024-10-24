@@ -32,9 +32,9 @@ public class PhotoQueryParameters : QueryParameters<PhotoResponse>
     
     
     
-    #region PUBLIC METHODS
+    #region PRIVATE METHODS
 
-    public override bool IsMeetingConditions(PhotoResponse item) =>
+    protected override bool IsMeetingConditions(PhotoResponse item) =>
     (
         TestStringWithRegex(item.MimeType, MimeType)
         &&

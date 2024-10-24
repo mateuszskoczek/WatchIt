@@ -1,0 +1,89 @@
+@using System.Text
+@using WatchIt.Website.Components.Pages.PersonPage.Panels
+
+@page "/person/{id:long}"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+    
+    if (!_loaded)               sb.Insert(0, "Loading...");
+    else if (_person is null)   sb.Insert(0, "Error");
+    else                        sb.Insert(0, _person.Name);
+    
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+<div class="container-grid">
+    @if (_loaded)
+    {
+        if (_person is not null)
+        {
+            <div class="row">
+                <div class="col">
+                    <ItemPageHeaderPanelComponent Name="@(_person.Name)"
+                                                  Subname="@(_person.FullName)"
+                                                  Description="@(_person.Description)"
+                                                  PosterPlaceholder="/assets/person_poster.png"
+                                                  GetPosterMethod="@(action => PersonsWebAPIService.GetPersonPhoto(_person.Id, action))"/>
+                </div>
+            </div>
+            <div class="row mt-default gx-default">
+                <div class="col">
+                    <PersonMetadataPanel Item="@(_person)"/>
+                </div>
+                <div class="col-auto">
+                    <PersonRatingPanel @ref="_ratingPanel" 
+                                       Id="@(_person.Id)"
+                                       Rating="@(_person.Rating)"/>
+                </div>
+            </div>
+            <div class="row mt-over-panel-menu">
+                <div class="col">
+                    <Tabs Pills
+                          RenderMode="TabsRenderMode.LazyLoad"
+                          SelectedTab="actor"
+                          Class="panel panel-menu panel-background-menu">
+                        <Items>
+                            <Tab Name="actor">Actor</Tab>
+                            <Tab Name="creator">Creator</Tab>
+                        </Items>
+                        <Content>
+                            <TabPanel Name="actor">
+                                <div class="mt-default">
+                                    <PersonActorRolesPanelComponent Id="@(Id)"
+                                                                    OnRatingChanged="@(async () => await _ratingPanel.UpdateRating())"/>
+                                </div>
+                            </TabPanel>
+                            <TabPanel Name="creator">
+                                <div class="mt-default">
+                                    <PersonCreatorRolesPanelComponent Id="@(Id)"
+                                                                      OnRatingChanged="@(async () => await _ratingPanel.UpdateRating())"/>
+                                </div>
+                            </TabPanel>
+                        </Content>
+                    </Tabs>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col">
+                    <ErrorPanelComponent ErrorMessage="@($"Person with ID {Id} was not found")"/>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="row">
+            <div class="col">
+                <div class="m-5">
+                    <LoadingComponent/>
+                </div>
+            </div>
+        </div>
+    }
+</div>

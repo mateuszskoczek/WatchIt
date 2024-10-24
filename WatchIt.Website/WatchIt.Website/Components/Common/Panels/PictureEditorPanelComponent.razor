@@ -1,0 +1,67 @@
+<div class="panel @(Class)">
+    @if (_loaded)
+    {
+        <div class="vstack gap-3">
+            <PictureComponent Picture="@(_pictureSelected)" Placeholder="@(PicturePlaceholder)" AlternativeText="poster" Width="@(ContentWidth)" AspectRatio="PictureComponent.PictureComponentAspectRatio.Default"/>
+            <InputFile class="form-control content-width" OnChange="Load" disabled="@(!Id.HasValue)" autocomplete="off"/>
+            @if (_pictureChanged || _pictureSaved is not null)
+            {
+                <div class="content-width">
+                    @if (_pictureChanged)
+                    {
+                        <div class="container-grid">
+                            <div class="row gx-1">
+                                <div class="col">
+                                    <button type="button" class="btn btn-secondary btn-block btn-stretch-x" @onclick="Save" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">
+                                        @if (!_pictureSaving)
+                                        {
+                                            <span>Save</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <span>Saving...</span>
+                                        }
+                                    </button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="Cancel" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">Drop changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (_pictureSaved is not null)
+                    {
+                        <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="Delete" disabled=@(!Id.HasValue || _pictureSaving || _pictureDeleting) autocomplete="off">
+                            @if (!_pictureSaving)
+                            {
+                                <span>Delete</span>
+                            }
+                            else
+                            {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span>Deleting...</span>
+                            }
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="d-flex align-items-center justify-content-center h-100 content-width">
+            <LoadingComponent Color="@(LoadingComponent.LoadingComponentColors.Light)"/>
+        </div>
+    }
+</div>
+
+
+
+<style>
+    /* CLASSES */
+    
+    .content-width {
+        width: @(ContentWidth)px;
+    }
+</style>

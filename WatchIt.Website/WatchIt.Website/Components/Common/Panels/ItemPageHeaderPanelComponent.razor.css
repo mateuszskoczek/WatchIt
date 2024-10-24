@@ -1,0 +1,13 @@
+/* CLASSES */
+
+.mt-grid {
+    margin-top: 9rem !important;
+}
+
+.title-shadow {
+    text-shadow: 2px 2px 2px #000;
+}
+
+.description-shadow {
+    text-shadow: 1px 1px 1px #000;
+}

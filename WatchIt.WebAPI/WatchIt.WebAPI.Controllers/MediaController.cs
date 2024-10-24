@@ -6,6 +6,7 @@ using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Rating;
+using WatchIt.Common.Model.Roles;
 using WatchIt.WebAPI.Services.Controllers.Media;
 
 namespace WatchIt.WebAPI.Controllers;
@@ -36,6 +37,11 @@ public class MediaController : ControllerBase
     #region METHODS
     
     #region Main
+    
+    [HttpGet]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<MediaResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetAllMedia(MediaQueryParameters query) => await _mediaControllerService.GetAllMedia(query);
     
     [HttpGet("{id}")]
     [AllowAnonymous]
@@ -160,6 +166,40 @@ public class MediaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> PostPhoto([FromRoute]long id, [FromBody]MediaPhotoRequest body) => await _mediaControllerService.PostMediaPhoto(id, body);
     
+    #endregion
+
+    #region Roles
+
+    [HttpGet("{id}/roles/actor")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<ActorRoleResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetMediaAllActorRoles([FromRoute]long id, ActorRoleMediaQueryParameters query) => await _mediaControllerService.GetMediaAllActorRoles(id, query);
+    
+    [HttpPost("{id}/roles/actor")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(ActorRoleResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> PostMediaActorRole([FromRoute]long id, [FromBody]ActorRoleMediaRequest body) => await _mediaControllerService.PostMediaActorRole(id, body);
+    
+    [HttpGet("{id}/roles/creator")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<CreatorRoleResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetMediaAllCreatorRoles([FromRoute]long id, CreatorRoleMediaQueryParameters query) => await _mediaControllerService.GetMediaAllCreatorRoles(id, query);
+    
+    [HttpPost("{id}/roles/creator")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(CreatorRoleResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> PostMediaCreatorRole([FromRoute]long id, [FromBody]CreatorRoleMediaRequest body) => await _mediaControllerService.PostMediaCreatorRole(id, body);
+
     #endregion
     
     #endregion

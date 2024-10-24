@@ -25,6 +25,8 @@ body, html {
     font-family: "PT Sans";
 }
 
+
+
 /* CLASSES */
 
 .container-grid {
@@ -40,6 +42,28 @@ body, html {
     text-decoration: none;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.table-transparent {
+    --bs-table-bg: transparent !important;
+}
+
+.table td.table-cell-fit, .table th.table-cell-fit {
+    white-space: nowrap;
+    width: 1%;
+}
+
+.metadata-pill {
+    border-color: gray;
+    border-width: 2px;
+    border-radius: 30px;
+    border-style: solid;
+
+    padding: 2px 10px;
+}
+
+.metadata-pill-container {
+    gap: 1rem;
 }
 
 
@@ -62,21 +86,17 @@ body, html {
     margin-top: 9rem !important;
 }
 
-.panel-header {
-    background-color: rgba(0, 0, 0, 0.8);
-}
 
 .panel-regular {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.6) !important;
 }
 
 .panel-yellow {
-    background-color: rgba(255, 184, 58, 0.6);
+    background-color: rgba(255, 184, 58, 0.6) !important;
 }
 
-.panel {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(25px);
+.pt-05 {
+    padding-top: 0.125rem !important;
 }
 
 

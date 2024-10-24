@@ -1,12 +1,14 @@
 ﻿using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Rating;
+using WatchIt.Common.Model.Roles;
 using WatchIt.WebAPI.Services.Controllers.Common;
 
 namespace WatchIt.WebAPI.Services.Controllers.Media;
 
 public interface IMediaControllerService
 {
+    Task<RequestResult> GetAllMedia(MediaQueryParameters query);
     Task<RequestResult> GetMedia(long mediaId);
     
     Task<RequestResult> GetMediaGenres(long mediaId);
@@ -27,4 +29,9 @@ public interface IMediaControllerService
     Task<RequestResult> GetMediaPhotos(long mediaId, PhotoQueryParameters queryParameters);
     Task<RequestResult> GetMediaPhotoRandomBackground(long mediaId);
     Task<RequestResult> PostMediaPhoto(long mediaId, MediaPhotoRequest data);
+
+    Task<RequestResult> GetMediaAllActorRoles(long mediaId, ActorRoleMediaQueryParameters queryParameters);
+    Task<RequestResult> PostMediaActorRole(long mediaId, ActorRoleMediaRequest data);
+    Task<RequestResult> GetMediaAllCreatorRoles(long mediaId, CreatorRoleMediaQueryParameters queryParameters);
+    Task<RequestResult> PostMediaCreatorRole(long mediaId, CreatorRoleMediaRequest data);
 }

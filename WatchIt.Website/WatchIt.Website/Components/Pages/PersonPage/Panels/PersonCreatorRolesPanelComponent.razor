@@ -1,0 +1,43 @@
+@using WatchIt.Common.Model.Persons
+@using WatchIt.Common.Model.Roles
+
+
+
+<div class="panel panel-padding-regular panel-radius-regular panel-background-regular @(Class)">
+    @if (_loaded)
+    {
+        <div class="vstack gap-3">
+            <span class="panel-text-title">Creators</span>
+            <div class="d-flex justify-content-center">
+                <RadioGroup TValue="short" Color="Color.Default" Buttons Size="Size.Small" CheckedValue="@(_query.TypeId!.Value)" CheckedValueChanged="CheckedTypeChanged">
+                    @foreach (RoleTypeResponse roleType in _roleTypes)
+                    {
+                        <Radio Value="@(roleType.Id)">@roleType.Name</Radio>
+                    }
+                </RadioGroup>
+            </div>
+            <RoleListComponent @ref=@(_roleListComponent)
+                               TRole="CreatorRoleResponse"
+                               TQuery="CreatorRolePersonQueryParameters"
+                               TRoleParent="MediaResponse"
+                               Id="@(Id)"
+                               Query="@(_query)"
+                               GetRolesAction="@(PersonsWebAPIService.GetPersonAllCreatorRoles)"
+                               NameSource="@((_, parent) => parent.Title)"
+                               GetRoleParentMethod="@((id, action) => MediaWebAPIService.GetMedia(id, action))"
+                               ParentItemIdSource="@(item => item.MediaId)"
+                               ParentUrlTemplate="/media/{0}"
+                               PosterPlaceholder="/assets/media_poster.png"
+                               PosterDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
+                               GetGlobalRatingMethod="@((id, action) => RolesWebAPIService.GetCreatorRoleRating(id, action))"
+                               GetUserRatingMethod="@((id, userId, actionSuccess, actionNotFound) => RolesWebAPIService.GetCreatorRoleRatingByUser(id, userId, actionSuccess, actionNotFound))"
+                               PutRatingMethod="@((id, request) => RolesWebAPIService.PutCreatorRoleRating(id, request))"
+                               DeleteRatingMethod="@((id) => RolesWebAPIService.DeleteCreatorRoleRating(id))"
+                               OnRatingChanged="@(OnRatingChanged)"/>
+        </div>
+    }
+    else
+    {
+        <LoadingComponent Color="@(LoadingComponent.LoadingComponentColors.Light)"/>
+    }
+</div>

@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
+using WatchIt.Common.Model.Persons;
 using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Series;
 using WatchIt.Website.Layout;
 using WatchIt.Website.Services.Utility.Authentication;
 using WatchIt.Website.Services.WebAPI.Media;
 using WatchIt.Website.Services.WebAPI.Movies;
+using WatchIt.Website.Services.WebAPI.Persons;
 using WatchIt.Website.Services.WebAPI.Photos;
 using WatchIt.Website.Services.WebAPI.Series;
 
@@ -24,6 +26,7 @@ public partial class MediaEditPage : ComponentBase
     [Inject] public IMoviesWebAPIService MoviesWebAPIService { get; set; } = default!;
     [Inject] public ISeriesWebAPIService SeriesWebAPIService { get; set; } = default!;
     [Inject] public IPhotosWebAPIService PhotosWebAPIService { get; set; } = default!;
+    [Inject] public IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
     
     #endregion
     
@@ -48,6 +51,8 @@ public partial class MediaEditPage : ComponentBase
     private User? _user;
 
     private MediaResponse? _media;
+    private Dictionary<long, PersonResponse> _persons;
+    
     private MovieRequest? _movieRequest;
     private SeriesRequest? _seriesRequest;
     private Media? _mediaRequest => _movieRequest is not null ? _movieRequest : _seriesRequest;
@@ -106,6 +111,10 @@ public partial class MediaEditPage : ComponentBase
                 step2Tasks.AddRange(
                 [
                     InitializeMedia()
+                ]);
+                endTasks.AddRange(
+                [
+                    PersonsWebAPIService.GetAllPersons(successAction: data => _persons = data.ToDictionary(x => x.Id, x => x))
                 ]);
             }
             

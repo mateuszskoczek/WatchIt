@@ -1,0 +1,13 @@
+<div class="d-flex flex-column align-items-center gap-2 h-100">
+    <PictureComponent Class="w-100" Picture="@(_poster)" Placeholder="@(PosterPlaceholder)" AlternativeText="poster"/>
+    <div class="container-grid">
+        <div class="row">
+            <div class="col-auto">
+                <div class="text-center border border-2 border-light rounded-circle place-circle fw-bold">@(Place)</div>
+            </div>
+            <div class="col">
+                <div class="text-end ms-auto pt-05">@(Name)</div>
+            </div>
+        </div>
+    </div>
+</div>

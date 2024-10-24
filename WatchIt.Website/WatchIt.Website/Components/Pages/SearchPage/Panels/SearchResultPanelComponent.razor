@@ -1,0 +1,90 @@
+@using Microsoft.IdentityModel.Tokens
+
+@typeparam TItem
+@typeparam TQuery where TQuery : WatchIt.Common.Query.QueryParameters
+
+
+
+<div class="panel">
+    <div class="container-grid">
+        <div class="row mb-4">
+            <div class="col">
+                <h4 class="m-0"><strong>@(Title)</strong></h4>
+            </div>
+        </div>
+        @if (_loaded)
+        {
+            if (!_items.IsNullOrEmpty())
+            {
+                for (int i = 0; i < _items.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        <div class="row">
+                            <div class="col">
+                                <hr/>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col">
+                            @{
+                                int iCopy = i;
+                                long id = IdSource(_items[iCopy]);
+                                string url = string.Format(UrlIdTemplate, id);
+                            }
+                            <ListItemComponent Name="@(NameSource(_items[i]))"
+                                               AdditionalInfo="@(AdditionalNameInfoSource(_items[i]))"
+                                               PosterPlaceholder="@(PosterPlaceholder)"
+                                               PosterDownloadingTask="@(action => PictureDownloadingTask(id, action))"
+                                               GlobalRating="@(RatingSource(_items[i]))"
+                                               GetGlobalRatingMethod="@(action => GetGlobalRatingMethod(id, action))"
+                                               GetUserRatingMethod="@(GetUserRatingMethod is not null ? (user, actionSuccess, actionNotFound) => GetUserRatingMethod(id, user, actionSuccess, actionNotFound) : null)"
+                                               PutRatingMethod="@(PutRatingMethod is not null ? (request) => PutRatingMethod(id, request) : null)"
+                                               DeleteRatingMethod="@(DeleteRatingMethod is not null ? () => DeleteRatingMethod(id) : null)"
+                                               ItemUrl="@(url)"/>
+                        </div>
+                    </div>
+                }
+                if (!_allItemsLoaded)
+                {
+                    <div class="row mt-3">
+                        <div class="col">
+                            <div class="d-flex justify-content-center">
+                                <button class="btn btn-secondary" @onclick="DownloadItems">
+                                    @if (!_itemsLoading)
+                                    {
+                                        <span>Load more</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        <span>Loading...</span>
+                                    }
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-center">
+                            No items found
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col">
+                    <LoadingComponent Color="@(LoadingComponent.LoadingComponentColors.Light)"/>
+                </div>
+            </div>
+        }
+    </div>
+</div>
