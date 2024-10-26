@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using WatchIt.Database;
 
 namespace WatchIt.WebAPI.Services.Utility.User;
@@ -48,6 +49,18 @@ public class UserValidator
         {
             IsValid = false;
             _validationErrors.Add("User is not admin");
+        }
+
+        return this;
+    }
+
+    public UserValidator MustHaveId(long id)
+    {
+        Claim adminClaim = _claimsPrincipal.FindFirst(x => x.Type == JwtRegisteredClaimNames.Sub)!;
+        if (adminClaim.Value == id.ToString())
+        {
+            IsValid = false;
+            _validationErrors.Add("User have wrong id");
         }
 
         return this;
