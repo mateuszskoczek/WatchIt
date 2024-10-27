@@ -19,6 +19,9 @@ public class AccountResponse : Account
 
 
     #region CONSTRUCTORS
+    
+    [JsonConstructor]
+    public AccountResponse() {}
 
     [SetsRequiredMembers]
     public AccountResponse(Database.Model.Account.Account account)

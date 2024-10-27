@@ -10,7 +10,7 @@
       <ProjectReference Include="..\..\..\WatchIt.Common\WatchIt.Common.Model\WatchIt.Common.Model.csproj" />
       <ProjectReference Include="..\..\..\WatchIt.Common\WatchIt.Common.Services\WatchIt.Common.Services.HttpClient\WatchIt.Common.Services.HttpClient.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services.Tokens\WatchIt.Website.Services.Tokens.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services.Utility\WatchIt.Website.Services.Configuration\WatchIt.Website.Services.Configuration.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services.Configuration\WatchIt.Website.Services.Configuration.csproj" />
     </ItemGroup>
 
 </Project>

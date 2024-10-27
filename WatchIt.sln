@@ -58,7 +58,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchIt.Common.Query", "Wat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchIt.Common.Services.HttpClient", "WatchIt.Common\WatchIt.Common.Services\WatchIt.Common.Services.HttpClient\WatchIt.Common.Services.HttpClient.csproj", "{A4A75CCA-0DEE-4F1E-9816-60674CA807FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchIt.Website.Services.Configuration", "WatchIt.Website\WatchIt.Website.Services\WatchIt.Website.Services.Utility\WatchIt.Website.Services.Configuration\WatchIt.Website.Services.Configuration.csproj", "{0DBBE7EA-05FE-481F-8814-6FA0BC9E571F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchIt.Website.Services.Configuration", "WatchIt.Website\WatchIt.Website.Services\WatchIt.Website.Services.Configuration\WatchIt.Website.Services.Configuration.csproj", "{0DBBE7EA-05FE-481F-8814-6FA0BC9E571F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchIt.WebAPI.Services.Controllers.Media", "WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Media\WatchIt.WebAPI.Services.Controllers.Media.csproj", "{3156AD7B-D6EC-4EB6-AEE8-4FBAF14C18E4}"
 EndProject

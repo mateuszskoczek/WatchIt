@@ -61,8 +61,10 @@
                                                 </Button>
                                                 <DropdownToggle Color="Color.Default" Split />
                                                 <DropdownMenu >
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/user"))">Your profile</DropdownItem>
                                                     @if (_user.IsAdmin)
                                                     {
+                                                        <DropdownDivider/>
                                                         <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/admin"))">Administrator panel</DropdownItem>
                                                     }
                                                     <DropdownDivider/>

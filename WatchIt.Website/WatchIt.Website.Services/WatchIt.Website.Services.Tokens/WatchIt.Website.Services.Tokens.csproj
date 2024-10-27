@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\WatchIt.Common\WatchIt.Common.Model\WatchIt.Common.Model.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services.Utility\WatchIt.Website.Services.Configuration\WatchIt.Website.Services.Configuration.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services.Configuration\WatchIt.Website.Services.Configuration.csproj" />
     </ItemGroup>
 
 </Project>

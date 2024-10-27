@@ -1,1 +1,49 @@
-@page "/user/{id:long}"
+@using System.Text
+@using WatchIt.Website.Components.Pages.UserPage.Panels
+
+@page "/user/{id:long?}"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+
+    if (!_loaded)                   sb.Insert(0, "Loading...");
+    else if (_accountData is null)  sb.Insert(0, "Error");
+    else
+    {
+        if (_owner) sb.Insert(0, "Your profile");
+        else        sb.Insert(0, $"\"{_accountData.Username}\" profile");
+    }
+
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+<div class="container-grid">
+    @if (!_loaded)
+    {
+        <div class="row">
+            <div class="col">
+                <div class="m-5">
+                    <LoadingComponent/>
+                </div>
+            </div>
+        </div>
+    }
+    else if (_accountData is null)
+    {
+        <div class="row">
+            <div class="col">
+                <ErrorPanelComponent ErrorMessage="@($"User with ID {Id!.Value} was not found")"/>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col">
+                <UserPageHeaderPanelComponent/>
+            </div>
+        </div>
+    }
+</div>
