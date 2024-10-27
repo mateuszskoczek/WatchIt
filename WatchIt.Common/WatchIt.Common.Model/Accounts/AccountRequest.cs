@@ -7,7 +7,7 @@ public class AccountRequest : Account
     #region PROPERTIES
 
     [JsonPropertyName("gender_id")]
-    public short GenderId { get; set; }
+    public short? GenderId { get; set; }
 
     #endregion
     
