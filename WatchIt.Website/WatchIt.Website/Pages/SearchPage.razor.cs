@@ -1,10 +1,10 @@
 using System.Net;
 using Microsoft.AspNetCore.Components;
 using WatchIt.Website.Layout;
-using WatchIt.Website.Services.WebAPI.Media;
-using WatchIt.Website.Services.WebAPI.Movies;
-using WatchIt.Website.Services.WebAPI.Persons;
-using WatchIt.Website.Services.WebAPI.Series;
+using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Movies;
+using WatchIt.Website.Services.Client.Persons;
+using WatchIt.Website.Services.Client.Series;
 
 namespace WatchIt.Website.Pages;
 
@@ -12,10 +12,10 @@ public partial class SearchPage : ComponentBase
 {
     #region SERVICES
 
-    [Inject] private IMoviesWebAPIService MoviesWebAPIService { get; set; } = default!;
-    [Inject] private ISeriesWebAPIService SeriesWebAPIService { get; set; } = default!;
-    [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
-    [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
+    [Inject] private IMoviesClientService MoviesClientService { get; set; } = default!;
+    [Inject] private ISeriesClientService SeriesClientService { get; set; } = default!;
+    [Inject] private IMediaClientService MediaClientService { get; set; } = default!;
+    [Inject] private IPersonsClientService PersonsClientService { get; set; } = default!;
     
     #endregion
     

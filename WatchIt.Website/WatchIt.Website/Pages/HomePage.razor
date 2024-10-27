@@ -12,26 +12,26 @@
 <div class="vstack gap-default">
     <ViewRankPanelComponent TItem="MovieResponse"
                             Name="movies"
-                            GetViewRankAction="@((count, action) => MoviesWebAPIService.GetMoviesViewRank(count, successAction: action))"
+                            GetViewRankAction="@((count, action) => MoviesClientService.GetMoviesViewRank(count, successAction: action))"
                             ItemUrlFormatString="/media/{0}"
                             IdSource="@(item => item.Id)"
                             NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
                             PosterPlaceholder="/assets/media_poster.png"
-                            GetPictureAction="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"/>
+                            GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"/>
     <ViewRankPanelComponent TItem="SeriesResponse"
                             Name="TV series"
-                            GetViewRankAction="@((count, action) => SeriesWebAPIService.GetSeriesViewRank(count, successAction: action))"
+                            GetViewRankAction="@((count, action) => SeriesClientService.GetSeriesViewRank(count, successAction: action))"
                             ItemUrlFormatString="/media/{0}"
                             IdSource="@(item => item.Id)"
                             NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
                             PosterPlaceholder="/assets/media_poster.png"
-                            GetPictureAction="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"/>
+                            GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"/>
     <ViewRankPanelComponent TItem="PersonResponse"
                             Name="people"
-                            GetViewRankAction="@((count, action) => PersonsWebAPIService.GetPersonsViewRank(count, successAction: action))"
+                            GetViewRankAction="@((count, action) => PersonsClientService.GetPersonsViewRank(count, successAction: action))"
                             ItemUrlFormatString="/person/{0}"
                             IdSource="@(item => item.Id)"
                             NameSource="@(item => item.Name)"
                             PosterPlaceholder="/assets/person_poster.png"
-                            GetPictureAction="@((id, action) => PersonsWebAPIService.GetPersonPhoto(id, action))"/>
+                            GetPictureAction="@((id, action) => PersonsClientService.GetPersonPhoto(id, action))"/>
 </div>

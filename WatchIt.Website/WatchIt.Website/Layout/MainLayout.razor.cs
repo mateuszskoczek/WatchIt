@@ -2,11 +2,11 @@ using System.Net;
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Photos;
-using WatchIt.Website.Services.Utility.Authentication;
-using WatchIt.Website.Services.Utility.Tokens;
-using WatchIt.Website.Services.WebAPI.Accounts;
-using WatchIt.Website.Services.WebAPI.Media;
-using WatchIt.Website.Services.WebAPI.Photos;
+using WatchIt.Website.Services.Authentication;
+using WatchIt.Website.Services.Tokens;
+using WatchIt.Website.Services.Client.Accounts;
+using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Photos;
 
 namespace WatchIt.Website.Layout;
 
@@ -18,9 +18,9 @@ public partial class MainLayout : LayoutComponentBase
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
     [Inject] public ITokensService TokensService { get; set; } = default!;
     [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
-    [Inject] public IAccountsWebAPIService AccountsWebAPIService { get; set; } = default!;
-    [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
-    [Inject] public IPhotosWebAPIService PhotosWebAPIService { get; set; } = default!;
+    [Inject] public IAccountsClientService AccountsClientService { get; set; } = default!;
+    [Inject] public IMediaClientService MediaClientService { get; set; } = default!;
+    [Inject] public IPhotosClientService PhotosClientService { get; set; } = default!;
     
     #endregion
     
@@ -76,7 +76,7 @@ public partial class MainLayout : LayoutComponentBase
             ]);
             endTasks.AddRange(
             [
-                PhotosWebAPIService.GetPhotoRandomBackground(data => _defaultBackgroundPhoto = data)
+                PhotosClientService.GetPhotoRandomBackground(data => _defaultBackgroundPhoto = data)
             ]);
             
             // STEP 1
@@ -85,7 +85,7 @@ public partial class MainLayout : LayoutComponentBase
             {
                 endTasks.AddRange(
                 [
-                    AccountsWebAPIService.GetAccountProfilePicture(_user.Id, data => _userProfilePicture = data)
+                    AccountsClientService.GetAccountProfilePicture(_user.Id, data => _userProfilePicture = data)
                 ]);
             }
             

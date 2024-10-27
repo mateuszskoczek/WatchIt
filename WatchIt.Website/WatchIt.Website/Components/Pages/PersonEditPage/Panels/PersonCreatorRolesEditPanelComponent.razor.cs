@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Roles;
-using WatchIt.Website.Services.WebAPI.Media;
-using WatchIt.Website.Services.WebAPI.Persons;
-using WatchIt.Website.Services.WebAPI.Roles;
+using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Persons;
+using WatchIt.Website.Services.Client.Roles;
 
 namespace WatchIt.Website.Components.Pages.PersonEditPage.Panels;
 
@@ -11,9 +11,9 @@ public partial class PersonCreatorRolesEditPanelComponent : ComponentBase
 {
     #region SERVICES
     
-    [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
-    [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
-    [Inject] private IRolesWebAPIService RolesWebAPIService { get; set; } = default!;
+    [Inject] private IPersonsClientService PersonsClientService { get; set; } = default!;
+    [Inject] private IMediaClientService MediaClientService { get; set; } = default!;
+    [Inject] private IRolesClientService RolesClientService { get; set; } = default!;
     
     #endregion
     
@@ -61,8 +61,8 @@ public partial class PersonCreatorRolesEditPanelComponent : ComponentBase
             {
                 endTasks.AddRange(
                 [
-                    PersonsWebAPIService.GetPersonAllCreatorRoles(Id.Value, successAction: data => _roles = data.ToDictionary(x => x.Id, x => (x, false))),
-                    RolesWebAPIService.GetAllCreatorRoleTypes(successAction: data => _roleTypes = data.ToDictionary(x => x.Id, x => x.Name)),
+                    PersonsClientService.GetPersonAllCreatorRoles(Id.Value, successAction: data => _roles = data.ToDictionary(x => x.Id, x => (x, false))),
+                    RolesClientService.GetAllCreatorRoleTypes(successAction: data => _roleTypes = data.ToDictionary(x => x.Id, x => x.Name)),
                 ]);
             }
 
@@ -121,11 +121,11 @@ public partial class PersonCreatorRolesEditPanelComponent : ComponentBase
         _saving = true;
         if (_editedId.HasValue)
         {
-            await RolesWebAPIService.PutCreatorRole(_editedId.Value, _editedModel as CreatorRoleUniversalRequest, SuccessPut, BadRequest, Unauthorized);
+            await RolesClientService.PutCreatorRole(_editedId.Value, _editedModel as CreatorRoleUniversalRequest, SuccessPut, BadRequest, Unauthorized);
         }
         else
         {
-            await PersonsWebAPIService.PostPersonCreatorRole(Id!.Value, _editedModel as CreatorRolePersonRequest, SuccessPost, BadRequest, Unauthorized);
+            await PersonsClientService.PostPersonCreatorRole(Id!.Value, _editedModel as CreatorRolePersonRequest, SuccessPost, BadRequest, Unauthorized);
         }
     }
 
@@ -142,7 +142,7 @@ public partial class PersonCreatorRolesEditPanelComponent : ComponentBase
     private async Task Delete(Guid id)
     {
         _roles[id] = (_roles[id].Data, true);
-        await RolesWebAPIService.DeleteCreatorRole(id, () => _roles.Remove(id));
+        await RolesClientService.DeleteCreatorRole(id, () => _roles.Remove(id));
     }
 
     #endregion

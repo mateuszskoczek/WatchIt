@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
-using WatchIt.Website.Services.WebAPI.Media;
-using WatchIt.Website.Services.WebAPI.Persons;
-using WatchIt.Website.Services.WebAPI.Roles;
+using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Persons;
+using WatchIt.Website.Services.Client.Roles;
 
 namespace WatchIt.Website.Components.Pages.PersonPage.Panels;
 
@@ -9,9 +9,9 @@ public partial class PersonActorRolesPanelComponent : ComponentBase
 {
     #region SERVICES
     
-    [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
-    [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
-    [Inject] private IRolesWebAPIService RolesWebAPIService { get; set; } = default!;
+    [Inject] private IMediaClientService MediaClientService { get; set; } = default!;
+    [Inject] private IPersonsClientService PersonsClientService { get; set; } = default!;
+    [Inject] private IRolesClientService RolesClientService { get; set; } = default!;
     
     #endregion
     
