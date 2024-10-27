@@ -10,4 +10,7 @@ public interface IAccountsControllerService
     Task<RequestResult> AuthenticateRefresh();
     Task<RequestResult> Logout();
     Task<RequestResult> GetAccountProfilePicture(long id);
+    Task<RequestResult> GetAccountInfo();
+    Task<RequestResult> GetAccountInfo(long id);
+    Task<RequestResult> PutAccountInfo(AccountRequest data);
 }

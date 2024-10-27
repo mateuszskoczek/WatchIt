@@ -11,6 +11,7 @@ using WatchIt.WebAPI.Services.Controllers.Common;
 using WatchIt.WebAPI.Services.Utility.Tokens;
 using WatchIt.WebAPI.Services.Utility.Tokens.Exceptions;
 using WatchIt.WebAPI.Services.Utility.User;
+using Account = WatchIt.Database.Model.Account.Account;
 using AccountProfilePicture = WatchIt.Common.Model.Accounts.AccountProfilePicture;
 
 namespace WatchIt.WebAPI.Services.Controllers.Accounts;
@@ -127,6 +128,31 @@ public class AccountsControllerService(
         
         AccountProfilePictureResponse picture = new AccountProfilePictureResponse(account.ProfilePicture);
         return RequestResult.Ok(picture);
+    }
+
+    public async Task<RequestResult> GetAccountInfo() => await GetAccountInfo(userService.GetUserId());
+    public async Task<RequestResult> GetAccountInfo(long id)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null)
+        {
+            return RequestResult.NotFound();
+        }
+        
+        AccountResponse response = new AccountResponse(account);
+        return RequestResult.Ok(response);
+    }
+
+    public async Task<RequestResult> PutAccountInfo(AccountRequest data)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == userService.GetUserId());
+        if (account is null)
+        {
+            return RequestResult.NotFound();
+        }
+        
+        data.UpdateAccount(account);
+        return RequestResult.Ok();
     }
 
     #endregion
