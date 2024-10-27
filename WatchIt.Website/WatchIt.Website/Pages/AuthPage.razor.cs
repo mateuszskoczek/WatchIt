@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Photos;
-using WatchIt.Website.Services.Utility.Authentication;
-using WatchIt.Website.Services.Utility.Tokens;
-using WatchIt.Website.Services.WebAPI.Accounts;
-using WatchIt.Website.Services.WebAPI.Media;
-using WatchIt.Website.Services.WebAPI.Photos;
+using WatchIt.Website.Services.Authentication;
+using WatchIt.Website.Services.Tokens;
+using WatchIt.Website.Services.Client.Accounts;
+using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Photos;
 
 namespace WatchIt.Website.Pages;
 
@@ -18,9 +18,9 @@ public partial class AuthPage
     [Inject] public ILogger<AuthPage> Logger { get; set; } = default!;
     [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
     [Inject] public ITokensService TokensService { get; set; } = default!;
-    [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
-    [Inject] public IAccountsWebAPIService AccountsWebAPIService { get; set; } = default!;
-    [Inject] public IPhotosWebAPIService PhotosWebAPIService { get; set; } = default!;
+    [Inject] public IMediaClientService MediaClientService { get; set; } = default!;
+    [Inject] public IAccountsClientService AccountsClientService { get; set; } = default!;
+    [Inject] public IPhotosClientService PhotosClientService { get; set; } = default!;
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
 
     #endregion
@@ -80,7 +80,7 @@ public partial class AuthPage
             // STEP 0
             endTasks.AddRange(
             [
-                PhotosWebAPIService.GetPhotoRandomBackground(data => _background = data)
+                PhotosClientService.GetPhotoRandomBackground(data => _background = data)
             ]);
             
             // END
@@ -112,7 +112,7 @@ public partial class AuthPage
         }
         
         
-        await AccountsWebAPIService.Authenticate(_loginModel, async (data) => await LoginSuccess(data), LoginBadRequest, LoginUnauthorized);
+        await AccountsClientService.Authenticate(_loginModel, async (data) => await LoginSuccess(data), LoginBadRequest, LoginUnauthorized);
     }
     
     private async Task Register()
@@ -137,7 +137,7 @@ public partial class AuthPage
             _formMessage = "Password fields don't match";
             return;
         }
-        await AccountsWebAPIService.Register(_registerModel, RegisterSuccess, RegisterBadRequest);
+        await AccountsClientService.Register(_registerModel, RegisterSuccess, RegisterBadRequest);
     }
 
     #endregion

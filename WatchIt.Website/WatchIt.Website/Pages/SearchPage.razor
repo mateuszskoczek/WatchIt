@@ -28,13 +28,13 @@
                                 AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
                                 RatingSource="@(item => item.Rating)"
                                 Query="@(new MovieQueryParameters { Title = DecodedQuery, OrderBy = "rating.count" })"
-                                ItemDownloadingTask="@(MoviesWebAPIService.GetAllMovies)"
-                                PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
+                                ItemDownloadingTask="@(MoviesClientService.GetAllMovies)"
+                                PictureDownloadingTask="@((id, action) => MediaClientService.GetMediaPoster(id, action))"
                                 PosterPlaceholder="/assets/media_poster.png"
-                                GetGlobalRatingMethod="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"
-                                GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaWebAPIService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
-                                PutRatingMethod="@((id, request) => MediaWebAPIService.PutMediaRating(id, request))"
-                                DeleteRatingMethod="@(id => MediaWebAPIService.DeleteMediaRating(id))"/>
+                                GetGlobalRatingMethod="@((id, action) => MediaClientService.GetMediaRating(id, action))"
+                                GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaClientService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
+                                PutRatingMethod="@((id, request) => MediaClientService.PutMediaRating(id, request))"
+                                DeleteRatingMethod="@(id => MediaClientService.DeleteMediaRating(id))"/>
     <SearchResultPanelComponent TItem="SeriesResponse"
                                 TQuery="SeriesQueryParameters"
                                 Title="TV series"
@@ -44,13 +44,13 @@
                                 AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
                                 RatingSource="@(item => item.Rating)"
                                 Query="@(new SeriesQueryParameters { Title = DecodedQuery, OrderBy = "rating.count" })"
-                                ItemDownloadingTask="@(SeriesWebAPIService.GetAllSeries)"
-                                PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
+                                ItemDownloadingTask="@(SeriesClientService.GetAllSeries)"
+                                PictureDownloadingTask="@((id, action) => MediaClientService.GetMediaPoster(id, action))"
                                 PosterPlaceholder="/assets/media_poster.png"
-                                GetGlobalRatingMethod="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"
-                                GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaWebAPIService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
-                                PutRatingMethod="@((id, request) => MediaWebAPIService.PutMediaRating(id, request))"
-                                DeleteRatingMethod="@(id => MediaWebAPIService.DeleteMediaRating(id))"/>
+                                GetGlobalRatingMethod="@((id, action) => MediaClientService.GetMediaRating(id, action))"
+                                GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaClientService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
+                                PutRatingMethod="@((id, request) => MediaClientService.PutMediaRating(id, request))"
+                                DeleteRatingMethod="@(id => MediaClientService.DeleteMediaRating(id))"/>
     <SearchResultPanelComponent TItem="PersonResponse"
                                 TQuery="PersonQueryParameters"
                                 Title="People"
@@ -59,8 +59,8 @@
                                 NameSource="@(item => item.Name)"
                                 RatingSource="@(item => item.Rating)"
                                 Query="@(new PersonQueryParameters { Name = DecodedQuery, OrderBy = "rating.count" })"
-                                ItemDownloadingTask="@(PersonsWebAPIService.GetAllPersons)"
-                                PictureDownloadingTask="@((id, action) => PersonsWebAPIService.GetPersonPhoto(id, action))"
+                                ItemDownloadingTask="@(PersonsClientService.GetAllPersons)"
+                                PictureDownloadingTask="@((id, action) => PersonsClientService.GetPersonPhoto(id, action))"
                                 PosterPlaceholder="/assets/person_poster.png"
-                                GetGlobalRatingMethod="@((id, action) => PersonsWebAPIService.GetPersonGlobalRating(id, action))"/>
+                                GetGlobalRatingMethod="@((id, action) => PersonsClientService.GetPersonGlobalRating(id, action))"/>
 </div>

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Components.Authorization">
+        <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.10\Microsoft.AspNetCore.Components.Authorization.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WatchIt.Website.Services.Client\WatchIt.Website.Services.Client.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services.Tokens\WatchIt.Website.Services.Tokens.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
+    </ItemGroup>
+
+</Project>

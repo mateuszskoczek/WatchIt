@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model;
 using WatchIt.Common.Model.Rating;
-using WatchIt.Website.Services.Utility.Authentication;
+using WatchIt.Website.Services.Authentication;
 
 namespace WatchIt.Website.Components.Common.Subcomponents;
 

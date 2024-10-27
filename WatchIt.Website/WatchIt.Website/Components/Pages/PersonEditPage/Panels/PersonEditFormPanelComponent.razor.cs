@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Genders;
 using WatchIt.Common.Model.Persons;
-using WatchIt.Website.Services.WebAPI.Genders;
-using WatchIt.Website.Services.WebAPI.Persons;
+using WatchIt.Website.Services.Client.Genders;
+using WatchIt.Website.Services.Client.Persons;
 
 namespace WatchIt.Website.Components.Pages.PersonEditPage.Panels;
 
@@ -11,8 +11,8 @@ public partial class PersonEditFormPanelComponent : ComponentBase
     #region SERVICES
 
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-    [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
-    [Inject] private IGendersWebAPIService GendersWebAPIService { get; set; } = default!;
+    [Inject] private IPersonsClientService PersonsClientService { get; set; } = default!;
+    [Inject] private IGendersClientService GendersClientService { get; set; } = default!;
     
     #endregion
     
@@ -52,13 +52,13 @@ public partial class PersonEditFormPanelComponent : ComponentBase
             // STEP 0
             endTasks.AddRange(
             [
-                GendersWebAPIService.GetAllGenders(successAction: data => _genders = data)
+                GendersClientService.GetAllGenders(successAction: data => _genders = data)
             ]);
             if (Id.HasValue)
             {
                 endTasks.AddRange(
                 [
-                    PersonsWebAPIService.GetPerson(Id.Value, data => _person = new PersonRequest(data))
+                    PersonsClientService.GetPerson(Id.Value, data => _person = new PersonRequest(data))
                 ]);
             }
             
@@ -98,11 +98,11 @@ public partial class PersonEditFormPanelComponent : ComponentBase
         _saving = true;
         if (Id.HasValue)
         {
-            await PersonsWebAPIService.PutPerson(Id.Value, _person, PutSuccess, BadRequest, AuthError, AuthError);
+            await PersonsClientService.PutPerson(Id.Value, _person, PutSuccess, BadRequest, AuthError, AuthError);
         }
         else
         {
-            await PersonsWebAPIService.PostPerson(_person, PostSuccess, BadRequest, AuthError, AuthError);
+            await PersonsClientService.PostPerson(_person, PostSuccess, BadRequest, AuthError, AuthError);
         }
     }
 

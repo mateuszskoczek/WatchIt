@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Roles;
 using WatchIt.Website.Components.Common.Subcomponents;
-using WatchIt.Website.Services.WebAPI.Media;
-using WatchIt.Website.Services.WebAPI.Persons;
-using WatchIt.Website.Services.WebAPI.Roles;
+using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Persons;
+using WatchIt.Website.Services.Client.Roles;
 
 namespace WatchIt.Website.Components.Pages.PersonPage.Panels;
 
@@ -12,9 +12,9 @@ public partial class PersonCreatorRolesPanelComponent : ComponentBase
 {
     #region SERVICES
 
-    [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
-    [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
-    [Inject] private IRolesWebAPIService RolesWebAPIService { get; set; } = default!;
+    [Inject] private IPersonsClientService PersonsClientService { get; set; } = default!;
+    [Inject] private IMediaClientService MediaClientService { get; set; } = default!;
+    [Inject] private IRolesClientService RolesClientService { get; set; } = default!;
     
     #endregion
     
@@ -54,7 +54,7 @@ public partial class PersonCreatorRolesPanelComponent : ComponentBase
             // STEP 0
             endTasks.AddRange(
             [
-                RolesWebAPIService.GetAllCreatorRoleTypes(successAction: data => _roleTypes = data)
+                RolesClientService.GetAllCreatorRoleTypes(successAction: data => _roleTypes = data)
             ]);
             
             // END

@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Persons;
 using WatchIt.Website.Layout;
-using WatchIt.Website.Services.Utility.Authentication;
-using WatchIt.Website.Services.WebAPI.Media;
-using WatchIt.Website.Services.WebAPI.Persons;
+using WatchIt.Website.Services.Authentication;
+using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Persons;
 
 namespace WatchIt.Website.Pages;
 
@@ -14,8 +14,8 @@ public partial class PersonEditPage : ComponentBase
 
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
     [Inject] private IAuthenticationService AuthenticationService { get; set; } = default!;
-    [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
-    [Inject] private IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
+    [Inject] private IPersonsClientService PersonsClientService { get; set; } = default!;
+    [Inject] private IMediaClientService MediaClientService { get; set; } = default!;
 
     #endregion
     
@@ -66,8 +66,8 @@ public partial class PersonEditPage : ComponentBase
             {
                 endTasks.AddRange(
                 [
-                    PersonsWebAPIService.GetPerson(Id.Value, data => _person = data, () => NavigationManager.NavigateTo("/person/new", true)),
-                    MediaWebAPIService.GetAllMedia(successAction: data => _media = data.ToDictionary(x => x.Id, x => x)),
+                    PersonsClientService.GetPerson(Id.Value, data => _person = data, () => NavigationManager.NavigateTo("/person/new", true)),
+                    MediaClientService.GetAllMedia(successAction: data => _media = data.ToDictionary(x => x.Id, x => x)),
                 ]);
             }
             

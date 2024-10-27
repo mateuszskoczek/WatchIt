@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using WatchIt.Website.Layout;
-using WatchIt.Website.Services.Utility.Authentication;
+using WatchIt.Website.Services.Authentication;
 
 namespace WatchIt.Website.Pages;
 

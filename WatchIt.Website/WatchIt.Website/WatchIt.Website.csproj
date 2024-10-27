@@ -16,17 +16,8 @@
     <ItemGroup>
       <ProjectReference Include="..\..\WatchIt.Common\WatchIt.Common.Services\WatchIt.Common.Services.HttpClient\WatchIt.Common.Services.HttpClient.csproj" />
       <ProjectReference Include="..\..\WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Utility\WatchIt.WebAPI.Services.Utility.Tokens\WatchIt.WebAPI.Services.Utility.Tokens.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.Utility\WatchIt.Website.Services.Utility.Authentication\WatchIt.Website.Services.Utility.Authentication.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.Utility\WatchIt.Website.Services.Utility.Configuration\WatchIt.Website.Services.Utility.Configuration.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.Utility\WatchIt.Website.Services.Utility.Tokens\WatchIt.Website.Services.Utility.Tokens.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Accounts\WatchIt.Website.Services.WebAPI.Accounts.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Genders\WatchIt.Website.Services.WebAPI.Genders.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Media\WatchIt.Website.Services.WebAPI.Media.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Movies\WatchIt.Website.Services.WebAPI.Movies.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Persons\WatchIt.Website.Services.WebAPI.Persons.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Photos\WatchIt.Website.Services.WebAPI.Photos.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Roles\WatchIt.Website.Services.WebAPI.Roles.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.WebAPI\WatchIt.Website.Services.WebAPI.Series\WatchIt.Website.Services.WebAPI.Series.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.Authentication\WatchIt.Website.Services.Authentication.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.Utility\WatchIt.Website.Services.Configuration\WatchIt.Website.Services.Configuration.csproj" />
     </ItemGroup>
 
     <ItemGroup>
