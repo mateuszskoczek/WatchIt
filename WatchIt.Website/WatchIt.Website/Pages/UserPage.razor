@@ -40,9 +40,42 @@
     }
     else
     {
-        <div class="row">
+        <div class="row mt-header">
             <div class="col">
-                <UserPageHeaderPanelComponent/>
+                <UserPageHeaderPanelComponent AccountData="@(_accountData)"/>
+            </div>
+        </div>
+        <div class="row mt-over-panel-menu">
+            <div class="col">
+                <Tabs Pills
+                      RenderMode="TabsRenderMode.LazyLoad"
+                      SelectedTab="summary"
+                      Class="panel panel-menu panel-background-menu justify-content-center">
+                    <Items>
+                        <Tab Name="summary">Summary</Tab>
+                        <Tab Name="movies">Movies</Tab>
+                        <Tab Name="series">TV Series</Tab>
+                        <Tab Name="people">People</Tab>
+                        <Tab Name="people">Roles</Tab>
+                    </Items>
+                    <Content>
+                        <TabPanel Name="summary">
+                            
+                        </TabPanel>
+                        <TabPanel Name="movies">
+                            
+                        </TabPanel>
+                        <TabPanel Name="series">
+
+                        </TabPanel>
+                        <TabPanel Name="people">
+
+                        </TabPanel>
+                        <TabPanel Name="roles">
+
+                        </TabPanel>
+                    </Content>
+                </Tabs>
             </div>
         </div>
     }

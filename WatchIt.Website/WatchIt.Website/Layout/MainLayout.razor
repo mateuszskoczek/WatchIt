@@ -53,14 +53,14 @@
                                         else
                                         {
                                             <Dropdown RightAligned>
-                                                <Button Color="Color.Default">
+                                                <Button Color="Color.Default" Clicked="@(() => NavigationManager.NavigateTo("/user"))">
                                                     <div class="d-flex gap-2 align-items-center">
-                                                        <img class="rounded-circle" alt="avatar" height="30" src="@(_userProfilePicture is null ? "assets/user_placeholder.png" : _userProfilePicture.ToString())"/>
+                                                        <AccountPictureComponent Id="@(_user.Id)" Size="30"/>
                                                         <span>@(_user.Username)</span>
                                                     </div>
                                                 </Button>
                                                 <DropdownToggle Color="Color.Default" Split />
-                                                <DropdownMenu >
+                                                <DropdownMenu>
                                                     <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/user"))">Your profile</DropdownItem>
                                                     @if (_user.IsAdmin)
                                                     {

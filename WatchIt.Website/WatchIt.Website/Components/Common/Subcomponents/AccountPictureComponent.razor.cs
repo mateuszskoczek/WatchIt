@@ -1,24 +1,25 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
-using WatchIt.Website.Services.Authentication;
 using WatchIt.Website.Services.Client.Accounts;
 
-namespace WatchIt.Website.Components.Pages.UserPage.Panels;
+namespace WatchIt.Website.Components.Common.Subcomponents;
 
-public partial class UserPageHeaderPanelComponent : ComponentBase
+public partial class AccountPictureComponent : ComponentBase
 {
     #region SERVICES
-
-    [Inject] private IAuthenticationService AuthenticationService { get; set; } = default!;
+    
     [Inject] private IAccountsClientService AccountsClientService { get; set; } = default!;
-
+    
     #endregion
     
     
     
     #region PARAMETERS
     
-    [Parameter] public required AccountResponse AccountData { get; set; }
+    [Parameter] public required long Id { get; set; }
+    [Parameter] public required int Size { get; set; }
+
+    [Parameter] public string Class { get; set; } = string.Empty;
     
     #endregion
     
@@ -26,12 +27,12 @@ public partial class UserPageHeaderPanelComponent : ComponentBase
     
     #region FIELDS
     
-    private AccountProfilePictureResponse? _accountProfilePicture;
-
+    private AccountProfilePictureResponse? _picture; 
+    
     #endregion
-
-
-
+    
+    
+    
     #region PRIVATE METHODS
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -43,7 +44,7 @@ public partial class UserPageHeaderPanelComponent : ComponentBase
             // STEP 0
             endTasks.AddRange(
             [
-                AccountsClientService.GetAccountProfilePicture(AccountData.Id, data => _accountProfilePicture = data),
+                AccountsClientService.GetAccountProfilePicture(Id, data => _picture = data)
             ]);
             
             // END

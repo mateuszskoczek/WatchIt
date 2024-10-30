@@ -62,6 +62,9 @@ public class AccountsControllerService(
             RefreshToken = await refreshTokenTask,
         };
         
+        account.LastActive = DateTime.UtcNow;
+        await database.SaveChangesAsync();
+        
         logger.LogInformation($"Account with ID {account.Id} was authenticated");
         return RequestResult.Ok(response);
     }
@@ -90,6 +93,9 @@ public class AccountsControllerService(
         }
         
         string accessToken = await tokensService.CreateAccessTokenAsync(token.Account);
+        
+        token.Account.LastActive = DateTime.UtcNow;
+        await database.SaveChangesAsync();
         
         logger.LogInformation($"Account with ID {token.AccountId} was authenticated by token refreshing");
         return RequestResult.Ok(new AuthenticateResponse

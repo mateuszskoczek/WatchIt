@@ -33,7 +33,6 @@ public partial class DatabasePageComponent<TItem, TQuery> : ComponentBase where 
     [Parameter] public Func<long, RatingRequest, Task>? PutRatingMethod { get; set; }
     [Parameter] public Func<long, Task>? DeleteRatingMethod { get; set; }
     [Parameter] public required string PosterPlaceholder { get; set; }
-    
 
     #endregion
     
