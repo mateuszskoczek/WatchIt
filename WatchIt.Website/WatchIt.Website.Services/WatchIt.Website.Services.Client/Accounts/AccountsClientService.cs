@@ -1,4 +1,6 @@
 ﻿using WatchIt.Common.Model.Accounts;
+using WatchIt.Common.Model.Movies;
+using WatchIt.Common.Model.Series;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Configuration;
 using WatchIt.Website.Services.Tokens;
@@ -78,25 +80,13 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
             .ExecuteAction();
     }
     
-    public async Task GetAccountInfoById(long id, Action<AccountResponse>? successAction = null, Action? notFoundAction = null)
+    public async Task GetAccountInfo(long id, Action<AccountResponse>? successAction = null, Action? notFoundAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountInfoById, id);
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountInfo, id);
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         
         HttpResponse response = await httpClientService.SendRequestAsync(request);
         response.RegisterActionFor2XXSuccess(successAction)
-                .RegisterActionFor404NotFound(notFoundAction)
-                .ExecuteAction();
-    }
-    
-    public async Task GetAccountInfo(Action<AccountResponse>? successAction = null, Action? unauthorizedAction = null, Action? notFoundAction = null)
-    {
-        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountInfo);
-        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
-        
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
-        response.RegisterActionFor2XXSuccess(successAction)
-                .RegisterActionFor401Unauthorized(unauthorizedAction)
                 .RegisterActionFor404NotFound(notFoundAction)
                 .ExecuteAction();
     }
@@ -113,6 +103,34 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor400BadRequest(badRequestAction)
                 .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task GetAccountRatedMovies(long id, MovieRatedQueryParameters query, Action<IEnumerable<MovieRatedResponse>>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountRatedMovies, id);
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url)
+        {
+            Query = query
+        };
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task GetAccountRatedSeries(long id, SeriesRatedQueryParameters query, Action<IEnumerable<SeriesRatedResponse>>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountRatedSeries, id);
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url)
+        {
+            Query = query
+        };
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor404NotFound(notFoundAction)
                 .ExecuteAction();
     }

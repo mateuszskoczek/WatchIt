@@ -27,6 +27,8 @@ public partial class ListItemComponent : ComponentBase
     [Parameter] public required Func<Action<Picture>, Task> PosterDownloadingTask { get; set; }
     
     [Parameter] public RatingResponse? GlobalRating { get; set; }
+    [Parameter] public short? SecondaryRating { get; set; }
+    [Parameter] public string? SecondaryRatingTitle { get; set; }
     [Parameter] public required Func<Action<RatingResponse>, Task> GetGlobalRatingMethod { get; set; }
     [Parameter] public Func<long, Action<short>, Action, Task>? GetUserRatingMethod { get; set; }
     [Parameter] public Func<RatingRequest, Task>? PutRatingMethod { get; set; }

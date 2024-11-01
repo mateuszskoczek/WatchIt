@@ -1,4 +1,4 @@
-@inherits WatchIt.Website.Components.Common.ListComponent.FilterFormComponent<WatchIt.Common.Model.Series.SeriesResponse, WatchIt.Common.Model.Series.SeriesQueryParameters>
+@inherits WatchIt.Website.Components.Common.ListComponent.FilterFormComponent<WatchIt.Common.Model.Series.SeriesRatedResponse, WatchIt.Common.Model.Series.SeriesRatedQueryParameters>
 
 <EditForm Model="@(Query)">
     <div class="container-grid">
@@ -63,6 +63,14 @@
                 <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="@(0.01M)" @bind-Value="@(Query.RatingAverageFrom)"/>
                 <span class="col-auto input-group-text">-</span>
                 <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="@(0.01M)" @bind-Value="@(Query.RatingAverageTo)"/>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="input-group input-group-sm">
+                <span class="col-3 input-group-text">User rating</span>
+                <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="1" @bind-Value="@(Query.UserRatingFrom)"/>
+                <span class="col-auto input-group-text">-</span>
+                <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="1" @bind-Value="@(Query.UserRatingTo)"/>
             </div>
         </div>
     </div>

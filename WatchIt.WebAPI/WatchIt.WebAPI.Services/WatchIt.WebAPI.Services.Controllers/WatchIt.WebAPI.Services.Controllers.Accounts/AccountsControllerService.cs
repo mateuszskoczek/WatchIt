@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SimpleToolkit.Extensions;
 using WatchIt.Common.Model.Accounts;
+using WatchIt.Common.Model.Media;
+using WatchIt.Common.Model.Movies;
+using WatchIt.Common.Model.Series;
 using WatchIt.Database;
 using WatchIt.Database.Model.Account;
+using WatchIt.Database.Model.Media;
+using WatchIt.Database.Model.Rating;
 using WatchIt.WebAPI.Services.Controllers.Common;
 using WatchIt.WebAPI.Services.Utility.Tokens;
 using WatchIt.WebAPI.Services.Utility.Tokens.Exceptions;
@@ -136,7 +141,6 @@ public class AccountsControllerService(
         return RequestResult.Ok(picture);
     }
 
-    public async Task<RequestResult> GetAccountInfo() => await GetAccountInfo(userService.GetUserId());
     public async Task<RequestResult> GetAccountInfo(long id)
     {
         Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
@@ -159,6 +163,32 @@ public class AccountsControllerService(
         
         data.UpdateAccount(account);
         return RequestResult.Ok();
+    }
+    
+    public async Task<RequestResult> GetAccountRatedMovies(long id, MovieRatedQueryParameters query)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        IEnumerable<MovieRatedResponse> response = account.RatingMedia.Join(database.MediaMovies, x => x.MediaId, x => x.Id, (x, y) => new MovieRatedResponse(y, x));
+        response = query.PrepareData(response);
+        return RequestResult.Ok(response);
+    }
+    
+    public async Task<RequestResult> GetAccountRatedSeries(long id, SeriesRatedQueryParameters query)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        IEnumerable<SeriesRatedResponse> response = account.RatingMedia.Join(database.MediaSeries, x => x.MediaId, x => x.Id, (x, y) => new SeriesRatedResponse(y, x));
+        response = query.PrepareData(response);
+        return RequestResult.Ok(response);
     }
 
     #endregion

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using WatchIt.Common.Query;
 
-namespace WatchIt.Common.Model.Series;
+namespace WatchIt.Common.Model.Movies;
 
-public class SeriesQueryParameters : QueryParameters<SeriesResponse>
+public class MovieRatedQueryParameters : QueryParameters<MovieRatedResponse>
 {
     #region PROPERTIES
 
@@ -34,8 +34,14 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
     [FromQuery(Name = "length_to")]
     public short? LengthTo { get; set; }
 
-    [FromQuery(Name = "has_ended")]
-    public bool? HasEnded { get; set; }
+    [FromQuery(Name = "budget")]
+    public decimal? Budget { get; set; }
+
+    [FromQuery(Name = "budget_from")]
+    public decimal? BudgetFrom { get; set; }
+
+    [FromQuery(Name = "budget_to")]
+    public decimal? BudgetTo { get; set; }
 
     [FromQuery(Name = "rating_average")]
     public decimal? RatingAverage { get; set; }
@@ -57,6 +63,15 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
     
     [FromQuery(Name = "genre")]
     public IEnumerable<short>? Genres { get; set; }
+    
+    [FromQuery(Name = "user_rating")]
+    public decimal? UserRating { get; set; }
+
+    [FromQuery(Name = "user_rating_from")]
+    public decimal? UserRatingFrom { get; set; }
+
+    [FromQuery(Name = "user_rating_to")]
+    public decimal? UserRatingTo { get; set; }
 
     #endregion
     
@@ -64,7 +79,7 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
     
     #region PRIVATE METHODS
 
-    protected override bool IsMeetingConditions(SeriesResponse item) =>
+    protected override bool IsMeetingConditions(MovieRatedResponse item) =>
     (
         TestStringWithRegex(item.Title, Title)
         &&
@@ -76,13 +91,13 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
         &&
         TestComparable(item.Length, Length, LengthFrom, LengthTo)
         &&
-        Test(item.HasEnded, HasEnded)
-        &&
         TestComparable(item.Rating.Average, RatingAverage, RatingAverageFrom, RatingAverageTo)
         &&
         TestComparable(item.Rating.Count, RatingCount, RatingCountFrom, RatingCountTo)
         &&
-        TestContains(item.Genres.Select(x => x.Id), Genres)
+        TestContains(Genres, item.Genres.Select(x => x.Id))
+        &&
+        TestComparable((decimal)item.UserRating, UserRating, UserRatingFrom, UserRatingTo)
     );
 
     #endregion

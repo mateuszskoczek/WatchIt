@@ -4,15 +4,16 @@ using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Query;
 using WatchIt.Database.Model.Media;
+using WatchIt.Database.Model.Rating;
 
 namespace WatchIt.Common.Model.Series;
 
-public class SeriesResponse : Series, IQueryOrderable<SeriesResponse>
+public class SeriesRatedResponse : SeriesResponse, IQueryOrderable<SeriesRatedResponse>
 {
     #region PROPERTIES
-
+    
     [JsonIgnore]
-    public static IDictionary<string, Func<SeriesResponse, IComparable>> OrderableProperties { get; } = new Dictionary<string, Func<SeriesResponse, IComparable>>
+    public static IDictionary<string, Func<SeriesRatedResponse, IComparable>> OrderableProperties { get; } = new Dictionary<string, Func<SeriesRatedResponse, IComparable>>
     {
         { "id", x => x.Id },
         { "title", x => x.Title },
@@ -22,30 +23,24 @@ public class SeriesResponse : Series, IQueryOrderable<SeriesResponse>
         { "length", x => x.Length },
         { "has_ended", x => x.HasEnded },
         { "rating.average", x => x.Rating.Average },
-        { "rating.count", x => x.Rating.Count }
+        { "rating.count", x => x.Rating.Count },
+        { "user_rating", x => x.UserRating }
     };
     
-
-    [JsonPropertyName("id")]
-    public long Id { get; set; }
+    [JsonPropertyName("user_rating")]
+    public short UserRating { get; set; }
     
-    [JsonPropertyName("rating")]
-    public RatingResponse Rating { get; set; }
-    
-    [JsonPropertyName("genres")]
-    public IEnumerable<GenreResponse> Genres { get; set; }
-
     #endregion
-    
-    
-    
+
+
+
     #region CONSTRUCTORS
 
     [JsonConstructor]
-    public SeriesResponse() {}
-    
+    public SeriesRatedResponse() { }
+
     [SetsRequiredMembers]
-    public SeriesResponse(MediaSeries mediaSeries)
+    public SeriesRatedResponse(MediaSeries mediaSeries, RatingMedia response)
     {
         Id = mediaSeries.Media.Id;
         Title = mediaSeries.Media.Title;
@@ -56,6 +51,7 @@ public class SeriesResponse : Series, IQueryOrderable<SeriesResponse>
         HasEnded = mediaSeries.HasEnded;
         Rating = RatingResponse.Create(mediaSeries.Media.RatingMedia);
         Genres = mediaSeries.Media.Genres.Select(x => new GenreResponse(x)).ToList();
+        UserRating = response.Rating;
     }
 
     #endregion

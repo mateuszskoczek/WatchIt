@@ -4,9 +4,9 @@ using WatchIt.Common.Model.Movies;
 using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Query;
 
-namespace WatchIt.Website.Components.Pages.DatabasePage;
+namespace WatchIt.Website.Components.Common.ListComponent;
 
-public partial class DatabasePageComponent<TItem, TQuery> : ComponentBase where TItem : IQueryOrderable<TItem> where TQuery : QueryParameters<TItem>
+public partial class ListComponent<TItem, TQuery> : ComponentBase where TItem : IQueryOrderable<TItem> where TQuery : QueryParameters<TItem>
 {
     #region SERVICES
     
@@ -23,6 +23,8 @@ public partial class DatabasePageComponent<TItem, TQuery> : ComponentBase where 
     [Parameter] public required Func<TItem, string> NameSource { get; set; }
     [Parameter] public Func<TItem, string?> AdditionalNameInfoSource { get; set; } = _ => null;
     [Parameter] public required Func<TItem, RatingResponse> RatingSource { get; set; }
+    [Parameter] public Func<TItem, short?>? SecondaryRatingSource { get; set; }
+    [Parameter] public string? SecondaryRatingTitle { get; set; }
     [Parameter] public required string UrlIdTemplate { get; set; }
     [Parameter] public required Func<long, Action<Picture>, Task> PictureDownloadingTask { get; set; }
     [Parameter] public required Func<TQuery, Action<IEnumerable<TItem>>, Task> ItemDownloadingTask { get; set; }

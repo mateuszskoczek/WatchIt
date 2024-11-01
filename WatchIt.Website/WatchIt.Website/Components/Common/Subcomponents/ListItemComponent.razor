@@ -12,40 +12,66 @@
                         <strong>@(Name)</strong>@(string.IsNullOrWhiteSpace(AdditionalInfo) ? string.Empty : AdditionalInfo)
                     </a>
                 </div>
-                <div class="d-inline-flex gap-3">
-                    <a class="text-reset text-decoration-none" href="@(ItemUrl)">
-                        <div class="vstack gap-2">
-                            <span id="ratingNameText">Global rating:</span>
-                            <DisplayRatingComponent Rating="GlobalRating"
-                                                    EmptyMode="DisplayRatingComponent.DisplayRatingComponentEmptyMode.DoubleDash"
-                                                    Scale="0.85"/>
-                        </div>
-                    </a>
-                    @if (GetUserRatingMethod is not null && PutRatingMethod is not null && DeleteRatingMethod is not null)
-                    {
-                        <div class="vr"></div>
-                        <div class="vstack gap-2">
-                            <span id="ratingNameText">Your rating:</span>
-                            <div class="d-inline-flex align-items-center h-100">
-                                @if (_user is null)
-                                {
-                                    <span id="ratingLoginInfoText">You must be logged in to rate</span>
-                                }
-                                else if (!_userRatingLoaded)
-                                {
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                        <span>Loading...</span>
+                <table id="ratingTable" class="table table-transparent table-bordered align-middle m-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                <span class="rating-name-text">Global rating:</span>
+                            </th>
+                            @if (SecondaryRating is not null)
+                            {
+                                <th scope="col">
+                                    <span class="rating-name-text">@(SecondaryRatingTitle):</span>
+                                </th>
+                            }
+                            @if (GetUserRatingMethod is not null && PutRatingMethod is not null && DeleteRatingMethod is not null)
+                            {
+                                <th class scope="col">
+                                    <span class="rating-name-text">Your rating:</span>
+                                </th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <DisplayRatingComponent Rating="@(GlobalRating)"
+                                                        EmptyMode="DisplayRatingComponent.DisplayRatingComponentEmptyMode.DoubleDash"
+                                                        Scale="0.85"/>
+                            </td>
+                            @if (SecondaryRating is not null)
+                            {
+                                <td>
+                                    <DisplayRatingComponent SingleRating="@(SecondaryRating)"
+                                                            EmptyMode="DisplayRatingComponent.DisplayRatingComponentEmptyMode.DoubleDash"
+                                                            Scale="0.85"/>
+                                </td>
+                            }
+                            @if (GetUserRatingMethod is not null && PutRatingMethod is not null && DeleteRatingMethod is not null)
+                            {
+                                <td>
+                                    <div class="d-inline-flex align-items-center h-100">
+                                        @if (_user is null)
+                                        {
+                                        <span id="ratingLoginInfoText">You must be logged in to rate</span>
+                                        }
+                                        else if (!_userRatingLoaded)
+                                        {
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <span>Loading...</span>
+                                        </div>
+                                        }
+                                        else
+                                        {
+                                        <Rating Color="Color.Light" MaxValue="10" @bind-SelectedValue="@(_userRating)" @onclick="@(RatingChanged)"/>
+                                        }
                                     </div>
-                                }
-                                else
-                                {
-                                    <Rating Color="Color.Light" MaxValue="10" @bind-SelectedValue="@(_userRating)" @onclick="@(RatingChanged)"/>
-                                }
-                            </div>
-                        </div>
-                    }
-                </div>
+                                </td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

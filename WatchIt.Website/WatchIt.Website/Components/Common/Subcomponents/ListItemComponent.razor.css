@@ -1,10 +1,39 @@
-/* IDS */
+/* TAGS */
 
-#ratingNameText {
-    font-size: 14px;
-    font-weight: bold;
+tbody, td, tfoot, th, thead, tr {
+    border-color: inherit;
+    border-style: unset;
+    border-width: 0;
 }
+
+
+
+/* IDS */
 
 #ratingLoginInfoText {
     font-size: 13px;
+}
+
+#ratingTable {
+    width: fit-content;
+    border-spacing: unset;
+    border-collapse: separate;
+    margin-left: -0.5rem !important;
+}
+
+#ratingTable > thead > tr > th:not(:last-child) {
+    border-right: 1px solid #444;
+}
+
+#ratingTable > tbody > tr > td:not(:last-child) {
+    border-right: 1px solid #444;
+}
+
+
+
+/* CLASSES */
+
+.rating-name-text {
+    font-size: 14px;
+    font-weight: bold;
 }

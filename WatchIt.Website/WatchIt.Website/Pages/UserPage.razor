@@ -1,5 +1,9 @@
 @using System.Text
+@using WatchIt.Common.Model.Movies
+@using WatchIt.Common.Model.Series
 @using WatchIt.Website.Components.Pages.UserPage.Panels
+@using WatchIt.Website.Components.Common.ListComponent
+@using WatchIt.Website.Components.Pages.UserPage.Subcomponents
 
 @page "/user/{id:long?}"
 
@@ -56,17 +60,59 @@
                         <Tab Name="movies">Movies</Tab>
                         <Tab Name="series">TV Series</Tab>
                         <Tab Name="people">People</Tab>
-                        <Tab Name="people">Roles</Tab>
+                        <Tab Name="roles">Roles</Tab>
                     </Items>
                     <Content>
                         <TabPanel Name="summary">
                             
                         </TabPanel>
                         <TabPanel Name="movies">
-                            
+                            <div class="mt-default">
+                                <ListComponent TItem="MovieRatedResponse"
+                                               TQuery="MovieRatedQueryParameters"
+                                               Title="Rated movies"
+                                               IdSource="@(item => item.Id)"
+                                               NameSource="@(item => item.Title)"
+                                               AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                                               RatingSource="@(item => item.Rating)"
+                                               SecondaryRatingSource="@(item => _owner ? null : item.UserRating)"
+                                               SecondaryRatingTitle="User rating"
+                                               UrlIdTemplate="/media/{0}"
+                                               PictureDownloadingTask="@((id, action) => MediaClientService.GetMediaPoster(id, action))"
+                                               ItemDownloadingTask="@((query, action) => AccountsClientService.GetAccountRatedMovies(Id!.Value, query, action))"
+                                               SortingOptions="@(new Dictionary<string, string> { { "user_rating", "User rating" }, { "rating.count", "Number of ratings" }, { "rating.average", "Average rating" }, { "title", "Title" }, { "release_date", "Release date" } })"
+                                               PosterPlaceholder="/assets/media_poster.png"
+                                               GetGlobalRatingMethod="@((id, action) => MediaClientService.GetMediaRating(id, action))"
+                                               GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaClientService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
+                                               PutRatingMethod="@((id, request) => MediaClientService.PutMediaRating(id, request))"
+                                               DeleteRatingMethod="@(id => MediaClientService.DeleteMediaRating(id))">
+                                    <MoviesRatedFilterFormComponent/>
+                                </ListComponent>
+                            </div>
                         </TabPanel>
                         <TabPanel Name="series">
-
+                            <div class="mt-default">
+                                <ListComponent TItem="SeriesRatedResponse"
+                                               TQuery="SeriesRatedQueryParameters"
+                                               Title="Rated TV series"
+                                               IdSource="@(item => item.Id)"
+                                               NameSource="@(item => item.Title)"
+                                               AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                                               RatingSource="@(item => item.Rating)"
+                                               SecondaryRatingSource="@(item => _owner ? null : item.UserRating)"
+                                               SecondaryRatingTitle="User rating"
+                                               UrlIdTemplate="/media/{0}"
+                                               PictureDownloadingTask="@((id, action) => MediaClientService.GetMediaPoster(id, action))"
+                                               ItemDownloadingTask="@((query, action) => AccountsClientService.GetAccountRatedSeries(Id!.Value, query, action))"
+                                               SortingOptions="@(new Dictionary<string, string> { { "user_rating", "User rating" }, { "rating.count", "Number of ratings" }, { "rating.average", "Average rating" }, { "title", "Title" }, { "release_date", "Release date" } })"
+                                               PosterPlaceholder="/assets/media_poster.png"
+                                               GetGlobalRatingMethod="@((id, action) => MediaClientService.GetMediaRating(id, action))"
+                                               GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaClientService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
+                                               PutRatingMethod="@((id, request) => MediaClientService.PutMediaRating(id, request))"
+                                               DeleteRatingMethod="@(id => MediaClientService.DeleteMediaRating(id))">
+                                    <SeriesRatedFilterFormComponent/>
+                                </ListComponent>
+                            </div>
                         </TabPanel>
                         <TabPanel Name="people">
 

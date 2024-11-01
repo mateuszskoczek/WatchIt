@@ -3,7 +3,7 @@ using WatchIt.Common.Query;
 
 namespace WatchIt.Common.Model.Series;
 
-public class SeriesQueryParameters : QueryParameters<SeriesResponse>
+public class SeriesRatedQueryParameters : QueryParameters<SeriesRatedResponse>
 {
     #region PROPERTIES
 
@@ -57,6 +57,15 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
     
     [FromQuery(Name = "genre")]
     public IEnumerable<short>? Genres { get; set; }
+    
+    [FromQuery(Name = "user_rating")]
+    public decimal? UserRating { get; set; }
+
+    [FromQuery(Name = "user_rating_from")]
+    public decimal? UserRatingFrom { get; set; }
+
+    [FromQuery(Name = "user_rating_to")]
+    public decimal? UserRatingTo { get; set; }
 
     #endregion
     
@@ -64,7 +73,7 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
     
     #region PRIVATE METHODS
 
-    protected override bool IsMeetingConditions(SeriesResponse item) =>
+    protected override bool IsMeetingConditions(SeriesRatedResponse item) =>
     (
         TestStringWithRegex(item.Title, Title)
         &&
@@ -83,6 +92,8 @@ public class SeriesQueryParameters : QueryParameters<SeriesResponse>
         TestComparable(item.Rating.Count, RatingCount, RatingCountFrom, RatingCountTo)
         &&
         TestContains(item.Genres.Select(x => x.Id), Genres)
+        &&
+        TestComparable((decimal)item.UserRating, UserRating, UserRatingFrom, UserRatingTo)
     );
 
     #endregion

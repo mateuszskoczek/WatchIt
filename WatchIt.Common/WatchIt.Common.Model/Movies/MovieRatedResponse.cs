@@ -1,18 +1,19 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Query;
 using WatchIt.Database.Model.Media;
+using WatchIt.Database.Model.Rating;
 
 namespace WatchIt.Common.Model.Movies;
 
-public class MovieResponse : Movie, IQueryOrderable<MovieResponse>
+public class MovieRatedResponse : MovieResponse, IQueryOrderable<MovieRatedResponse>
 {
     #region PROPERTIES
-
+    
     [JsonIgnore]
-    public static IDictionary<string, Func<MovieResponse, IComparable>> OrderableProperties { get; } = new Dictionary<string, Func<MovieResponse, IComparable>>
+    public static IDictionary<string, Func<MovieRatedResponse, IComparable>> OrderableProperties { get; } = new Dictionary<string, Func<MovieRatedResponse, IComparable>>
     {
         { "id", x => x.Id },
         { "title", x => x.Title },
@@ -22,30 +23,24 @@ public class MovieResponse : Movie, IQueryOrderable<MovieResponse>
         { "length", x => x.Length },
         { "budget", x => x.Budget },
         { "rating.average", x => x.Rating.Average },
-        { "rating.count", x => x.Rating.Count }
+        { "rating.count", x => x.Rating.Count },
+        { "user_rating", x => x.UserRating }
     };
-
-
-    [JsonPropertyName("id")]
-    public long Id { get; set; }
     
-    [JsonPropertyName("rating")]
-    public RatingResponse Rating { get; set; }
+    [JsonPropertyName("user_rating")]
+    public short UserRating { get; set; }
     
-    [JsonPropertyName("genres")]
-    public IEnumerable<GenreResponse> Genres { get; set; }
-
     #endregion
-    
-    
-    
+
+
+
     #region CONSTRUCTORS
 
     [JsonConstructor]
-    public MovieResponse() {}
-    
+    public MovieRatedResponse() { }
+
     [SetsRequiredMembers]
-    public MovieResponse(MediaMovie mediaMovie)
+    public MovieRatedResponse(MediaMovie mediaMovie, RatingMedia response)
     {
         Id = mediaMovie.Media.Id;
         Title = mediaMovie.Media.Title;
@@ -56,6 +51,7 @@ public class MovieResponse : Movie, IQueryOrderable<MovieResponse>
         Budget = mediaMovie.Budget;
         Rating = RatingResponse.Create(mediaMovie.Media.RatingMedia);
         Genres = mediaMovie.Media.Genres.Select(x => new GenreResponse(x)).ToList();
+        UserRating = response.Rating;
     }
 
     #endregion

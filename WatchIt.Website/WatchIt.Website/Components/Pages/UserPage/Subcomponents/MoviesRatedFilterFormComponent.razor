@@ -1,4 +1,6 @@
-@inherits WatchIt.Website.Components.Common.ListComponent.FilterFormComponent<WatchIt.Common.Model.Series.SeriesResponse, WatchIt.Common.Model.Series.SeriesQueryParameters>
+@inherits WatchIt.Website.Components.Common.ListComponent.FilterFormComponent<WatchIt.Common.Model.Movies.MovieRatedResponse, WatchIt.Common.Model.Movies.MovieRatedQueryParameters>
+
+
 
 <EditForm Model="@(Query)">
     <div class="container-grid">
@@ -38,15 +40,10 @@
         </div>
         <div class="row my-1">
             <div class="input-group input-group-sm">
-                <span class="col-3 input-group-text">Has ended</span>
-                <div class="btn-group col">
-                    <input type="radio" class="btn-check" name="has_ended" id="has_ended_yes" autocomplete="off" @onclick="() => Query.HasEnded = true">
-                    <label class="btn btn-outline-secondary btn-sm" for="has_ended_yes">Yes</label>
-                    <input type="radio" class="btn-check" name="has_ended" id="has_ended_no_choice" autocomplete="off" @onclick="() => Query.HasEnded = null" checked>
-                    <label class="btn btn-outline-secondary btn-sm" for="has_ended_no_choice">No choice</label>
-                    <input type="radio" class="btn-check" name="has_ended" id="has_ended_no" autocomplete="off" @onclick="() => Query.HasEnded = false">
-                    <label class="btn btn-outline-secondary btn-sm" for="has_ended_no">No</label>
-                </div>
+                <span class="col-3 input-group-text">Budget</span>
+                <NumericEdit TValue="decimal?" Class="col form-control" Min="0" @bind-Value="@(Query.BudgetFrom)"/>
+                <span class="col-auto input-group-text">-</span>
+                <NumericEdit TValue="decimal?" Class="col form-control" Min="0" @bind-Value="@(Query.BudgetTo)"/>
             </div>
         </div>
         <div class="row my-1">
@@ -63,6 +60,14 @@
                 <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="@(0.01M)" @bind-Value="@(Query.RatingAverageFrom)"/>
                 <span class="col-auto input-group-text">-</span>
                 <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="@(0.01M)" @bind-Value="@(Query.RatingAverageTo)"/>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="input-group input-group-sm">
+                <span class="col-3 input-group-text">User rating</span>
+                <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="1" @bind-Value="@(Query.UserRatingFrom)"/>
+                <span class="col-auto input-group-text">-</span>
+                <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="1" @bind-Value="@(Query.UserRatingTo)"/>
             </div>
         </div>
     </div>

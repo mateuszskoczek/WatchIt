@@ -60,6 +60,8 @@
                                                PosterPlaceholder="@(PosterPlaceholder)"
                                                PosterDownloadingTask="@(action => PictureDownloadingTask(id, action))"
                                                GlobalRating="@(RatingSource(item))"
+                                               SecondaryRating="@(SecondaryRatingSource?.Invoke(item))"
+                                               SecondaryRatingTitle="@(SecondaryRatingTitle)"
                                                GetGlobalRatingMethod="@(action => GetGlobalRatingMethod(id, action))"
                                                GetUserRatingMethod="@(GetUserRatingMethod is not null ? (user, actionSuccess, actionNotFound) => GetUserRatingMethod(id, user, actionSuccess, actionNotFound) : null)"
                                                PutRatingMethod="@(PutRatingMethod is not null ? (request) => PutRatingMethod(id, request) : null)"

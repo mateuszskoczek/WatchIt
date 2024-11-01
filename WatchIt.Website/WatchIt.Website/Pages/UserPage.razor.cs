@@ -3,6 +3,7 @@ using WatchIt.Common.Model.Accounts;
 using WatchIt.Website.Layout;
 using WatchIt.Website.Services.Authentication;
 using WatchIt.Website.Services.Client.Accounts;
+using WatchIt.Website.Services.Client.Media;
 
 namespace WatchIt.Website.Pages;
 
@@ -13,6 +14,7 @@ public partial class UserPage : ComponentBase
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
     [Inject] private IAuthenticationService AuthenticationService { get; set; } = default!;
     [Inject] private IAccountsClientService AccountsClientService { get; set; } = default!;
+    [Inject] private IMediaClientService MediaClientService { get; set; } = default!;
     
     #endregion 
     
@@ -78,7 +80,7 @@ public partial class UserPage : ComponentBase
             Id = user.Id;
         }
         
-        await AccountsClientService.GetAccountInfoById(Id.Value, data => _accountData = data);
+        await AccountsClientService.GetAccountInfo(Id.Value, data => _accountData = data);
         _owner = Id.Value == user?.Id;
     }
     
