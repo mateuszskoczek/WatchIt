@@ -1,5 +1,6 @@
 ﻿using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Movies;
+using WatchIt.Common.Model.Persons;
 using WatchIt.Common.Model.Series;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Configuration;
@@ -124,6 +125,20 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
     public async Task GetAccountRatedSeries(long id, SeriesRatedQueryParameters query, Action<IEnumerable<SeriesRatedResponse>>? successAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountRatedSeries, id);
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url)
+        {
+            Query = query
+        };
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task GetAccountRatedPersons(long id, PersonRatedQueryParameters query, Action<IEnumerable<PersonRatedResponse>>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountRatedPersons, id);
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url)
         {
             Query = query

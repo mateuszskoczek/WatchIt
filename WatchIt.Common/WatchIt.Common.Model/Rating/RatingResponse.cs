@@ -25,34 +25,10 @@ public class RatingResponse
     public RatingResponse() {}
 
     [SetsRequiredMembers]
-    private RatingResponse(long ratingSum, long ratingCount)
+    internal RatingResponse(long ratingSum, long ratingCount)
     {
         Average = ratingCount > 0 ? (decimal)ratingSum / ratingCount : 0;
         Count = ratingCount;
-    }
-
-    public static RatingResponse Create(long ratingSum, long ratingCount) => new RatingResponse(ratingSum, ratingCount);
-    
-    public static RatingResponse Create(IEnumerable<RatingMedia> ratingMedia) => Create(ratingMedia, x => x.Rating);
-    
-    public static RatingResponse Create(IEnumerable<RatingPersonActorRole> ratingPersonActorRoles) => Create(ratingPersonActorRoles, x => x.Rating);
-    
-    public static RatingResponse Create(IEnumerable<RatingPersonCreatorRole> ratingPersonCreatorRoles) => Create(ratingPersonCreatorRoles, x => x.Rating);
-    
-    public static RatingResponse Create<T>(IEnumerable<T> ratingList, Func<T, short> ratingSelector) => new RatingResponse(ratingList.Sum(x => ratingSelector(x)), ratingList.Count());
-
-    public static RatingResponse Create(IEnumerable<PersonActorRole> personActorRoles, IEnumerable<PersonCreatorRole> personCreatorRoles)
-    {
-        IEnumerable<RatingPersonActorRole> ratingsActorRoles = personActorRoles.SelectMany(x => x.RatingPersonActorRole);
-        IEnumerable<RatingPersonCreatorRole> ratingsCreatorRoles = personCreatorRoles.SelectMany(x => x.RatingPersonCreatorRole);
-        return Create(ratingsActorRoles, ratingsCreatorRoles);
-    }
-
-    public static RatingResponse Create(IEnumerable<RatingPersonActorRole> ratingsActorRoles, IEnumerable<RatingPersonCreatorRole> ratingsCreatorRoles)
-    {
-        long ratingSum = ratingsActorRoles.Sum(x => x.Rating) + ratingsCreatorRoles.Sum(x => x.Rating);
-        long ratingCount = ratingsActorRoles.Count() + ratingsCreatorRoles.Count(); 
-        return new RatingResponse(ratingSum, ratingCount);
     }
 
     #endregion

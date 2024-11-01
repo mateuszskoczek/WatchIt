@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Query;
+using WatchIt.Database.Model.Rating;
 
 namespace WatchIt.Common.Model.Media;
 
@@ -55,7 +56,9 @@ public class MediaResponse : Media, IQueryOrderable<MediaResponse>
         ReleaseDate = media.ReleaseDate;
         Length = media.Length;
         Type = mediaType;
-        Rating = RatingResponse.Create(media.RatingMedia);
+        Rating = RatingResponseBuilder.Initialize()
+                                      .Add(media.RatingMedia, x => x.Rating)
+                                      .Build();
         Genres = media.Genres.Select(x => new GenreResponse(x)).ToList();
     }
 

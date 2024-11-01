@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Movies;
+using WatchIt.Common.Model.Persons;
 using WatchIt.Common.Model.Series;
 using WatchIt.WebAPI.Services.Controllers.Accounts;
 
@@ -69,4 +70,10 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(typeof(IEnumerable<SeriesRatedResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetAccountRatedSeries([FromRoute]long id, SeriesRatedQueryParameters query) => await accountsControllerService.GetAccountRatedSeries(id, query);
+    
+    [HttpGet("{id}/persons")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<PersonRatedResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetAccountRatedPersons([FromRoute]long id, PersonRatedQueryParameters query) => await accountsControllerService.GetAccountRatedPersons(id, query);
 }

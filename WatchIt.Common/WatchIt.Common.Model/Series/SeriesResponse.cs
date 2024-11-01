@@ -54,7 +54,9 @@ public class SeriesResponse : Series, IQueryOrderable<SeriesResponse>
         ReleaseDate = mediaSeries.Media.ReleaseDate;
         Length = mediaSeries.Media.Length;
         HasEnded = mediaSeries.HasEnded;
-        Rating = RatingResponse.Create(mediaSeries.Media.RatingMedia);
+        Rating = RatingResponseBuilder.Initialize()
+                                      .Add(mediaSeries.Media.RatingMedia, x => x.Rating)
+                                      .Build();
         Genres = mediaSeries.Media.Genres.Select(x => new GenreResponse(x)).ToList();
     }
 

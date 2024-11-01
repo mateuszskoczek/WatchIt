@@ -18,7 +18,7 @@
                             <th scope="col">
                                 <span class="rating-name-text">Global rating:</span>
                             </th>
-                            @if (SecondaryRating is not null)
+                            @if (SecondaryRatingSingle is not null || SecondaryRatingMultiple is not null)
                             {
                                 <th scope="col">
                                     <span class="rating-name-text">@(SecondaryRatingTitle):</span>
@@ -39,10 +39,11 @@
                                                         EmptyMode="DisplayRatingComponent.DisplayRatingComponentEmptyMode.DoubleDash"
                                                         Scale="0.85"/>
                             </td>
-                            @if (SecondaryRating is not null)
+                            @if (SecondaryRatingSingle is not null || SecondaryRatingMultiple is not null)
                             {
                                 <td>
-                                    <DisplayRatingComponent SingleRating="@(SecondaryRating)"
+                                    <DisplayRatingComponent SingleRating="@(SecondaryRatingSingle)"
+                                                            Rating="@(SecondaryRatingMultiple)"
                                                             EmptyMode="DisplayRatingComponent.DisplayRatingComponentEmptyMode.DoubleDash"
                                                             Scale="0.85"/>
                                 </td>
@@ -53,18 +54,18 @@
                                     <div class="d-inline-flex align-items-center h-100">
                                         @if (_user is null)
                                         {
-                                        <span id="ratingLoginInfoText">You must be logged in to rate</span>
+                                            <span id="ratingLoginInfoText">You must be logged in to rate</span>
                                         }
                                         else if (!_userRatingLoaded)
                                         {
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                            <span>Loading...</span>
-                                        </div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                <span>Loading...</span>
+                                            </div>
                                         }
                                         else
                                         {
-                                        <Rating Color="Color.Light" MaxValue="10" @bind-SelectedValue="@(_userRating)" @onclick="@(RatingChanged)"/>
+                                            <Rating Color="Color.Light" MaxValue="10" @bind-SelectedValue="@(_userRating)" @onclick="@(RatingChanged)"/>
                                         }
                                     </div>
                                 </td>

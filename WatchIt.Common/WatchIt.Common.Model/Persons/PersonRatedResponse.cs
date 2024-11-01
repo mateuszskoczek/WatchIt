@@ -7,12 +7,12 @@ using WatchIt.Database.Model.Rating;
 
 namespace WatchIt.Common.Model.Persons;
 
-public class PersonResponse : Person, IQueryOrderable<PersonResponse>
+public class PersonRatedResponse : PersonResponse, IQueryOrderable<PersonRatedResponse>
 {
     #region PROPERTIES
-
+    
     [JsonIgnore]
-    public static IDictionary<string, Func<PersonResponse, IComparable>> OrderableProperties { get; } = new Dictionary<string, Func<PersonResponse, IComparable>>
+    public static IDictionary<string, Func<PersonRatedResponse, IComparable>> OrderableProperties { get; } = new Dictionary<string, Func<PersonRatedResponse, IComparable>>
     {
         { "id", x => x.Id },
         { "name", x => x.Name },
@@ -22,19 +22,14 @@ public class PersonResponse : Person, IQueryOrderable<PersonResponse>
         { "death_date", x => x.BirthDate },
         { "gender", x => x.Gender.Name },
         { "rating.average", x => x.Rating.Average },
-        { "rating.count", x => x.Rating.Count }
+        { "rating.count", x => x.Rating.Count },
+        { "user_rating.average", x => x.UserRating.Average },
+        { "user_rating.count", x => x.UserRating.Count }
     };
-
     
-    [JsonPropertyName("id")]
-    public required long Id { get; set; }
+    [JsonPropertyName("user_rating")]
+    public RatingResponse UserRating { get; set; }
     
-    [JsonPropertyName("gender")]
-    public GenderResponse? Gender { get; set; }
-    
-    [JsonPropertyName("rating")]
-    public required RatingResponse Rating { get; set; }
-
     #endregion
 
 
@@ -42,10 +37,10 @@ public class PersonResponse : Person, IQueryOrderable<PersonResponse>
     #region CONSTRUCTORS
 
     [JsonConstructor]
-    public PersonResponse() { }
-    
+    public PersonRatedResponse() { }
+
     [SetsRequiredMembers]
-    public PersonResponse(Database.Model.Person.Person person)
+    public PersonRatedResponse(Database.Model.Person.Person person, IEnumerable<RatingPersonActorRole> actorUserRatings, IEnumerable<RatingPersonCreatorRole> creatorUserRatings)
     {
         Id = person.Id;
         Name = person.Name;
@@ -58,6 +53,10 @@ public class PersonResponse : Person, IQueryOrderable<PersonResponse>
                                       .Add(person.PersonActorRoles.SelectMany(x => x.RatingPersonActorRole), x => x.Rating)
                                       .Add(person.PersonCreatorRoles.SelectMany(x => x.RatingPersonCreatorRole), x => x.Rating)
                                       .Build();
+        UserRating = RatingResponseBuilder.Initialize()
+                                          .Add(actorUserRatings, x => x.Rating)
+                                          .Add(creatorUserRatings, x => x.Rating)
+                                          .Build();
     }
 
     #endregion

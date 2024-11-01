@@ -7,6 +7,7 @@ using SimpleToolkit.Extensions;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
+using WatchIt.Common.Model.Persons;
 using WatchIt.Common.Model.Series;
 using WatchIt.Database;
 using WatchIt.Database.Model.Account;
@@ -18,6 +19,7 @@ using WatchIt.WebAPI.Services.Utility.Tokens.Exceptions;
 using WatchIt.WebAPI.Services.Utility.User;
 using Account = WatchIt.Database.Model.Account.Account;
 using AccountProfilePicture = WatchIt.Common.Model.Accounts.AccountProfilePicture;
+using Person = WatchIt.Database.Model.Person.Person;
 
 namespace WatchIt.WebAPI.Services.Controllers.Accounts;
 
@@ -187,6 +189,24 @@ public class AccountsControllerService(
         }
 
         IEnumerable<SeriesRatedResponse> response = account.RatingMedia.Join(database.MediaSeries, x => x.MediaId, x => x.Id, (x, y) => new SeriesRatedResponse(y, x));
+        response = query.PrepareData(response);
+        return RequestResult.Ok(response);
+    }
+    
+    public async Task<RequestResult> GetAccountRatedPersons(long id, PersonRatedQueryParameters query)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        IEnumerable<RatingPersonActorRole> actorRolesRatings = account.RatingPersonActorRole;
+        IEnumerable<RatingPersonCreatorRole> creatorRolesRatings = account.RatingPersonCreatorRole;
+        IEnumerable<Person> persons = actorRolesRatings.Select(x => x.PersonActorRole.Person)
+                                                       .Union(creatorRolesRatings.Select(x => x.PersonCreatorRole.Person));
+
+        IEnumerable<PersonRatedResponse> response = persons.Select(x => new PersonRatedResponse(x, actorRolesRatings.Where(y => y.PersonActorRole.Person.Id == x.Id), creatorRolesRatings.Where(y => y.PersonCreatorRole.Person.Id == x.Id)));
         response = query.PrepareData(response);
         return RequestResult.Ok(response);
     }

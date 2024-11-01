@@ -12,4 +12,5 @@ public class Accounts
     public string PutAccountInfo { get; set; }
     public string GetAccountRatedMovies { get; set; }
     public string GetAccountRatedSeries { get; set; }
+    public string GetAccountRatedPersons { get; set; }
 }

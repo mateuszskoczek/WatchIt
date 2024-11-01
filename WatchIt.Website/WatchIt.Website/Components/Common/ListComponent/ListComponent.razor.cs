@@ -23,7 +23,8 @@ public partial class ListComponent<TItem, TQuery> : ComponentBase where TItem : 
     [Parameter] public required Func<TItem, string> NameSource { get; set; }
     [Parameter] public Func<TItem, string?> AdditionalNameInfoSource { get; set; } = _ => null;
     [Parameter] public required Func<TItem, RatingResponse> RatingSource { get; set; }
-    [Parameter] public Func<TItem, short?>? SecondaryRatingSource { get; set; }
+    [Parameter] public Func<TItem, short?>? SecondaryRatingSingleSource { get; set; }
+    [Parameter] public Func<TItem, RatingResponse?>? SecondaryRatingMultipleSource { get; set; }
     [Parameter] public string? SecondaryRatingTitle { get; set; }
     [Parameter] public required string UrlIdTemplate { get; set; }
     [Parameter] public required Func<long, Action<Picture>, Task> PictureDownloadingTask { get; set; }

@@ -54,7 +54,9 @@ public class MovieResponse : Movie, IQueryOrderable<MovieResponse>
         ReleaseDate = mediaMovie.Media.ReleaseDate;
         Length = mediaMovie.Media.Length;
         Budget = mediaMovie.Budget;
-        Rating = RatingResponse.Create(mediaMovie.Media.RatingMedia);
+        Rating = RatingResponseBuilder.Initialize()
+                                      .Add(mediaMovie.Media.RatingMedia, x => x.Rating)
+                                      .Build();
         Genres = mediaMovie.Media.Genres.Select(x => new GenreResponse(x)).ToList();
     }
 

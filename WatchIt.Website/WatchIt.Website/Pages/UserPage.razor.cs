@@ -4,6 +4,7 @@ using WatchIt.Website.Layout;
 using WatchIt.Website.Services.Authentication;
 using WatchIt.Website.Services.Client.Accounts;
 using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Persons;
 
 namespace WatchIt.Website.Pages;
 
@@ -15,6 +16,7 @@ public partial class UserPage : ComponentBase
     [Inject] private IAuthenticationService AuthenticationService { get; set; } = default!;
     [Inject] private IAccountsClientService AccountsClientService { get; set; } = default!;
     [Inject] private IMediaClientService MediaClientService { get; set; } = default!;
+    [Inject] private IPersonsClientService PersonsClientService { get; set; } = default!;
     
     #endregion 
     
