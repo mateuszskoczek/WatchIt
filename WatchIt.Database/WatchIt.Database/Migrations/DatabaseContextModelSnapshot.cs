@@ -108,9 +108,9 @@ namespace WatchIt.Database.Migrations
                             Email = "root@watch.it",
                             IsAdmin = true,
                             LastActive = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LeftSalt = "@(0PF{b6Ot?HO*:yF5`L",
-                            Password = new byte[] { 254, 122, 19, 59, 187, 100, 174, 87, 55, 108, 14, 10, 123, 186, 129, 243, 145, 136, 152, 220, 72, 170, 196, 93, 54, 88, 192, 115, 128, 76, 133, 9, 181, 99, 181, 8, 102, 123, 197, 251, 85, 167, 146, 28, 116, 249, 118, 87, 146, 8, 194, 238, 127, 19, 33, 28, 14, 222, 218, 170, 74, 40, 223, 232 },
-                            RightSalt = "=pt,3T0#CfC1[}Zfp{/u",
+                            LeftSalt = "YuJiv1\"R'*0odl8${\\|S",
+                            Password = new byte[] { 215, 154, 186, 191, 12, 223, 76, 105, 137, 67, 41, 138, 26, 3, 38, 36, 0, 71, 40, 84, 153, 152, 105, 239, 55, 60, 164, 15, 99, 175, 133, 175, 227, 245, 102, 9, 171, 119, 16, 234, 97, 179, 70, 29, 120, 112, 241, 91, 209, 91, 228, 164, 52, 244, 36, 207, 147, 60, 124, 66, 77, 252, 129, 151 },
+                            RightSalt = "oT2N=y7^5,2o'+N>d}~!",
                             Username = "root"
                         });
                 });
@@ -607,7 +607,8 @@ namespace WatchIt.Database.Migrations
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
@@ -766,6 +767,11 @@ namespace WatchIt.Database.Migrations
                     b.Property<long>("AccountId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
                     b.Property<long>("MediaId")
                         .HasColumnType("bigint");
 
@@ -792,6 +798,11 @@ namespace WatchIt.Database.Migrations
 
                     b.Property<long>("AccountId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<Guid>("MediaSeriesEpisodeId")
                         .HasColumnType("uuid");
@@ -820,6 +831,11 @@ namespace WatchIt.Database.Migrations
                     b.Property<long>("AccountId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
                     b.Property<Guid>("MediaSeriesSeasonId")
                         .HasColumnType("uuid");
 
@@ -847,6 +863,11 @@ namespace WatchIt.Database.Migrations
                     b.Property<long>("AccountId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
                     b.Property<Guid>("PersonActorRoleId")
                         .HasColumnType("uuid");
 
@@ -873,6 +894,11 @@ namespace WatchIt.Database.Migrations
 
                     b.Property<long>("AccountId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<Guid>("PersonCreatorRoleId")
                         .HasColumnType("uuid");

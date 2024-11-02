@@ -18,7 +18,6 @@ public partial class MainLayout : LayoutComponentBase
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
     [Inject] public ITokensService TokensService { get; set; } = default!;
     [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
-    [Inject] public IAccountsClientService AccountsClientService { get; set; } = default!;
     [Inject] public IMediaClientService MediaClientService { get; set; } = default!;
     [Inject] public IPhotosClientService PhotosClientService { get; set; } = default!;
     
@@ -32,7 +31,6 @@ public partial class MainLayout : LayoutComponentBase
     
     private User? _user;
     private PhotoResponse? _defaultBackgroundPhoto;
-    private AccountProfilePictureResponse? _userProfilePicture;
     
     private bool _searchbarVisible;
     private string _searchbarText = string.Empty;
@@ -67,27 +65,13 @@ public partial class MainLayout : LayoutComponentBase
         if (firstRender)
         {
             List<Task> endTasks = new List<Task>();
-            List<Task> step1Tasks = new List<Task>();
             
             // STEP 0
-            step1Tasks.AddRange(
-            [
-                Task.Run(async () => _user = await AuthenticationService.GetUserAsync())
-            ]);
             endTasks.AddRange(
             [
+                Task.Run(async () => _user = await AuthenticationService.GetUserAsync()),
                 PhotosClientService.GetPhotoRandomBackground(data => _defaultBackgroundPhoto = data)
             ]);
-            
-            // STEP 1
-            await Task.WhenAll(step1Tasks);
-            if (_user is not null)
-            {
-                endTasks.AddRange(
-                [
-                    AccountsClientService.GetAccountProfilePicture(_user.Id, data => _userProfilePicture = data)
-                ]);
-            }
             
             // END
             await Task.WhenAll(endTasks);

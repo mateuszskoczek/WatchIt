@@ -335,7 +335,10 @@ public class PersonsControllerService : IPersonsControllerService
             return RequestResult.NotFound();
         }
         
-        RatingResponse ratingResponse = RatingResponse.Create(item.PersonActorRoles, item.PersonCreatorRoles);
+        RatingResponse ratingResponse = RatingResponseBuilder.Initialize()
+                                                             .Add(item.PersonActorRoles.SelectMany(x => x.RatingPersonActorRole), x => x.Rating)
+                                                             .Add(item.PersonCreatorRoles.SelectMany(x => x.RatingPersonCreatorRole), x => x.Rating)
+                                                             .Build();
         
         return RequestResult.Ok(ratingResponse);
     }
@@ -347,10 +350,11 @@ public class PersonsControllerService : IPersonsControllerService
         {
             return RequestResult.NotFound();
         }
-        
-        IEnumerable<RatingPersonActorRole> actorRoleRatings = item.PersonActorRoles.SelectMany(x => x.RatingPersonActorRole).Where(x => x.AccountId == userId);
-        IEnumerable<RatingPersonCreatorRole> creatorRoleRatings = item.PersonCreatorRoles.SelectMany(x => x.RatingPersonCreatorRole).Where(x => x.AccountId == userId);
-        RatingResponse ratingResponse = RatingResponse.Create(actorRoleRatings, creatorRoleRatings);
+
+        RatingResponse ratingResponse = RatingResponseBuilder.Initialize()
+                                                             .Add(item.PersonActorRoles.SelectMany(x => x.RatingPersonActorRole).Where(x => x.AccountId == userId), x => x.Rating)
+                                                             .Add(item.PersonCreatorRoles.SelectMany(x => x.RatingPersonCreatorRole).Where(x => x.AccountId == userId), x => x.Rating)
+                                                             .Build();
         
         return RequestResult.Ok(ratingResponse);
     }

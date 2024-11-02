@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Query;
 
-namespace WatchIt.Website.Components.Pages.DatabasePage.Subcomponents;
+namespace WatchIt.Website.Components.Common.ListComponent;
 
 public abstract class FilterFormComponent<TItem, TQuery> : ComponentBase where TItem : IQueryOrderable<TItem> where TQuery : QueryParameters<TItem>
 {
     #region PARAMETERS
     
     [CascadingParameter]
-    protected DatabasePageComponent<TItem, TQuery> Parent { get; set; }
+    protected ListComponent<TItem, TQuery> Parent { get; set; }
 
     #endregion
     

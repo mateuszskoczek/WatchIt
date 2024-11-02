@@ -97,7 +97,9 @@ public class RolesControllerService : IRolesControllerService
             return RequestResult.NotFound();
         }
         
-        RatingResponse ratingResponse = RatingResponse.Create(item.RatingPersonActorRole);
+        RatingResponse ratingResponse = RatingResponseBuilder.Initialize()
+                                                             .Add(item.RatingPersonActorRole, x => x.Rating)
+                                                             .Build();
         
         return RequestResult.Ok(ratingResponse);
     }
@@ -281,7 +283,9 @@ public class RolesControllerService : IRolesControllerService
             return RequestResult.NotFound();
         }
         
-        RatingResponse ratingResponse = RatingResponse.Create(item.RatingPersonCreatorRole);
+        RatingResponse ratingResponse = RatingResponseBuilder.Initialize()
+                                                             .Add(item.RatingPersonCreatorRole, x => x.Rating)
+                                                             .Build();
         
         return RequestResult.Ok(ratingResponse);
     }

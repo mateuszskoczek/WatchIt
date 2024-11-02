@@ -1,0 +1,50 @@
+﻿<Solution>
+  <Folder Name="/WatchIt.Common/">
+    <Project Path="WatchIt.Common\WatchIt.Common.Model\WatchIt.Common.Model.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.Common\WatchIt.Common.Query\WatchIt.Common.Query.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/WatchIt.Common/WatchIt.Common.Services/">
+    <Project Path="WatchIt.Common\WatchIt.Common.Services\WatchIt.Common.Services.HttpClient\WatchIt.Common.Services.HttpClient.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/WatchIt.Database/">
+    <Project Path="WatchIt.Database\WatchIt.Database\WatchIt.Database.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/WatchIt.Database/WatchIt.Database.Model/">
+    <Project Path="WatchIt.Database\WatchIt.Database.Model\WatchIt.Database.Model.Configuration\WatchIt.Database.Model.Configuration.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.Database\WatchIt.Database.Model\WatchIt.Database.Model.Seeding\WatchIt.Database.Model.Seeding.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.Database\WatchIt.Database.Model\WatchIt.Database.Model\WatchIt.Database.Model.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/WatchIt.WebAPI/">
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Controllers\WatchIt.WebAPI.Controllers.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Validators\WatchIt.WebAPI.Validators.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.WorkerServices\WatchIt.WebAPI.WorkerServices.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI\WatchIt.WebAPI.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/WatchIt.WebAPI/WatchIt.WebAPI.Services/" />
+  <Folder Name="/WatchIt.WebAPI/WatchIt.WebAPI.Services/WatchIt.WebAPI.Services.Controllers/">
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Accounts\WatchIt.WebAPI.Services.Controllers.Accounts.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Common\WatchIt.WebAPI.Services.Controllers.Common.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Genders\WatchIt.WebAPI.Services.Controllers.Genders.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Genres\WatchIt.WebAPI.Services.Controllers.Genres.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Media\WatchIt.WebAPI.Services.Controllers.Media.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Movies\WatchIt.WebAPI.Services.Controllers.Movies.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Persons\WatchIt.WebAPI.Services.Controllers.Persons.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Photos\WatchIt.WebAPI.Services.Controllers.Photos.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Roles\WatchIt.WebAPI.Services.Controllers.Roles.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Controllers\WatchIt.WebAPI.Services.Controllers.Series\WatchIt.WebAPI.Services.Controllers.Series.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/WatchIt.WebAPI/WatchIt.WebAPI.Services/WatchIt.WebAPI.Services.Utility/">
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Utility\WatchIt.WebAPI.Services.Utility.Configuration\WatchIt.WebAPI.Services.Utility.Configuration.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Utility\WatchIt.WebAPI.Services.Utility.Tokens\WatchIt.WebAPI.Services.Utility.Tokens.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Utility\WatchIt.WebAPI.Services.Utility.User\WatchIt.WebAPI.Services.Utility.User.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/WatchIt.Website/">
+    <Project Path="WatchIt.Website\WatchIt.Website\WatchIt.Website.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/WatchIt.Website/WatchIt.Website.Services/">
+    <Project Path="WatchIt.Website\WatchIt.Website.Services\WatchIt.Website.Services.Authentication\WatchIt.Website.Services.Authentication.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.Website\WatchIt.Website.Services\WatchIt.Website.Services.Client\WatchIt.Website.Services.Client.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.Website\WatchIt.Website.Services\WatchIt.Website.Services.Configuration\WatchIt.Website.Services.Configuration.csproj" Type="Classic C#" />
+    <Project Path="WatchIt.Website\WatchIt.Website.Services\WatchIt.Website.Services.Tokens\WatchIt.Website.Services.Tokens.csproj" Type="Classic C#" />
+  </Folder>
+</Solution>

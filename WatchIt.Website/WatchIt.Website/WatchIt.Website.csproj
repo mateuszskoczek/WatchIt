@@ -17,7 +17,7 @@
       <ProjectReference Include="..\..\WatchIt.Common\WatchIt.Common.Services\WatchIt.Common.Services.HttpClient\WatchIt.Common.Services.HttpClient.csproj" />
       <ProjectReference Include="..\..\WatchIt.WebAPI\WatchIt.WebAPI.Services\WatchIt.WebAPI.Services.Utility\WatchIt.WebAPI.Services.Utility.Tokens\WatchIt.WebAPI.Services.Utility.Tokens.csproj" />
       <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.Authentication\WatchIt.Website.Services.Authentication.csproj" />
-      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.Utility\WatchIt.Website.Services.Configuration\WatchIt.Website.Services.Configuration.csproj" />
+      <ProjectReference Include="..\WatchIt.Website.Services\WatchIt.Website.Services.Configuration\WatchIt.Website.Services.Configuration.csproj" />
     </ItemGroup>
 
     <ItemGroup>

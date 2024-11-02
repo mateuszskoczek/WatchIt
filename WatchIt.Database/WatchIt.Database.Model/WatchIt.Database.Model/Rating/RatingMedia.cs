@@ -8,6 +8,7 @@ public class RatingMedia
     public required long MediaId { get; set; }
     public required long AccountId { get; set; }
     public required short Rating { get; set; }
+    public DateTime Date { get; set; }
 
     #endregion
 

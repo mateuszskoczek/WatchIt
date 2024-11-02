@@ -8,6 +8,7 @@ public partial class DisplayRatingComponent : ComponentBase
     #region PARAMETERS
     
     [Parameter] public RatingResponse? Rating { get; set; }
+    [Parameter] public short? SingleRating { get; set; }
     [Parameter] public DisplayRatingComponentEmptyMode EmptyMode { get; set; } = DisplayRatingComponentEmptyMode.NoRatings;
     [Parameter] public double Scale { get; set; } = 1;
 

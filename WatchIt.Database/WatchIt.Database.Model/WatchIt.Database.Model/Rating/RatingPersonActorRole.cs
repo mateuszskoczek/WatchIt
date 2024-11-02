@@ -10,6 +10,7 @@ public class RatingPersonActorRole
     public required Guid PersonActorRoleId { get; set; }
     public required long AccountId { get; set; }
     public required short Rating { get; set; }
+    public DateTime Date { get; set; }
 
     #endregion
 

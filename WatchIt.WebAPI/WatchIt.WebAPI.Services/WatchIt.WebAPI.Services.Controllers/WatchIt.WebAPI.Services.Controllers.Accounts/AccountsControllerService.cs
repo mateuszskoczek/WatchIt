@@ -5,14 +5,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SimpleToolkit.Extensions;
 using WatchIt.Common.Model.Accounts;
+using WatchIt.Common.Model.Media;
+using WatchIt.Common.Model.Movies;
+using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Series;
 using WatchIt.Database;
 using WatchIt.Database.Model.Account;
+using WatchIt.Database.Model.Media;
+using WatchIt.Database.Model.Rating;
 using WatchIt.WebAPI.Services.Controllers.Common;
 using WatchIt.WebAPI.Services.Utility.Tokens;
 using WatchIt.WebAPI.Services.Utility.Tokens.Exceptions;
 using WatchIt.WebAPI.Services.Utility.User;
 using Account = WatchIt.Database.Model.Account.Account;
 using AccountProfilePicture = WatchIt.Common.Model.Accounts.AccountProfilePicture;
+using Person = WatchIt.Database.Model.Person.Person;
 
 namespace WatchIt.WebAPI.Services.Controllers.Accounts;
 
@@ -62,6 +69,9 @@ public class AccountsControllerService(
             RefreshToken = await refreshTokenTask,
         };
         
+        account.LastActive = DateTime.UtcNow;
+        await database.SaveChangesAsync();
+        
         logger.LogInformation($"Account with ID {account.Id} was authenticated");
         return RequestResult.Ok(response);
     }
@@ -90,6 +100,9 @@ public class AccountsControllerService(
         }
         
         string accessToken = await tokensService.CreateAccessTokenAsync(token.Account);
+        
+        token.Account.LastActive = DateTime.UtcNow;
+        await database.SaveChangesAsync();
         
         logger.LogInformation($"Account with ID {token.AccountId} was authenticated by token refreshing");
         return RequestResult.Ok(new AuthenticateResponse
@@ -130,7 +143,6 @@ public class AccountsControllerService(
         return RequestResult.Ok(picture);
     }
 
-    public async Task<RequestResult> GetAccountInfo() => await GetAccountInfo(userService.GetUserId());
     public async Task<RequestResult> GetAccountInfo(long id)
     {
         Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
@@ -153,6 +165,50 @@ public class AccountsControllerService(
         
         data.UpdateAccount(account);
         return RequestResult.Ok();
+    }
+    
+    public async Task<RequestResult> GetAccountRatedMovies(long id, MovieRatedQueryParameters query)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        IEnumerable<MovieRatedResponse> response = account.RatingMedia.Join(database.MediaMovies, x => x.MediaId, x => x.Id, (x, y) => new MovieRatedResponse(y, x));
+        response = query.PrepareData(response);
+        return RequestResult.Ok(response);
+    }
+    
+    public async Task<RequestResult> GetAccountRatedSeries(long id, SeriesRatedQueryParameters query)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        IEnumerable<SeriesRatedResponse> response = account.RatingMedia.Join(database.MediaSeries, x => x.MediaId, x => x.Id, (x, y) => new SeriesRatedResponse(y, x));
+        response = query.PrepareData(response);
+        return RequestResult.Ok(response);
+    }
+    
+    public async Task<RequestResult> GetAccountRatedPersons(long id, PersonRatedQueryParameters query)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        IEnumerable<RatingPersonActorRole> actorRolesRatings = account.RatingPersonActorRole;
+        IEnumerable<RatingPersonCreatorRole> creatorRolesRatings = account.RatingPersonCreatorRole;
+        IEnumerable<Person> persons = actorRolesRatings.Select(x => x.PersonActorRole.Person)
+                                                       .Union(creatorRolesRatings.Select(x => x.PersonCreatorRole.Person));
+
+        IEnumerable<PersonRatedResponse> response = persons.Select(x => new PersonRatedResponse(x, actorRolesRatings.Where(y => y.PersonActorRole.Person.Id == x.Id), creatorRolesRatings.Where(y => y.PersonCreatorRole.Person.Id == x.Id)));
+        response = query.PrepareData(response);
+        return RequestResult.Ok(response);
     }
 
     #endregion

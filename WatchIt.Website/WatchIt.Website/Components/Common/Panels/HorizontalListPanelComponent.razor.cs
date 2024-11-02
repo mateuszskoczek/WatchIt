@@ -3,19 +3,19 @@ using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model;
 using WatchIt.Common.Query;
 
-namespace WatchIt.Website.Components.Pages.HomePage.Panels;
+namespace WatchIt.Website.Components.Common.Panels;
 
-public partial class ViewRankPanelComponent<TItem> : ComponentBase
+public partial class HorizontalListPanelComponent<TItem> : ComponentBase
 {
     #region PARAMETERS
 
     [Parameter] public int Count { get; set; } = 5;
-    [Parameter] public required string Name {get; set; }
-    [Parameter] public required Func<int, Action<IEnumerable<TItem>>, Task> GetViewRankAction { get; set; }
+    [Parameter] public required string Title {get; set; }
+    [Parameter] public required Func<Action<IEnumerable<TItem>>, Task> GetItemsAction { get; set; }
     [Parameter] public required string ItemUrlFormatString { get; set; }
     [Parameter] public required Func<TItem, long> IdSource { get; set; }
     [Parameter] public required Func<TItem, string> NameSource { get; set; }
-    [Parameter] public required string PosterPlaceholder {get; set; }
+    [Parameter] public required string PosterPlaceholder { get; set; }
     [Parameter] public required Func<long, Action<Picture>, Task> GetPictureAction { get; set; }
 
     #endregion
@@ -43,7 +43,7 @@ public partial class ViewRankPanelComponent<TItem> : ComponentBase
             // STEP 0
             endTasks.AddRange(
             [
-                GetViewRankAction(Count, data => _items = data)
+                GetItemsAction(data => _items = data)
             ]);
             
             // END

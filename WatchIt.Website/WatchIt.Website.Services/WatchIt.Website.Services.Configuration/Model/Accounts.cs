@@ -8,7 +8,9 @@ public class Accounts
     public string AuthenticateRefresh { get; set; }
     public string Logout { get; set; }
     public string GetProfilePicture { get; set; }
-    public string GetAccountInfoById { get; set; }
     public string GetAccountInfo { get; set; }
     public string PutAccountInfo { get; set; }
+    public string GetAccountRatedMovies { get; set; }
+    public string GetAccountRatedSeries { get; set; }
+    public string GetAccountRatedPersons { get; set; }
 }

@@ -5,14 +5,18 @@
         <i id="star" class="fas fa-star"></i>
     }
     <div class="vstack">
-        @if (Rating is not null && Rating.Count > 0)
+        @if (SingleRating is not null)
+        {
+            <span id="ratingSingleLine">@($"{SingleRating}/10")</span>
+        }
+        else if (Rating is not null && Rating.Count > 0)
         {
             <span id="ratingAverage">@($"{Math.Round(Rating.Average, 2)}/10")</span>
             <span id="ratingCount">@(Rating.Count)</span>
         }
         else
         {
-            <div id="ratingNoItems">
+            <div id="ratingSingleLine">
                 @if (Rating is null)
                 {
                     <span><div class="spinner-border spinner-border-sm"></div>/10</span>
@@ -40,7 +44,7 @@
         font-size: @((1.3 * Scale).ToCultureInvariantString())rem;
     }
 
-    #ratingNoItems {
+    #ratingSingleLine {
         font-size: @((1.3 * Scale).ToCultureInvariantString())rem;
     }
 

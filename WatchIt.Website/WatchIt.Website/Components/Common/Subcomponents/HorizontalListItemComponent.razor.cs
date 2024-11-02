@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model;
 
-namespace WatchIt.Website.Components.Pages.HomePage.Subcomponents;
+namespace WatchIt.Website.Components.Common.Subcomponents;
 
-public partial class ViewRankItemComponent : ComponentBase
+public partial class HorizontalListItemComponent : ComponentBase
 {
     #region PARAMETERS
     

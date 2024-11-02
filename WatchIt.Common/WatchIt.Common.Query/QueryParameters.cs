@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -39,13 +40,16 @@ public abstract class QueryParameters
             FromQueryAttribute? attribute = property.GetCustomAttributes<FromQueryAttribute>(true).FirstOrDefault();
             if (value is not null && attribute is not null)
             {
-                string valueString = (value switch
+                if (value is IEnumerable enumerable and not string)
                 {
-                    decimal d => d.ToString(CultureInfo.InvariantCulture),
-                    _ => value.ToString()
-                })!;
-                string query = $"{attribute.Name}={valueString}";
-                queries.Add(query);
+                    IEnumerable<string> arrayQueryElements = enumerable.Cast<object>().Select(x => QueryElementToString(attribute.Name!, x.ToString()));
+                    queries.AddRange(arrayQueryElements);
+                }
+                else
+                {
+                    string query = QueryElementToString(attribute.Name!, value);
+                    queries.Add(query);
+                }
             }
         }
 
@@ -58,6 +62,18 @@ public abstract class QueryParameters
     
     #region PRIVATE METHODS
 
+    private string QueryElementToString(string name, object value)
+    {
+        string valueString = (value switch
+        {
+            decimal d => d.ToString(CultureInfo.InvariantCulture),
+            _ => value.ToString()
+        })!;
+        string query = $"{name}={valueString}";
+        return query;
+    }
+    
+    
     protected static bool Test<T>(T? property, T? query) =>
     (
         query is null
@@ -111,6 +127,15 @@ public abstract class QueryParameters
                 property.CompareTo(to) < 0
             )
         )
+    );
+
+    protected static bool TestContains<T>(IEnumerable<T>? shouldBeInCollection, IEnumerable<T>? collection) => 
+    (
+        collection is null
+        ||
+        shouldBeInCollection is null
+        ||
+        shouldBeInCollection.All(collection.Contains)
     );
 
     #endregion

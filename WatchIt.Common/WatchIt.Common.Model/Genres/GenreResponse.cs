@@ -18,7 +18,7 @@ public class GenreResponse : Genre, IQueryOrderable<GenreResponse>
 
     
     [JsonPropertyName("id")]
-    public long Id { get; set; }
+    public short Id { get; set; }
 
     #endregion
     
