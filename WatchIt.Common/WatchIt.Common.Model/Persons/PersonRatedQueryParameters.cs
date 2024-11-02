@@ -72,6 +72,15 @@ public class PersonRatedQueryParameters : QueryParameters<PersonRatedResponse>
 
     [FromQuery(Name = "user_rating_count_to")]
     public long? UserRatingCountTo { get; set; }
+
+    [FromQuery(Name = "user_rating_date")]
+    public DateOnly? UserRatingLastDate { get; set; }
+
+    [FromQuery(Name = "user_rating_date_from")]
+    public DateOnly? UserRatingLastDateFrom { get; set; }
+
+    [FromQuery(Name = "user_rating_date_to")]
+    public DateOnly? UserRatingLastDateTo { get; set; }
     
     #endregion
     
@@ -100,6 +109,8 @@ public class PersonRatedQueryParameters : QueryParameters<PersonRatedResponse>
         TestComparable(item.UserRating.Average, UserRatingAverage, UserRatingAverageFrom, UserRatingAverageTo)
         &&
         TestComparable(item.UserRating.Count, UserRatingCount, UserRatingCountFrom, UserRatingCountTo)
+        &&
+        TestComparable(item.UserRatingLastDate, UserRatingLastDate, UserRatingLastDateFrom, UserRatingLastDateTo)
     );
     
     #endregion

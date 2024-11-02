@@ -8,25 +8,25 @@
     <div class="container-grid">
         <div class="row mb-1">
             <div class="input-group input-group-sm">
-                <span class="col-3 input-group-text">Name</span>
+                <span class="col-4 input-group-text">Name</span>
                 <InputText class="col form-control" placeholder="Search with regex" @bind-Value="@(Query.Name)"></InputText>
             </div>
         </div>
         <div class="row my-1">
             <div class="input-group input-group-sm">
-                <span class="col-3 input-group-text">Full name</span>
+                <span class="col-4 input-group-text">Full name</span>
                 <InputText class="col form-control" placeholder="Search with regex" @bind-Value="@(Query.FullName)"/>
             </div>
         </div>
         <div class="row my-1">
             <div class="input-group input-group-sm">
-                <span class="col-3 input-group-text">Description</span>
+                <span class="col-4 input-group-text">Description</span>
                 <InputText class="col form-control" placeholder="Search with regex" @bind-Value="@(Query.Description)"/>
             </div>
         </div>
         <div class="row my-1">
             <div class="input-group input-group-sm">
-                <span class="col-3 input-group-text">Birth date</span>
+                <span class="col-4 input-group-text">Birth date</span>
                 <InputDate TValue="DateOnly?" class="col form-control" @bind-Value="@(Query.BirthDateFrom)"/>
                 <span class="col-auto input-group-text">-</span>
                 <InputDate TValue="DateOnly?" class="col form-control" @bind-Value="@(Query.BirthDateTo)"/>
@@ -34,7 +34,7 @@
         </div>
         <div class="row my-1">
             <div class="input-group input-group-sm">
-                <span class="col-3 input-group-text">Death date</span>
+                <span class="col-4 input-group-text">Death date</span>
                 <InputDate TValue="DateOnly?" class="col form-control" @bind-Value="@(Query.DeathDateFrom)"/>
                 <span class="col-auto input-group-text">-</span>
                 <InputDate TValue="DateOnly?" class="col form-control" @bind-Value="@(Query.DeathDateTo)"/>
@@ -42,7 +42,7 @@
         </div>
         <div class="row my-1">
             <div class="input-group input-group-sm">
-                <span class="col-3 input-group-text">Gender</span>
+                <span class="col-4 input-group-text">Gender</span>
                 <InputSelect TValue="short?" class="col form-control" @bind-Value="@(Query.GenderId)">
                     <option @onclick="() => Query.GenderId = null">No choice</option>
                     @foreach (GenderResponse gender in _genders)
@@ -54,7 +54,7 @@
         </div>
         <div class="row my-1">
             <div class="input-group input-group-sm">
-                <span class="col-3 input-group-text">Rating (count)</span>
+                <span class="col-4 input-group-text">Rating (count)</span>
                 <NumericEdit TValue="long?" Class="col form-control" Min="0" @bind-Value="@(Query.RatingCountFrom)"/>
                 <span class="col-auto input-group-text">-</span>
                 <NumericEdit TValue="long?" Class="col form-control" Min="0" @bind-Value="@(Query.RatingCountTo)"/>
@@ -62,7 +62,7 @@
         </div>
         <div class="row mt-1">
             <div class="input-group input-group-sm">
-                <span class="col-3 input-group-text">Rating (average)</span>
+                <span class="col-4 input-group-text">Rating (average)</span>
                 <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="@(0.01M)" @bind-Value="@(Query.RatingAverageFrom)"/>
                 <span class="col-auto input-group-text">-</span>
                 <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="@(0.01M)" @bind-Value="@(Query.RatingAverageTo)"/>
@@ -70,7 +70,7 @@
         </div>
         <div class="row my-1">
             <div class="input-group input-group-sm">
-                <span class="col-3 input-group-text">User rating (count)</span>
+                <span class="col-4 input-group-text">User rating (count)</span>
                 <NumericEdit TValue="long?" Class="col form-control" Min="0" @bind-Value="@(Query.UserRatingCountFrom)"/>
                 <span class="col-auto input-group-text">-</span>
                 <NumericEdit TValue="long?" Class="col form-control" Min="0" @bind-Value="@(Query.UserRatingCountTo)"/>
@@ -78,10 +78,18 @@
         </div>
         <div class="row mt-1">
             <div class="input-group input-group-sm">
-                <span class="col-3 input-group-text">User rating (average)</span>
+                <span class="col-4 input-group-text">User rating (average)</span>
                 <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="@(0.01M)" @bind-Value="@(Query.UserRatingAverageFrom)"/>
                 <span class="col-auto input-group-text">-</span>
                 <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="@(0.01M)" @bind-Value="@(Query.UserRatingAverageTo)"/>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="input-group input-group-sm">
+                <span class="col-4 input-group-text">User rating (date)</span>
+                <InputDate TValue="DateOnly?" class="col form-control" @bind-Value="@(Query.UserRatingLastDateFrom)"/>
+                <span class="col-auto input-group-text">-</span>
+                <InputDate TValue="DateOnly?" class="col form-control" @bind-Value="@(Query.UserRatingLastDateTo)"/>
             </div>
         </div>
     </div>

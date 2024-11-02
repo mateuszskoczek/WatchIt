@@ -24,11 +24,15 @@ public class PersonRatedResponse : PersonResponse, IQueryOrderable<PersonRatedRe
         { "rating.average", x => x.Rating.Average },
         { "rating.count", x => x.Rating.Count },
         { "user_rating.average", x => x.UserRating.Average },
-        { "user_rating.count", x => x.UserRating.Count }
+        { "user_rating.count", x => x.UserRating.Count },
+        { "user_rating_last_date", x => x.UserRatingLastDate }
     };
     
     [JsonPropertyName("user_rating")]
     public RatingResponse UserRating { get; set; }
+
+    [JsonPropertyName("user_rating_last_date")]
+    public DateTime UserRatingLastDate { get; set; }
     
     #endregion
 
@@ -57,6 +61,9 @@ public class PersonRatedResponse : PersonResponse, IQueryOrderable<PersonRatedRe
                                           .Add(actorUserRatings, x => x.Rating)
                                           .Add(creatorUserRatings, x => x.Rating)
                                           .Build();
+        UserRatingLastDate = actorUserRatings.Select(x => x.Date)
+                                             .Union(creatorUserRatings.Select(x => x.Date))
+                                             .Max();
     }
 
     #endregion

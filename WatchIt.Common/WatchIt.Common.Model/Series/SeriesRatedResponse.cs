@@ -24,11 +24,15 @@ public class SeriesRatedResponse : SeriesResponse, IQueryOrderable<SeriesRatedRe
         { "has_ended", x => x.HasEnded },
         { "rating.average", x => x.Rating.Average },
         { "rating.count", x => x.Rating.Count },
-        { "user_rating", x => x.UserRating }
+        { "user_rating", x => x.UserRating },
+        { "user_rating_date", x => x.UserRatingDate }
     };
     
     [JsonPropertyName("user_rating")]
     public short UserRating { get; set; }
+    
+    [JsonPropertyName("user_rating_date")]
+    public DateTime UserRatingDate { get; set; }
     
     #endregion
 
@@ -54,6 +58,7 @@ public class SeriesRatedResponse : SeriesResponse, IQueryOrderable<SeriesRatedRe
                                       .Build();
         Genres = mediaSeries.Media.Genres.Select(x => new GenreResponse(x)).ToList();
         UserRating = response.Rating;
+        UserRatingDate = response.Date;
     }
 
     #endregion

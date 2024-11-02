@@ -70,5 +70,13 @@
                 <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="1" @bind-Value="@(Query.UserRatingTo)"/>
             </div>
         </div>
+        <div class="row my-1">
+            <div class="input-group input-group-sm">
+                <span class="col-3 input-group-text">User rating date</span>
+                <InputDate TValue="DateOnly?" class="col form-control" @bind-Value="@(Query.UserRatingDateFrom)"/>
+                <span class="col-auto input-group-text">-</span>
+                <InputDate TValue="DateOnly?" class="col form-control" @bind-Value="@(Query.UserRatingDateTo)"/>
+            </div>
+        </div>
     </div>
 </EditForm>

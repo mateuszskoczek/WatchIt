@@ -65,7 +65,35 @@
                     </Items>
                     <Content>
                         <TabPanel Name="summary">
-                            
+                            <div class="vstack gap-default mt-default">
+                                <HorizontalListPanelComponent TItem="MovieRatedResponse"
+                                                              Title="Recently rated movies"
+                                                              Count="6"
+                                                              GetItemsAction="@(action => AccountsClientService.GetAccountRatedMovies(Id!.Value, new MovieRatedQueryParameters { First = 6, OrderBy = "user_rating_date" }, successAction: action))"
+                                                              ItemUrlFormatString="/media/{0}"
+                                                              IdSource="@(item => item.Id)"
+                                                              NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                                                              PosterPlaceholder="/assets/media_poster.png"
+                                                              GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"/>
+                                <HorizontalListPanelComponent TItem="SeriesRatedResponse"
+                                                              Title="Recently rated TV series"
+                                                              Count="6"
+                                                              GetItemsAction="@(action => AccountsClientService.GetAccountRatedSeries(Id!.Value, new SeriesRatedQueryParameters { First = 6, OrderBy = "user_rating_date" }, successAction: action))"
+                                                              ItemUrlFormatString="/media/{0}"
+                                                              IdSource="@(item => item.Id)"
+                                                              NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                                                              PosterPlaceholder="/assets/media_poster.png"
+                                                              GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"/>
+                                <HorizontalListPanelComponent TItem="PersonRatedResponse"
+                                                              Title="Recently rated people"
+                                                              Count="6"
+                                                              GetItemsAction="@(action => AccountsClientService.GetAccountRatedPersons(Id!.Value, new PersonRatedQueryParameters { First = 6, OrderBy = "user_rating_last_date" }, successAction: action))"
+                                                              ItemUrlFormatString="/person/{0}"
+                                                              IdSource="@(item => item.Id)"
+                                                              NameSource="@(item => item.Name)"
+                                                              PosterPlaceholder="/assets/person_poster.png"
+                                                              GetPictureAction="@((id, action) => PersonsClientService.GetPersonPhoto(id, action))"/>
+                            </div>
                         </TabPanel>
                         <TabPanel Name="movies">
                             <div class="mt-default">
@@ -81,7 +109,7 @@
                                                UrlIdTemplate="/media/{0}"
                                                PictureDownloadingTask="@((id, action) => MediaClientService.GetMediaPoster(id, action))"
                                                ItemDownloadingTask="@((query, action) => AccountsClientService.GetAccountRatedMovies(Id!.Value, query, action))"
-                                               SortingOptions="@(new Dictionary<string, string> { { "user_rating", "User rating" }, { "rating.count", "Number of ratings" }, { "rating.average", "Average rating" }, { "title", "Title" }, { "release_date", "Release date" } })"
+                                               SortingOptions="@(new Dictionary<string, string> { { "user_rating", "User rating" }, { "user_rating_date", "User rating date" }, { "rating.count", "Number of ratings" }, { "rating.average", "Average rating" }, { "title", "Title" }, { "release_date", "Release date" } })"
                                                PosterPlaceholder="/assets/media_poster.png"
                                                GetGlobalRatingMethod="@((id, action) => MediaClientService.GetMediaRating(id, action))"
                                                GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaClientService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
@@ -105,7 +133,7 @@
                                                UrlIdTemplate="/media/{0}"
                                                PictureDownloadingTask="@((id, action) => MediaClientService.GetMediaPoster(id, action))"
                                                ItemDownloadingTask="@((query, action) => AccountsClientService.GetAccountRatedSeries(Id!.Value, query, action))"
-                                               SortingOptions="@(new Dictionary<string, string> { { "user_rating", "User rating" }, { "rating.count", "Number of ratings" }, { "rating.average", "Average rating" }, { "title", "Title" }, { "release_date", "Release date" } })"
+                                               SortingOptions="@(new Dictionary<string, string> { { "user_rating", "User rating" }, { "user_rating_date", "User rating date" }, { "rating.count", "Number of ratings" }, { "rating.average", "Average rating" }, { "title", "Title" }, { "release_date", "Release date" } })"
                                                PosterPlaceholder="/assets/media_poster.png"
                                                GetGlobalRatingMethod="@((id, action) => MediaClientService.GetMediaRating(id, action))"
                                                GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaClientService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
@@ -132,6 +160,7 @@
                                                {
                                                    { "user_rating.average", "Average user rating" },
                                                    { "user_rating.count", "Number of user ratings" },
+                                                   { "user_rating_last_date", "User rating date" },
                                                    { "rating.average", "Average rating" },
                                                    { "rating.count", "Number of ratings" },
                                                    { "name", "Name" },

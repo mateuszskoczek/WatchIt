@@ -67,6 +67,15 @@ public class SeriesRatedQueryParameters : QueryParameters<SeriesRatedResponse>
     [FromQuery(Name = "user_rating_to")]
     public decimal? UserRatingTo { get; set; }
 
+    [FromQuery(Name = "user_rating_date")]
+    public DateOnly? UserRatingDate { get; set; }
+
+    [FromQuery(Name = "user_rating_date_from")]
+    public DateOnly? UserRatingDateFrom { get; set; }
+
+    [FromQuery(Name = "user_rating_date_to")]
+    public DateOnly? UserRatingDateTo { get; set; }
+
     #endregion
     
     
@@ -94,6 +103,8 @@ public class SeriesRatedQueryParameters : QueryParameters<SeriesRatedResponse>
         TestContains(item.Genres.Select(x => x.Id), Genres)
         &&
         TestComparable((decimal)item.UserRating, UserRating, UserRatingFrom, UserRatingTo)
+        &&
+        TestComparable(item.UserRatingDate, UserRatingDate, UserRatingDateFrom, UserRatingDateTo)
     );
 
     #endregion

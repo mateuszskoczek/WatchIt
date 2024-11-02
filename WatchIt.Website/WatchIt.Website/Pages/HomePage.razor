@@ -1,7 +1,6 @@
 ﻿@using WatchIt.Common.Model.Movies
 @using WatchIt.Common.Model.Persons
 @using WatchIt.Common.Model.Series
-@using WatchIt.Website.Components.Pages.HomePage.Panels
 
 @page "/"
 
@@ -10,28 +9,28 @@
 
 
 <div class="vstack gap-default">
-    <ViewRankPanelComponent TItem="MovieResponse"
-                            Name="movies"
-                            GetViewRankAction="@((count, action) => MoviesClientService.GetMoviesViewRank(count, successAction: action))"
-                            ItemUrlFormatString="/media/{0}"
-                            IdSource="@(item => item.Id)"
-                            NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
-                            PosterPlaceholder="/assets/media_poster.png"
-                            GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"/>
-    <ViewRankPanelComponent TItem="SeriesResponse"
-                            Name="TV series"
-                            GetViewRankAction="@((count, action) => SeriesClientService.GetSeriesViewRank(count, successAction: action))"
-                            ItemUrlFormatString="/media/{0}"
-                            IdSource="@(item => item.Id)"
-                            NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
-                            PosterPlaceholder="/assets/media_poster.png"
-                            GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"/>
-    <ViewRankPanelComponent TItem="PersonResponse"
-                            Name="people"
-                            GetViewRankAction="@((count, action) => PersonsClientService.GetPersonsViewRank(count, successAction: action))"
-                            ItemUrlFormatString="/person/{0}"
-                            IdSource="@(item => item.Id)"
-                            NameSource="@(item => item.Name)"
-                            PosterPlaceholder="/assets/person_poster.png"
-                            GetPictureAction="@((id, action) => PersonsClientService.GetPersonPhoto(id, action))"/>
+    <HorizontalListPanelComponent TItem="MovieResponse"
+                                  Title="Top 5 movies this week by popularity"
+                                  GetItemsAction="@(action => MoviesClientService.GetMoviesViewRank(successAction: action))"
+                                  ItemUrlFormatString="/media/{0}"
+                                  IdSource="@(item => item.Id)"
+                                  NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                                  PosterPlaceholder="/assets/media_poster.png"
+                                  GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"/>
+    <HorizontalListPanelComponent TItem="SeriesResponse"
+                                  Title="Top 5 TV series this week by popularity"
+                                  GetItemsAction="@(action => SeriesClientService.GetSeriesViewRank(successAction: action))"
+                                  ItemUrlFormatString="/media/{0}"
+                                  IdSource="@(item => item.Id)"
+                                  NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                                  PosterPlaceholder="/assets/media_poster.png"
+                                  GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"/>
+    <HorizontalListPanelComponent TItem="PersonResponse"
+                                  Title="Top 5 people this week by popularity"
+                                  GetItemsAction="@(action => PersonsClientService.GetPersonsViewRank(successAction: action))"
+                                  ItemUrlFormatString="/person/{0}"
+                                  IdSource="@(item => item.Id)"
+                                  NameSource="@(item => item.Name)"
+                                  PosterPlaceholder="/assets/person_poster.png"
+                                  GetPictureAction="@((id, action) => PersonsClientService.GetPersonPhoto(id, action))"/>
 </div>
