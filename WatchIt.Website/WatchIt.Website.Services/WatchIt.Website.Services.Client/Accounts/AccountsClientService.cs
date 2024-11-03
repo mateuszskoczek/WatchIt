@@ -71,7 +71,7 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
 
     public async Task GetAccountProfilePicture(long id, Action<AccountProfilePictureResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Accounts.GetProfilePicture, id);
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountProfilePicture, id);
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         
         HttpResponse response = await httpClientService.SendRequestAsync(request);
@@ -79,6 +79,34 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
             .RegisterActionFor400BadRequest(badRequestAction)
             .RegisterActionFor404NotFound(notFoundAction)
             .ExecuteAction();
+    }
+
+    public async Task PutAccountProfilePicture(AccountProfilePictureRequest data, Action<AccountProfilePictureResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.PutAccountProfilePicture);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Put, url)
+        {
+            Body = data
+        };
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .ExecuteAction();
+    }
+    
+    public async Task DeleteAccountProfilePicture(Action? successAction = null, Action? unauthorizedAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.DeleteAccountProfilePicture);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .ExecuteAction();
     }
     
     public async Task GetAccountInfo(long id, Action<AccountResponse>? successAction = null, Action? notFoundAction = null)
@@ -92,9 +120,9 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
                 .ExecuteAction();
     }
     
-    public async Task PutAccountInfo(AccountRequest data, Action<AccountResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null, Action? notFoundAction = null)
+    public async Task PutAccountProfileInfo(AccountProfileInfoRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Accounts.PutAccountInfo);
+        string url = GetUrl(EndpointsConfiguration.Accounts.PutAccountProfileInfo);
         HttpRequest request = new HttpRequest(HttpMethodType.Put, url)
         {
             Body = data,
@@ -104,7 +132,6 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
         response.RegisterActionFor2XXSuccess(successAction)
                 .RegisterActionFor400BadRequest(badRequestAction)
                 .RegisterActionFor401Unauthorized(unauthorizedAction)
-                .RegisterActionFor404NotFound(notFoundAction)
                 .ExecuteAction();
     }
     

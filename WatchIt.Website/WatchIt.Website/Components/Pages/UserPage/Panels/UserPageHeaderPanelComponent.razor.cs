@@ -18,7 +18,7 @@ public partial class UserPageHeaderPanelComponent : ComponentBase
     
     #region PARAMETERS
     
-    [Parameter] public required AccountResponse AccountData { get; set; }
+    [Parameter] public required AccountResponse AccountProfileInfoData { get; set; }
     
     #endregion
     
@@ -43,7 +43,7 @@ public partial class UserPageHeaderPanelComponent : ComponentBase
             // STEP 0
             endTasks.AddRange(
             [
-                AccountsClientService.GetAccountProfilePicture(AccountData.Id, data => _accountProfilePicture = data),
+                AccountsClientService.GetAccountProfilePicture(AccountProfileInfoData.Id, data => _accountProfilePicture = data),
             ]);
             
             // END

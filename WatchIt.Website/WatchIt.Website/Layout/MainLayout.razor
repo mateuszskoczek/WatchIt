@@ -55,7 +55,7 @@
                                             <Dropdown RightAligned>
                                                 <Button Color="Color.Default" Clicked="@(() => NavigationManager.NavigateTo("/user"))">
                                                     <div class="d-flex gap-2 align-items-center">
-                                                        <AccountPictureComponent Id="@(_user.Id)" Size="30"/>
+                                                        <AccountPictureComponent @ref="_profilePicture" Id="@(_user.Id)" Size="30"/>
                                                         <span>@(_user.Username)</span>
                                                     </div>
                                                 </Button>
@@ -80,7 +80,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row pb-3">
+            <div class="row pt-3 pb-3">
                 <div class="col">
                     @Body
                 </div>

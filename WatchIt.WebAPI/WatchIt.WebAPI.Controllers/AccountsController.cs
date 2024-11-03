@@ -27,7 +27,7 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> Authenticate([FromBody]AuthenticateRequest body) => await accountsControllerService.Authenticate(body);
     
-    [HttpPost("authenticate-refresh")]
+    [HttpPost("authenticate_refresh")]
     [Authorize(AuthenticationSchemes = "refresh")]
     [ProducesResponseType(typeof(AuthenticateResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -39,12 +39,25 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Logout() => await accountsControllerService.Logout();
 
-    [HttpGet("{id}/profile-picture")]
+    [HttpGet("{id}/profile_picture")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AccountProfilePictureResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetAccountProfilePicture([FromRoute(Name = "id")]long id) => await accountsControllerService.GetAccountProfilePicture(id);
+    
+    [HttpPut("profile_picture")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(AccountProfilePictureResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> PutAccountProfilePicture([FromBody]AccountProfilePictureRequest body) => await accountsControllerService.PutAccountProfilePicture(body);
+    
+    [HttpDelete("profile_picture")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> DeleteAccountProfilePicture() => await accountsControllerService.DeleteAccountProfilePicture();
     
     [HttpGet("{id}/info")]
     [AllowAnonymous]
@@ -52,12 +65,12 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetAccountInfo([FromRoute]long id) => await accountsControllerService.GetAccountInfo(id);
     
-    [HttpPut("info")]
+    [HttpPut("profile_info")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PutAccountInfo([FromBody]AccountRequest data) => await accountsControllerService.PutAccountInfo(data);
+    public async Task<ActionResult> PutAccountProfileInfo([FromBody]AccountProfileInfoRequest data) => await accountsControllerService.PutAccountProfileInfo(data);
     
     [HttpGet("{id}/movies")]
     [AllowAnonymous]

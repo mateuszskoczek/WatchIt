@@ -14,8 +14,10 @@ public interface IAccountsControllerService
     Task<RequestResult> AuthenticateRefresh();
     Task<RequestResult> Logout();
     Task<RequestResult> GetAccountProfilePicture(long id);
+    Task<RequestResult> PutAccountProfilePicture(AccountProfilePictureRequest data);
+    Task<RequestResult> DeleteAccountProfilePicture();
     Task<RequestResult> GetAccountInfo(long id);
-    Task<RequestResult> PutAccountInfo(AccountRequest data);
+    Task<RequestResult> PutAccountProfileInfo(AccountProfileInfoRequest data);
     Task<RequestResult> GetAccountRatedMovies(long id, MovieRatedQueryParameters query);
     Task<RequestResult> GetAccountRatedSeries(long id, SeriesRatedQueryParameters query);
     Task<RequestResult> GetAccountRatedPersons(long id, PersonRatedQueryParameters query);

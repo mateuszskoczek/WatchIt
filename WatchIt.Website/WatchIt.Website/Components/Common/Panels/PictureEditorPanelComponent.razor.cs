@@ -11,10 +11,12 @@ public partial class PictureEditorPanelComponent : ComponentBase
     [Parameter] public long? Id { get; set; }
     [Parameter] public int ContentWidth { get; set; } = 300;
     [Parameter] public required string PicturePlaceholder { get; set; }
+    [Parameter] public bool Circle { get; set; }
     [Parameter] public string Class { get; set; } = string.Empty;
     [Parameter] public required Func<long, Action<Picture>, Task> PictureGetTask { get; set; }
     [Parameter] public required Func<long, Picture, Action<Picture>, Task> PicturePutTask { get; set; }
     [Parameter] public required Func<long, Action, Task> PictureDeleteTask { get; set; }
+    [Parameter] public Action<Picture?>? OnPictureChanged { get; set; }
 
     #endregion
     
@@ -92,6 +94,7 @@ public partial class PictureEditorPanelComponent : ComponentBase
             _pictureSelected = data;
             _pictureChanged = false;
             _pictureSaving = false;
+            OnPictureChanged?.Invoke(data);
         }
         
         _pictureSaving = true;
@@ -112,6 +115,7 @@ public partial class PictureEditorPanelComponent : ComponentBase
             _pictureSelected = null;
             _pictureChanged = false;
             _pictureDeleting = false;
+            OnPictureChanged?.Invoke(null);
         }
         
         _pictureDeleting = true;

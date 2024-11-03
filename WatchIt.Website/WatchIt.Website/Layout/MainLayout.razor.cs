@@ -2,6 +2,7 @@ using System.Net;
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Photos;
+using WatchIt.Website.Components.Common.Subcomponents;
 using WatchIt.Website.Services.Authentication;
 using WatchIt.Website.Services.Tokens;
 using WatchIt.Website.Services.Client.Accounts;
@@ -26,6 +27,8 @@ public partial class MainLayout : LayoutComponentBase
     
     
     #region FIELDS
+
+    private AccountPictureComponent? _profilePicture;
 
     private bool _loaded;
     
@@ -52,6 +55,20 @@ public partial class MainLayout : LayoutComponentBase
         }
     }
     
+    #endregion
+
+
+
+    #region PUBLIC METHODS
+
+    public async Task ReloadProfilePicture()
+    {
+        if (_profilePicture is not null)
+        {
+            await _profilePicture.Reload();
+        }
+    }
+
     #endregion
     
     

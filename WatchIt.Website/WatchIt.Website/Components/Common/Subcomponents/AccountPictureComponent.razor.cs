@@ -30,6 +30,18 @@ public partial class AccountPictureComponent : ComponentBase
     private AccountProfilePictureResponse? _picture; 
     
     #endregion
+
+
+
+    #region PUBLIC METHODS
+
+    public async Task Reload()
+    {
+        await AccountsClientService.GetAccountProfilePicture(Id, data => _picture = data, notFoundAction: () => _picture = null);
+        StateHasChanged();
+    }
+
+    #endregion
     
     
     
@@ -39,18 +51,7 @@ public partial class AccountPictureComponent : ComponentBase
     {
         if (firstRender)
         {
-            List<Task> endTasks = new List<Task>();
-            
-            // STEP 0
-            endTasks.AddRange(
-            [
-                AccountsClientService.GetAccountProfilePicture(Id, data => _picture = data)
-            ]);
-            
-            // END
-            await Task.WhenAll(endTasks);
-            
-            StateHasChanged();
+            await Reload();
         }
     }
 

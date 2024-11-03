@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Website.Layout;
@@ -75,7 +76,7 @@ public partial class UserPage : ComponentBase
         {
             if (user is null)
             {
-                NavigationManager.NavigateTo("/auth");
+                NavigationManager.NavigateTo($"/auth?redirect_to={WebUtility.UrlEncode("/user")}");
                 _redirection = true;
                 return;
             }

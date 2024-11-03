@@ -142,6 +142,48 @@ public class AccountsControllerService(
         AccountProfilePictureResponse picture = new AccountProfilePictureResponse(account.ProfilePicture);
         return RequestResult.Ok(picture);
     }
+    
+    public async Task<RequestResult> PutAccountProfilePicture(AccountProfilePictureRequest data)
+    {
+        Account account = await database.Accounts.FirstAsync(x => x.Id == userService.GetUserId());
+        Database.Model.Account.AccountProfilePicture? picture = account.ProfilePicture;
+
+        if (picture is null)
+        {
+            picture = data.CreateMediaPosterImage();
+            await database.AccountProfilePictures.AddAsync(picture);
+            await database.SaveChangesAsync();
+
+            account.ProfilePictureId = picture.Id;
+        }
+        else
+        {
+            data.UpdateMediaPosterImage(picture);
+        }
+        
+        await database.SaveChangesAsync();
+
+        AccountProfilePictureResponse returnData = new AccountProfilePictureResponse(picture);
+        return RequestResult.Ok(returnData);
+    }
+
+    public async Task<RequestResult> DeleteAccountProfilePicture()
+    {
+        Account account = await database.Accounts.FirstAsync(x => x.Id == userService.GetUserId());
+        Database.Model.Account.AccountProfilePicture? picture = account.ProfilePicture;
+
+        if (picture is not null)
+        {
+            account.ProfilePictureId = null;
+            await database.SaveChangesAsync();
+            
+            database.AccountProfilePictures.Attach(picture);
+            database.AccountProfilePictures.Remove(picture);
+            await database.SaveChangesAsync();
+        }
+
+        return RequestResult.NoContent();
+    }
 
     public async Task<RequestResult> GetAccountInfo(long id)
     {
@@ -151,11 +193,11 @@ public class AccountsControllerService(
             return RequestResult.NotFound();
         }
         
-        AccountResponse response = new AccountResponse(account);
-        return RequestResult.Ok(response);
+        AccountResponse profileInfoResponse = new AccountResponse(account);
+        return RequestResult.Ok(profileInfoResponse);
     }
 
-    public async Task<RequestResult> PutAccountInfo(AccountRequest data)
+    public async Task<RequestResult> PutAccountProfileInfo(AccountProfileInfoRequest data)
     {
         Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == userService.GetUserId());
         if (account is null)
@@ -164,6 +206,8 @@ public class AccountsControllerService(
         }
         
         data.UpdateAccount(account);
+        await database.SaveChangesAsync();
+        
         return RequestResult.Ok();
     }
     

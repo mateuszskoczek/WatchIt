@@ -1,1 +1,82 @@
+@using System.Text
+@using WatchIt.Common.Model
+@using WatchIt.Website.Components.Pages.UserEditPage.Panels
+
 @page "/user/edit"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+
+    if (_user is null) sb.Insert(0, "Loading...");
+    else sb.Insert(0, "User settings");
+
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+<div class="container-grid">
+    @if (_user is not null)
+    {
+        <div class="row">
+            <div class="col">
+                <UserEditPageHeaderPanelComponent @ref="@(_header)" User="@(_user)"/>
+            </div>
+        </div>
+        <div class="row mt-default">
+            <div class="col">
+                <Tabs Pills
+                      RenderMode="TabsRenderMode.LazyLoad"
+                      Class="panel panel-menu panel-background-menu justify-content-center"
+                      SelectedTab="profile">
+                    <Items>
+                        <Tab Name="profile">Profile</Tab>
+                        <Tab Name="account">Account</Tab>
+                    </Items>
+                    <Content>
+                        <TabPanel Name="profile">
+                            <div class="mt-default">
+                                <div class="container-grid">
+                                    <div class="row">
+                                        <div class="col">
+                                            <ProfileEditHeaderPanelComponent/>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-default gx-default">
+                                        <div class="col-auto">
+                                            <PictureEditorPanelComponent Id="@(_user.Id)"
+                                                                         Class="h-100"
+                                                                         PicturePlaceholder="assets/user_placeholder.png"
+                                                                         Circle="true"
+                                                                         PictureGetTask="@((id, action) => AccountsClientService.GetAccountProfilePicture(id, action))"
+                                                                         PicturePutTask="@((_, picture, action) => AccountsClientService.PutAccountProfilePicture(new AccountProfilePictureRequest(picture), action))"
+                                                                         PictureDeleteTask="@((_, action) => AccountsClientService.DeleteAccountProfilePicture(action))"
+                                                                         OnPictureChanged="@(async (_) => await PictureChanged())"/>
+                                        </div>
+                                        <div class="col">
+                                            <ProfileEditFormPanelComponent Id="@(_user.Id)"
+                                                                           Class="h-100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </TabPanel>
+                        <TabPanel Name="account">
+
+                        </TabPanel>
+                    </Content>
+                </Tabs>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col">
+                <div class="m-5">
+                    <LoadingComponent/>
+                </div>
+            </div>
+        </div>
+    }
+</div>
