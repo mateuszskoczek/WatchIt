@@ -17,6 +17,7 @@ public partial class HorizontalListPanelComponent<TItem> : ComponentBase
     [Parameter] public required Func<TItem, string> NameSource { get; set; }
     [Parameter] public required string PosterPlaceholder { get; set; }
     [Parameter] public required Func<long, Action<Picture>, Task> GetPictureAction { get; set; }
+    [Parameter] public bool HidePlace { get; set; }
 
     #endregion
     

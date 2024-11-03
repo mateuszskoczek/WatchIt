@@ -16,7 +16,7 @@
                             {
                                 <a class="text-reset text-decoration-none" href="@(string.Format(ItemUrlFormatString, IdSource(_items.ElementAt(i))))">
                                     @{int iCopy = i;}
-                                    <HorizontalListItemComponent Place="@(i + 1)"
+                                    <HorizontalListItemComponent Place="@(HidePlace ? null : i + 1)"
                                                                  Name="@(NameSource(_items.ElementAt(iCopy)))"
                                                                  PosterPlaceholder="@(PosterPlaceholder)"
                                                                  GetPosterAction="@(action => GetPictureAction(IdSource(_items.ElementAt(iCopy)), action))"/>

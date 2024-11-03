@@ -62,6 +62,7 @@
                                                 <DropdownToggle Color="Color.Default" Split />
                                                 <DropdownMenu>
                                                     <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/user"))">Your profile</DropdownItem>
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/user/edit"))">User settings</DropdownItem>
                                                     @if (_user.IsAdmin)
                                                     {
                                                         <DropdownDivider/>

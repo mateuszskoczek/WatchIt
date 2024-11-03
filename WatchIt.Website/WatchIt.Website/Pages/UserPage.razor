@@ -74,7 +74,8 @@
                                                               IdSource="@(item => item.Id)"
                                                               NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
                                                               PosterPlaceholder="/assets/media_poster.png"
-                                                              GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"/>
+                                                              GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"
+                                                              HidePlace="@(true)"/>
                                 <HorizontalListPanelComponent TItem="SeriesRatedResponse"
                                                               Title="Recently rated TV series"
                                                               Count="6"
@@ -83,7 +84,8 @@
                                                               IdSource="@(item => item.Id)"
                                                               NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
                                                               PosterPlaceholder="/assets/media_poster.png"
-                                                              GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"/>
+                                                              GetPictureAction="@((id, action) => MediaClientService.GetMediaPoster(id, action))"
+                                                              HidePlace="@(true)"/>
                                 <HorizontalListPanelComponent TItem="PersonRatedResponse"
                                                               Title="Recently rated people"
                                                               Count="6"
@@ -92,7 +94,8 @@
                                                               IdSource="@(item => item.Id)"
                                                               NameSource="@(item => item.Name)"
                                                               PosterPlaceholder="/assets/person_poster.png"
-                                                              GetPictureAction="@((id, action) => PersonsClientService.GetPersonPhoto(id, action))"/>
+                                                              GetPictureAction="@((id, action) => PersonsClientService.GetPersonPhoto(id, action))"
+                                                              HidePlace="@(true)"/>
                             </div>
                         </TabPanel>
                         <TabPanel Name="movies">
