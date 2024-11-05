@@ -10,6 +10,9 @@ public class Accounts
     public string GetAccountProfilePicture { get; set; }
     public string PutAccountProfilePicture { get; set; }
     public string DeleteAccountProfilePicture { get; set; }
+    public string GetAccountProfileBackground { get; set; }
+    public string PutAccountProfileBackground { get; set; }
+    public string DeleteAccountProfileBackground { get; set; }
     public string GetAccountInfo { get; set; }
     public string PutAccountProfileInfo { get; set; }
     public string GetAccountRatedMovies { get; set; }

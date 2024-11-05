@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Movies;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Series;
 using WatchIt.WebAPI.Services.Controllers.Accounts;
 
@@ -14,6 +15,8 @@ namespace WatchIt.WebAPI.Controllers;
 [Route("accounts")]
 public class AccountsController(IAccountsControllerService accountsControllerService) : ControllerBase
 {
+    #region Basic
+    
     [HttpPost("register")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(RegisterResponse), StatusCodes.Status201Created)]
@@ -39,6 +42,10 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Logout() => await accountsControllerService.Logout();
 
+    #endregion
+    
+    #region Profile picture
+    
     [HttpGet("{id}/profile_picture")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AccountProfilePictureResponse), StatusCodes.Status200OK)]
@@ -58,6 +65,32 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> DeleteAccountProfilePicture() => await accountsControllerService.DeleteAccountProfilePicture();
+    
+    #endregion
+    
+    #region Profile background
+    
+    [HttpGet("{id}/profile_background")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(PhotoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetAccountProfileBackground([FromRoute(Name = "id")]long id) => await accountsControllerService.GetAccountProfileBackground(id);
+    
+    [HttpPut("profile_background")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(PhotoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> PutAccountProfileBackground([FromBody]AccountProfileBackgroundRequest body) => await accountsControllerService.PutAccountProfileBackground(body);
+    
+    [HttpDelete("profile_background")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> DeleteAccountProfileBackground() => await accountsControllerService.DeleteAccountProfileBackground();
+    
+    #endregion
     
     [HttpGet("{id}/info")]
     [AllowAnonymous]

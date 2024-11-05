@@ -50,15 +50,23 @@ public partial class UserPage : ComponentBase
     {
         if (firstRender)
         {
+            List<Task> step1Tasks = new List<Task>();
             List<Task> endTasks = new List<Task>();
             
             // INIT
             Layout.BackgroundPhoto = null;
             
             // STEP 0
-            endTasks.AddRange(
+            step1Tasks.AddRange(
             [
                 GetUserData()
+            ]);
+            
+            // STEP 1
+            await Task.WhenAll(step1Tasks);
+            endTasks.AddRange(
+            [
+                AccountsClientService.GetAccountProfileBackground(_accountData.Id, data => Layout.BackgroundPhoto = data)
             ]);
             
             // END

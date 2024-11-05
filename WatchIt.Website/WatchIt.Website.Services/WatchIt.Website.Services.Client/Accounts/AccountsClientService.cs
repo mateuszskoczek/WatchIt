@@ -1,6 +1,7 @@
 ﻿using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Movies;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Series;
 using WatchIt.Common.Services.HttpClient;
 using WatchIt.Website.Services.Configuration;
@@ -100,6 +101,46 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
     public async Task DeleteAccountProfilePicture(Action? successAction = null, Action? unauthorizedAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Accounts.DeleteAccountProfilePicture);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .ExecuteAction();
+    }
+
+    public async Task GetAccountProfileBackground(long id, Action<PhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountProfileBackground, id);
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task PutAccountProfileBackground(AccountProfileBackgroundRequest data, Action<PhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.PutAccountProfileBackground);
+        
+        HttpRequest request = new HttpRequest(HttpMethodType.Put, url)
+        {
+            Body = data
+        };
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .ExecuteAction();
+    }
+    
+    public async Task DeleteAccountProfileBackground(Action? successAction = null, Action? unauthorizedAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.DeleteAccountProfileBackground);
         
         HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
         

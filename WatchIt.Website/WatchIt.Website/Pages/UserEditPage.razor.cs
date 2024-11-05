@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Website.Components.Pages.UserEditPage.Panels;
 using WatchIt.Website.Layout;
 using WatchIt.Website.Services.Authentication;
@@ -50,11 +51,12 @@ public partial class UserEditPage : ComponentBase
             if (_user is null)
             {
                 NavigationManager.NavigateTo($"/auth?redirect_to={WebUtility.UrlEncode("/user/edit")}");
+                return;
             }
-            else
-            {
-                StateHasChanged();
-            }
+            StateHasChanged();
+            
+            await AccountsClientService.GetAccountProfileBackground(_user.Id, data => Layout.BackgroundPhoto = data);
+            StateHasChanged();
         }
     }
     
@@ -63,6 +65,11 @@ public partial class UserEditPage : ComponentBase
         _header.ReloadPicture(),
         Layout.ReloadProfilePicture()
     ]);
+    
+    private void BackgroundChanged(PhotoResponse? background)
+    {
+        Layout.BackgroundPhoto = background;
+    }
 
     #endregion
 }

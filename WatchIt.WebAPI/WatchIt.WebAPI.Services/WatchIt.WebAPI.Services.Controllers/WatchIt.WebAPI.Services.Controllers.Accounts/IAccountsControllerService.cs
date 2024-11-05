@@ -16,6 +16,9 @@ public interface IAccountsControllerService
     Task<RequestResult> GetAccountProfilePicture(long id);
     Task<RequestResult> PutAccountProfilePicture(AccountProfilePictureRequest data);
     Task<RequestResult> DeleteAccountProfilePicture();
+    Task<RequestResult> GetAccountProfileBackground(long id);
+    Task<RequestResult> PutAccountProfileBackground(AccountProfileBackgroundRequest data);
+    Task<RequestResult> DeleteAccountProfileBackground();
     Task<RequestResult> GetAccountInfo(long id);
     Task<RequestResult> PutAccountProfileInfo(AccountProfileInfoRequest data);
     Task<RequestResult> GetAccountRatedMovies(long id, MovieRatedQueryParameters query);

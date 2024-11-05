@@ -1,6 +1,8 @@
 @using System.Text
 @using WatchIt.Common.Model
+@using WatchIt.Common.Model.Photos
 @using WatchIt.Website.Components.Pages.UserEditPage.Panels
+
 
 @page "/user/edit"
 
@@ -60,7 +62,8 @@
                                     </div>
                                     <div class="row mt-default">
                                         <div class="col">
-                                            <ProfileBackgroundEditorPanelComponent/>
+                                            <ProfileBackgroundEditorPanelComponent Id="@(_user.Id)"
+                                                                                   OnBackgroundChanged="BackgroundChanged"/>
                                         </div>
                                     </div>
                                 </div>

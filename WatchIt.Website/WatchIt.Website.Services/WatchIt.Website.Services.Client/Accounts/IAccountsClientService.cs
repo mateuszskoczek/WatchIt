@@ -1,6 +1,7 @@
 ﻿using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Movies;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Series;
 
 namespace WatchIt.Website.Services.Client.Accounts;
@@ -14,6 +15,9 @@ public interface IAccountsClientService
     Task GetAccountProfilePicture(long id, Action<AccountProfilePictureResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null);
     Task PutAccountProfilePicture(AccountProfilePictureRequest data, Action<AccountProfilePictureResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
     Task DeleteAccountProfilePicture(Action? successAction = null, Action? unauthorizedAction = null);
+    Task GetAccountProfileBackground(long id, Action<PhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null);
+    Task PutAccountProfileBackground(AccountProfileBackgroundRequest data, Action<PhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
+    Task DeleteAccountProfileBackground(Action? successAction = null, Action? unauthorizedAction = null);
     Task GetAccountInfo(long id, Action<AccountResponse>? successAction = null, Action? notFoundAction = null);
     Task PutAccountProfileInfo(AccountProfileInfoRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
     Task GetAccountRatedMovies(long id, MovieRatedQueryParameters query, Action<IEnumerable<MovieRatedResponse>>? successAction = null, Action? notFoundAction = null);

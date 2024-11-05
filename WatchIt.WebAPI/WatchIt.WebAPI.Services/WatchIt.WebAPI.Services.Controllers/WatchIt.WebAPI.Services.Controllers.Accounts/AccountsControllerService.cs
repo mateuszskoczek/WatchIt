@@ -8,6 +8,7 @@ using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Media;
 using WatchIt.Common.Model.Movies;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Series;
 using WatchIt.Database;
 using WatchIt.Database.Model.Account;
@@ -32,6 +33,8 @@ public class AccountsControllerService(
 {
     #region PUBLIC METHODS
 
+    #region Basic
+    
     public async Task<RequestResult> Register(RegisterRequest data)
     {
         string leftSalt = StringExtensions.CreateRandom(20);
@@ -125,6 +128,10 @@ public class AccountsControllerService(
         return RequestResult.NoContent();
     }
 
+    #endregion
+
+    #region Profile picture
+
     public async Task<RequestResult> GetAccountProfilePicture(long id)
     {
         Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
@@ -184,6 +191,55 @@ public class AccountsControllerService(
 
         return RequestResult.NoContent();
     }
+
+    #endregion
+
+    #region Profile background
+    
+    public async Task<RequestResult> GetAccountProfileBackground(long id)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null)
+        {
+            return RequestResult.BadRequest()
+                                .AddValidationError("id", "Account with this id does not exists");
+        }
+
+        if (account.BackgroundPicture is null)
+        {
+            return RequestResult.NotFound();
+        }
+        
+        PhotoResponse response = new PhotoResponse(account.BackgroundPicture);
+        return RequestResult.Ok(response);
+    }
+
+    public async Task<RequestResult> PutAccountProfileBackground(AccountProfileBackgroundRequest data)
+    {
+        Account account = await database.Accounts.FirstAsync(x => x.Id == userService.GetUserId());
+        
+        account.BackgroundPictureId = data.Id;
+        
+        await database.SaveChangesAsync();
+
+        PhotoResponse returnData = new PhotoResponse(account.BackgroundPicture!);
+        return RequestResult.Ok(returnData);
+    }
+    
+    public async Task<RequestResult> DeleteAccountProfileBackground()
+    {
+        Account account = await database.Accounts.FirstAsync(x => x.Id == userService.GetUserId());
+
+        if (account.BackgroundPicture is not null)
+        {
+            account.BackgroundPictureId = null;
+            await database.SaveChangesAsync();
+        }
+
+        return RequestResult.NoContent();
+    }
+
+    #endregion
 
     public async Task<RequestResult> GetAccountInfo(long id)
     {
