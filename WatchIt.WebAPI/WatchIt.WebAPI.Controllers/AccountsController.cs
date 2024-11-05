@@ -92,6 +92,8 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     
     #endregion
     
+    #region Info
+    
     [HttpGet("{id}/info")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
@@ -104,6 +106,15 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> PutAccountProfileInfo([FromBody]AccountProfileInfoRequest data) => await accountsControllerService.PutAccountProfileInfo(data);
+    
+    [HttpPatch("username")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> PatchAccountUsername([FromBody]AccountUsernameRequest data) => await accountsControllerService.PatchAccountUsername(data);
+    
+    #endregion
     
     [HttpGet("{id}/movies")]
     [AllowAnonymous]

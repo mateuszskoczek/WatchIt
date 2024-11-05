@@ -37,40 +37,41 @@
                     </Items>
                     <Content>
                         <TabPanel Name="profile">
-                            <div class="mt-default">
-                                <div class="container-grid">
-                                    <div class="row">
-                                        <div class="col">
-                                            <ProfileEditHeaderPanelComponent/>
-                                        </div>
+                            <div class="container-grid mt-default">
+                                <div class="row">
+                                    <div class="col">
+                                        <ProfileEditHeaderPanelComponent/>
                                     </div>
-                                    <div class="row mt-default gx-default">
-                                        <div class="col-auto">
-                                            <PictureEditorPanelComponent Id="@(_user.Id)"
-                                                                         Class="h-100"
-                                                                         PicturePlaceholder="assets/user_placeholder.png"
-                                                                         Circle="true"
-                                                                         PictureGetTask="@((id, action) => AccountsClientService.GetAccountProfilePicture(id, action))"
-                                                                         PicturePutTask="@((_, picture, action) => AccountsClientService.PutAccountProfilePicture(new AccountProfilePictureRequest(picture), action))"
-                                                                         PictureDeleteTask="@((_, action) => AccountsClientService.DeleteAccountProfilePicture(action))"
-                                                                         OnPictureChanged="@(async (_) => await PictureChanged())"/>
-                                        </div>
-                                        <div class="col">
-                                            <ProfileEditFormPanelComponent Id="@(_user.Id)"
-                                                                           Class="h-100"/>
-                                        </div>
+                                </div>
+                                <div class="row mt-default gx-default">
+                                    <div class="col-auto">
+                                        <PictureEditorPanelComponent Id="@(_user.Id)"
+                                                                     Class="h-100"
+                                                                     PicturePlaceholder="assets/user_placeholder.png"
+                                                                     Circle="true"
+                                                                     PictureGetTask="@((id, action) => AccountsClientService.GetAccountProfilePicture(id, action))"
+                                                                     PicturePutTask="@((_, picture, action) => AccountsClientService.PutAccountProfilePicture(new AccountProfilePictureRequest(picture), action))"
+                                                                     PictureDeleteTask="@((_, action) => AccountsClientService.DeleteAccountProfilePicture(action))"
+                                                                     OnPictureChanged="@(async (_) => await PictureChanged())"/>
                                     </div>
-                                    <div class="row mt-default">
-                                        <div class="col">
-                                            <ProfileBackgroundEditorPanelComponent Id="@(_user.Id)"
-                                                                                   OnBackgroundChanged="BackgroundChanged"/>
-                                        </div>
+                                    <div class="col">
+                                        <ProfileEditFormPanelComponent Id="@(_user.Id)"
+                                                                       Class="h-100"/>
+                                    </div>
+                                </div>
+                                <div class="row mt-default">
+                                    <div class="col">
+                                        <ProfileBackgroundEditorPanelComponent Id="@(_user.Id)"
+                                                                               OnBackgroundChanged="BackgroundChanged"/>
                                     </div>
                                 </div>
                             </div>
                         </TabPanel>
                         <TabPanel Name="account">
-
+                            <div class="vstack mt-default gap-default">
+                                <AccountEditHeaderPanelComponent/>
+                                <NewUsernamePanelComponent Id="@(_user.Id)"/>
+                            </div>
                         </TabPanel>
                     </Content>
                 </Tabs>

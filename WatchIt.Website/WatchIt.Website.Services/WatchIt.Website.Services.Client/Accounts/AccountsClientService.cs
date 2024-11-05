@@ -176,6 +176,21 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
                 .ExecuteAction();
     }
     
+    public async Task PatchAccountUsername(AccountUsernameRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.PatchAccountUsername);
+        HttpRequest request = new HttpRequest(HttpMethodType.Patch, url)
+        {
+            Body = data,
+        };
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .ExecuteAction();
+    }
+    
     public async Task GetAccountRatedMovies(long id, MovieRatedQueryParameters query, Action<IEnumerable<MovieRatedResponse>>? successAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountRatedMovies, id);

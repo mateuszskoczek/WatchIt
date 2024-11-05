@@ -21,6 +21,7 @@ public partial class MainLayout : LayoutComponentBase
     [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
     [Inject] public IMediaClientService MediaClientService { get; set; } = default!;
     [Inject] public IPhotosClientService PhotosClientService { get; set; } = default!;
+    [Inject] public IAccountsClientService AccountsClientService { get; set; } = default!;
     
     #endregion
     
@@ -33,6 +34,7 @@ public partial class MainLayout : LayoutComponentBase
     private bool _loaded;
     
     private User? _user;
+    private AccountResponse? _accountData;
     private PhotoResponse? _defaultBackgroundPhoto;
     
     private bool _searchbarVisible;
@@ -81,17 +83,16 @@ public partial class MainLayout : LayoutComponentBase
     {
         if (firstRender)
         {
-            List<Task> endTasks = new List<Task>();
-            
-            // STEP 0
-            endTasks.AddRange(
+            await Task.WhenAll(
             [
                 Task.Run(async () => _user = await AuthenticationService.GetUserAsync()),
                 PhotosClientService.GetPhotoRandomBackground(data => _defaultBackgroundPhoto = data)
             ]);
-            
-            // END
-            await Task.WhenAll(endTasks);
+
+            if (_user is not null)
+            {
+                await AccountsClientService.GetAccountInfo(_user.Id, data => _accountData = data);
+            }
             
             _loaded = true;
             StateHasChanged();

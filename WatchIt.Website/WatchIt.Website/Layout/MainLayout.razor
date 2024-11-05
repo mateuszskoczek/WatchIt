@@ -56,7 +56,7 @@
                                                 <Button Color="Color.Default" Clicked="@(() => NavigationManager.NavigateTo("/user"))">
                                                     <div class="d-flex gap-2 align-items-center">
                                                         <AccountPictureComponent @ref="_profilePicture" Id="@(_user.Id)" Size="30"/>
-                                                        <span>@(_user.Username)</span>
+                                                        <span>@(_accountData!.Username)</span>
                                                     </div>
                                                 </Button>
                                                 <DropdownToggle Color="Color.Default" Split />

@@ -15,6 +15,7 @@ public class Accounts
     public string DeleteAccountProfileBackground { get; set; }
     public string GetAccountInfo { get; set; }
     public string PutAccountProfileInfo { get; set; }
+    public string PatchAccountUsername { get; set; }
     public string GetAccountRatedMovies { get; set; }
     public string GetAccountRatedSeries { get; set; }
     public string GetAccountRatedPersons { get; set; }

@@ -240,7 +240,9 @@ public class AccountsControllerService(
     }
 
     #endregion
-
+    
+    #region Info
+    
     public async Task<RequestResult> GetAccountInfo(long id)
     {
         Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
@@ -266,6 +268,23 @@ public class AccountsControllerService(
         
         return RequestResult.Ok();
     }
+
+    public async Task<RequestResult> PatchAccountUsername(AccountUsernameRequest data)
+    {
+        Account account = await database.Accounts.FirstAsync(x => x.Id == userService.GetUserId());
+        
+        if (!ComputeHash(data.Password, account.LeftSalt, account.RightSalt).SequenceEqual(account.Password))
+        {
+            return RequestResult.Unauthorized();
+        }
+        
+        data.UpdateAccount(account);
+        await database.SaveChangesAsync();
+        
+        return RequestResult.Ok();
+    }
+    
+    #endregion
     
     public async Task<RequestResult> GetAccountRatedMovies(long id, MovieRatedQueryParameters query)
     {

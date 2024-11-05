@@ -1,8 +1,8 @@
 <div class="panel" role="button" @onclick="@(() => NavigationManager.NavigateTo("/user"))">
     <div class="d-flex gap-3 align-items-center">
-        <AccountPictureComponent @ref="_accountPicture" Id="@(User.Id)" Size="50"/>
+        <AccountPictureComponent @ref="_accountPicture" Id="@(User.Id)" Size="60"/>
         <div class="d-flex-inline flex-column">
-            <h2 id="username" class="fw-bold m-0">@(User.Username)</h2>
+            <h2 id="username" class="fw-bold m-0">@(_username ?? "Loading...")</h2>
             <span id="secondaryText" class="text-secondary">User settings</span>
         </div>
     </div>

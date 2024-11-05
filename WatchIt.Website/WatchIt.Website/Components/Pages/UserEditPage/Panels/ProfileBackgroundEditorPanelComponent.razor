@@ -90,7 +90,7 @@
                     <div class="container-grid">
                         <div class="row gx-3 mb-2">
                             <div class="col">
-                                <PictureComponent Picture="@(_selectedPhoto)" AlternativeText="background" Width="500" Placeholder="/assets/photo.png" AspectRatio="PictureComponent.PictureComponentAspectRatio.Photo"/>
+                                <PictureComponent Class="w-100" Picture="@(_selectedPhoto)" AlternativeText="background" Placeholder="/assets/photo.png" AspectRatio="PictureComponent.PictureComponentAspectRatio.Photo"/>
                             </div>
                             <div class="col">
                                 <div class="rounded-3 border h-100" style="height: 30px; background: linear-gradient(45deg, @($"#{Convert.ToHexString(_selectedPhoto.Background!.FirstGradientColor)}, #{Convert.ToHexString(_selectedPhoto.Background!.SecondGradientColor)}"));"></div>
