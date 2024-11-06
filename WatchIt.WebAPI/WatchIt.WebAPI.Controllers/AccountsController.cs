@@ -94,6 +94,11 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     
     #region Info
     
+    [HttpGet]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<AccountResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetAccounts(AccountQueryParameters query) => await accountsControllerService.GetAccounts(query);
+    
     [HttpGet("{id}")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]

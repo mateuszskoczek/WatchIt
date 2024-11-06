@@ -19,6 +19,7 @@ public interface IAccountsControllerService
     Task<RequestResult> GetAccountProfileBackground(long id);
     Task<RequestResult> PutAccountProfileBackground(AccountProfileBackgroundRequest data);
     Task<RequestResult> DeleteAccountProfileBackground();
+    Task<RequestResult> GetAccounts(AccountQueryParameters query);
     Task<RequestResult> GetAccount(long id);
     Task<RequestResult> PutAccountProfileInfo(AccountProfileInfoRequest data);
     Task<RequestResult> PatchAccountUsername(AccountUsernameRequest data);
