@@ -91,7 +91,7 @@ public partial class MainLayout : LayoutComponentBase
 
             if (_user is not null)
             {
-                await AccountsClientService.GetAccountInfo(_user.Id, data => _accountData = data);
+                await AccountsClientService.GetAccount(_user.Id, data => _accountData = data);
             }
             
             _loaded = true;
@@ -121,7 +121,7 @@ public partial class MainLayout : LayoutComponentBase
         if (!string.IsNullOrWhiteSpace(_searchbarText))
         {
             string query = WebUtility.UrlEncode(_searchbarText);
-            NavigationManager.NavigateTo($"/search/{query}");
+            NavigationManager.NavigateTo($"/search/{query}", true);
         }
     }
     

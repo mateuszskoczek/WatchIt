@@ -150,9 +150,22 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
                 .ExecuteAction();
     }
     
-    public async Task GetAccountInfo(long id, Action<AccountResponse>? successAction = null, Action? notFoundAction = null)
+    public async Task GetAccounts(AccountQueryParameters query, Action<IEnumerable<AccountResponse>>? successAction = null)
     {
-        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountInfo, id);
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccounts);
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url)
+        {
+            Query = query
+        };
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .ExecuteAction();
+    }
+    
+    public async Task GetAccount(long id, Action<AccountResponse>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccount, id);
         HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
         
         HttpResponse response = await httpClientService.SendRequestAsync(request);

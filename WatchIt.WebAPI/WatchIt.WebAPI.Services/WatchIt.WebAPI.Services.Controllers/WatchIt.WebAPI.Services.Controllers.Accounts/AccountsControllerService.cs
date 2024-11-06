@@ -238,7 +238,15 @@ public class AccountsControllerService(
     
     #region Info
     
-    public async Task<RequestResult> GetAccountInfo(long id)
+    public async Task<RequestResult> GetAccounts(AccountQueryParameters query)
+    {
+        IEnumerable<Account> accounts = await database.Accounts.ToListAsync();
+        IEnumerable<AccountResponse> accountsData = accounts.Select(x => new AccountResponse(x));
+        accountsData = query.PrepareData(accountsData);
+        return RequestResult.Ok(accountsData);
+    }
+    
+    public async Task<RequestResult> GetAccount(long id)
     {
         Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
         if (account is null)

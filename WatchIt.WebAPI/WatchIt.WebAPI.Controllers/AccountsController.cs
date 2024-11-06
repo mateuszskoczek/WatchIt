@@ -94,11 +94,16 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     
     #region Info
     
-    [HttpGet("{id}/info")]
+    [HttpGet]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<AccountResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult> GetAccounts(AccountQueryParameters query) => await accountsControllerService.GetAccounts(query);
+    
+    [HttpGet("{id}")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetAccountInfo([FromRoute]long id) => await accountsControllerService.GetAccountInfo(id);
+    public async Task<ActionResult> GetAccount([FromRoute]long id) => await accountsControllerService.GetAccount(id);
     
     [HttpPut("profile_info")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

@@ -91,7 +91,7 @@ public partial class UserPage : ComponentBase
             Id = user.Id;
         }
         
-        await AccountsClientService.GetAccountInfo(Id.Value, data => _accountData = data);
+        await AccountsClientService.GetAccount(Id.Value, data => _accountData = data);
         _owner = Id.Value == user?.Id;
     }
     

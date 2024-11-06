@@ -13,7 +13,8 @@ public class Accounts
     public string GetAccountProfileBackground { get; set; }
     public string PutAccountProfileBackground { get; set; }
     public string DeleteAccountProfileBackground { get; set; }
-    public string GetAccountInfo { get; set; }
+    public string GetAccounts { get; set; }
+    public string GetAccount { get; set; }
     public string PutAccountProfileInfo { get; set; }
     public string PatchAccountUsername { get; set; }
     public string PatchAccountEmail { get; set; }
