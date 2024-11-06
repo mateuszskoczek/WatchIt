@@ -238,7 +238,7 @@ public class AccountsControllerService(
     
     #region Info
     
-    public async Task<RequestResult> GetAccountInfo(long id)
+    public async Task<RequestResult> GetAccount(long id)
     {
         Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
         if (account is null)

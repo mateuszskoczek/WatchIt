@@ -91,7 +91,7 @@ public partial class MainLayout : LayoutComponentBase
 
             if (_user is not null)
             {
-                await AccountsClientService.GetAccountInfo(_user.Id, data => _accountData = data);
+                await AccountsClientService.GetAccount(_user.Id, data => _accountData = data);
             }
             
             _loaded = true;

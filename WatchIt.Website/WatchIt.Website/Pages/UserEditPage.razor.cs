@@ -58,7 +58,7 @@ public partial class UserEditPage : ComponentBase
             
             await Task.WhenAll(
             [
-                AccountsClientService.GetAccountInfo(user.Id, data => _accountData = data),
+                AccountsClientService.GetAccount(user.Id, data => _accountData = data),
                 AccountsClientService.GetAccountProfileBackground(user.Id, data => Layout.BackgroundPhoto = data)
             ]);
             StateHasChanged();

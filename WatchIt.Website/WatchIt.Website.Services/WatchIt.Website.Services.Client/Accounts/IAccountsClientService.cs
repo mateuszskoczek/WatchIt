@@ -18,7 +18,7 @@ public interface IAccountsClientService
     Task GetAccountProfileBackground(long id, Action<PhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null);
     Task PutAccountProfileBackground(AccountProfileBackgroundRequest data, Action<PhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
     Task DeleteAccountProfileBackground(Action? successAction = null, Action? unauthorizedAction = null);
-    Task GetAccountInfo(long id, Action<AccountResponse>? successAction = null, Action? notFoundAction = null);
+    Task GetAccount(long id, Action<AccountResponse>? successAction = null, Action? notFoundAction = null);
     Task PutAccountProfileInfo(AccountProfileInfoRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
     Task PatchAccountUsername(AccountUsernameRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
     Task PatchAccountEmail(AccountEmailRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
