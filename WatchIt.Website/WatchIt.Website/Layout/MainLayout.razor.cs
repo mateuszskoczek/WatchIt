@@ -121,7 +121,7 @@ public partial class MainLayout : LayoutComponentBase
         if (!string.IsNullOrWhiteSpace(_searchbarText))
         {
             string query = WebUtility.UrlEncode(_searchbarText);
-            NavigationManager.NavigateTo($"/search/{query}");
+            NavigationManager.NavigateTo($"/search/{query}", true);
         }
     }
     
