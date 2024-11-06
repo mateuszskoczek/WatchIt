@@ -46,6 +46,7 @@ public static class Program
 
             while (!dbContext.Database.CanConnect())
             {
+                app.Logger.LogInformation("Waiting for database...");
                 Thread.Sleep(1000);
             }
             

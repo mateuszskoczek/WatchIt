@@ -1,5 +1,9 @@
 /* DEFAULT */
 
+.mt-header {
+    margin-top: 9rem !important;
+}
+
 .mt-default {
     margin-top: 1rem !important;
 }

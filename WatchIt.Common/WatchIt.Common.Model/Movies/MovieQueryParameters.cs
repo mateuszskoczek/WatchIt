@@ -60,6 +60,9 @@ public class MovieQueryParameters : QueryParameters<MovieResponse>
 
     [FromQuery(Name = "rating_count_to")]
     public long? RatingCountTo { get; set; }
+    
+    [FromQuery(Name = "genre")]
+    public IEnumerable<short>? Genres { get; set; }
 
     #endregion
     
@@ -84,6 +87,8 @@ public class MovieQueryParameters : QueryParameters<MovieResponse>
         TestComparable(item.Rating.Average, RatingAverage, RatingAverageFrom, RatingAverageTo)
         &&
         TestComparable(item.Rating.Count, RatingCount, RatingCountFrom, RatingCountTo)
+        &&
+        TestContains(item.Genres.Select(x => x.Id), Genres)
     );
 
     #endregion

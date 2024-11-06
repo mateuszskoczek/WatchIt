@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Rating;
-using WatchIt.Website.Services.Utility.Authentication;
-using WatchIt.Website.Services.WebAPI.Persons;
+using WatchIt.Website.Services.Authentication;
+using WatchIt.Website.Services.Client.Persons;
 
 namespace WatchIt.Website.Components.Pages.PersonPage.Panels;
 
@@ -10,7 +10,7 @@ public partial class PersonRatingPanel : ComponentBase
     #region SERVICES
 
     [Inject] private IAuthenticationService AuthenticationService { get; set; } = default!;
-    [Inject] private IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
+    [Inject] private IPersonsClientService PersonsClientService { get; set; } = default!;
     
     #endregion
     
@@ -83,13 +83,13 @@ public partial class PersonRatingPanel : ComponentBase
         }
     }
 
-    protected async Task UpdateGlobalRating() => await PersonsWebAPIService.GetPersonGlobalRating(Id, data => Rating = data);
+    protected async Task UpdateGlobalRating() => await PersonsClientService.GetPersonGlobalRating(Id, data => Rating = data);
 
     protected async Task UpdateUserRating()
     {
         if (_user is not null)
         {
-            await PersonsWebAPIService.GetPersonUserRating(Id, _user.Id, data => _userRating = data);
+            await PersonsClientService.GetPersonUserRating(Id, _user.Id, data => _userRating = data);
         }
     }
 

@@ -30,7 +30,7 @@ public class RegisterResponse
     public RegisterResponse() {}
     
     [SetsRequiredMembers]
-    public RegisterResponse(Account account)
+    public RegisterResponse(Database.Model.Account.Account account)
     {
         Id = account.Id;
         Username = account.Username;

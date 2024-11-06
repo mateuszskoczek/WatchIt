@@ -10,17 +10,17 @@
                            TQuery="ActorRoleMediaQueryParameters"
                            TRoleParent="PersonResponse"
                            Id="@(Id)"
-                           GetRolesAction="@(MediaWebAPIService.GetMediaAllActorRoles)"
+                           GetRolesAction="@(MediaClientService.GetMediaAllActorRoles)"
                            NameSource="@((_, parent) => parent.Name)"
                            AdditionalInfoSource="@((item, _) => $" as {item.Name}")"
-                           GetRoleParentMethod="@((id, action) => PersonsWebAPIService.GetPerson(id, action))"
+                           GetRoleParentMethod="@((id, action) => PersonsClientService.GetPerson(id, action))"
                            ParentItemIdSource="@(item => item.PersonId)"
                            ParentUrlTemplate="/person/{0}"
                            PosterPlaceholder="/assets/person_poster.png"
-                           PosterDownloadingTask="@((id, action) => PersonsWebAPIService.GetPersonPhoto(id, action))"
-                           GetGlobalRatingMethod="@((id, action) => RolesWebAPIService.GetActorRoleRating(id, action))"
-                           GetUserRatingMethod="@((id, userId, actionSuccess, actionNotFound) => RolesWebAPIService.GetActorRoleRatingByUser(id, userId, actionSuccess, actionNotFound))"
-                           PutRatingMethod="@((id, request) => RolesWebAPIService.PutActorRoleRating(id, request))"
-                           DeleteRatingMethod="@(id => RolesWebAPIService.DeleteActorRoleRating(id))"/>
+                           PosterDownloadingTask="@((id, action) => PersonsClientService.GetPersonPhoto(id, action))"
+                           GetGlobalRatingMethod="@((id, action) => RolesClientService.GetActorRoleRating(id, action))"
+                           GetUserRatingMethod="@((id, userId, actionSuccess, actionNotFound) => RolesClientService.GetActorRoleRatingByUser(id, userId, actionSuccess, actionNotFound))"
+                           PutRatingMethod="@((id, request) => RolesClientService.PutActorRoleRating(id, request))"
+                           DeleteRatingMethod="@(id => RolesClientService.DeleteActorRoleRating(id))"/>
     </div>
 </div>

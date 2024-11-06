@@ -2,11 +2,12 @@ using System.Net;
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Photos;
-using WatchIt.Website.Services.Utility.Authentication;
-using WatchIt.Website.Services.Utility.Tokens;
-using WatchIt.Website.Services.WebAPI.Accounts;
-using WatchIt.Website.Services.WebAPI.Media;
-using WatchIt.Website.Services.WebAPI.Photos;
+using WatchIt.Website.Components.Common.Subcomponents;
+using WatchIt.Website.Services.Authentication;
+using WatchIt.Website.Services.Tokens;
+using WatchIt.Website.Services.Client.Accounts;
+using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Photos;
 
 namespace WatchIt.Website.Layout;
 
@@ -18,9 +19,9 @@ public partial class MainLayout : LayoutComponentBase
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
     [Inject] public ITokensService TokensService { get; set; } = default!;
     [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
-    [Inject] public IAccountsWebAPIService AccountsWebAPIService { get; set; } = default!;
-    [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
-    [Inject] public IPhotosWebAPIService PhotosWebAPIService { get; set; } = default!;
+    [Inject] public IMediaClientService MediaClientService { get; set; } = default!;
+    [Inject] public IPhotosClientService PhotosClientService { get; set; } = default!;
+    [Inject] public IAccountsClientService AccountsClientService { get; set; } = default!;
     
     #endregion
     
@@ -28,11 +29,13 @@ public partial class MainLayout : LayoutComponentBase
     
     #region FIELDS
 
+    private AccountPictureComponent? _profilePicture;
+
     private bool _loaded;
     
     private User? _user;
+    private AccountResponse? _accountData;
     private PhotoResponse? _defaultBackgroundPhoto;
-    private AccountProfilePictureResponse? _userProfilePicture;
     
     private bool _searchbarVisible;
     private string _searchbarText = string.Empty;
@@ -55,6 +58,20 @@ public partial class MainLayout : LayoutComponentBase
     }
     
     #endregion
+
+
+
+    #region PUBLIC METHODS
+
+    public async Task ReloadProfilePicture()
+    {
+        if (_profilePicture is not null)
+        {
+            await _profilePicture.Reload();
+        }
+    }
+
+    #endregion
     
     
     
@@ -66,31 +83,16 @@ public partial class MainLayout : LayoutComponentBase
     {
         if (firstRender)
         {
-            List<Task> endTasks = new List<Task>();
-            List<Task> step1Tasks = new List<Task>();
-            
-            // STEP 0
-            step1Tasks.AddRange(
+            await Task.WhenAll(
             [
-                Task.Run(async () => _user = await AuthenticationService.GetUserAsync())
+                Task.Run(async () => _user = await AuthenticationService.GetUserAsync()),
+                PhotosClientService.GetPhotoRandomBackground(data => _defaultBackgroundPhoto = data)
             ]);
-            endTasks.AddRange(
-            [
-                PhotosWebAPIService.GetPhotoRandomBackground(data => _defaultBackgroundPhoto = data)
-            ]);
-            
-            // STEP 1
-            await Task.WhenAll(step1Tasks);
+
             if (_user is not null)
             {
-                endTasks.AddRange(
-                [
-                    AccountsWebAPIService.GetAccountProfilePicture(_user.Id, data => _userProfilePicture = data)
-                ]);
+                await AccountsClientService.GetAccount(_user.Id, data => _accountData = data);
             }
-            
-            // END
-            await Task.WhenAll(endTasks);
             
             _loaded = true;
             StateHasChanged();
@@ -119,7 +121,7 @@ public partial class MainLayout : LayoutComponentBase
         if (!string.IsNullOrWhiteSpace(_searchbarText))
         {
             string query = WebUtility.UrlEncode(_searchbarText);
-            NavigationManager.NavigateTo($"/search/{query}");
+            NavigationManager.NavigateTo($"/search/{query}", true);
         }
     }
     

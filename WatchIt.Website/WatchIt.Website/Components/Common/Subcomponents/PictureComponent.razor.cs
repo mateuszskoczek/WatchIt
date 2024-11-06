@@ -14,6 +14,8 @@ public partial class PictureComponent : ComponentBase
     [Parameter] public string Class { get; set; } = string.Empty;
     [Parameter] public int? Height { get; set; }
     [Parameter] public int? Width { get; set; }
+    [Parameter] public bool Circle { get; set; }
+    [Parameter] public bool Shadow { get; set; } = true;
 
     #endregion
     
@@ -39,6 +41,11 @@ public partial class PictureComponent : ComponentBase
         else if (Width.HasValue)
         {
             _attributes.Add("width", Width.Value);
+        }
+        
+        if (Circle)
+        {
+            AspectRatio = PictureComponentAspectRatio.Square;
         }
     }
 
@@ -71,6 +78,7 @@ public partial class PictureComponent : ComponentBase
         
         public static readonly PictureComponentAspectRatio Default = new PictureComponentAspectRatio();
         public static readonly PictureComponentAspectRatio Photo = new PictureComponentAspectRatio(16, 9);
+        public static readonly PictureComponentAspectRatio Square = new PictureComponentAspectRatio(1, 1);
         
         #endregion
         

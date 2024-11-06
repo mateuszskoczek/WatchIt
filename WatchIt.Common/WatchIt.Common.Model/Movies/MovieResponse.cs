@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Query;
 using WatchIt.Database.Model.Media;
@@ -30,6 +31,9 @@ public class MovieResponse : Movie, IQueryOrderable<MovieResponse>
     
     [JsonPropertyName("rating")]
     public RatingResponse Rating { get; set; }
+    
+    [JsonPropertyName("genres")]
+    public IEnumerable<GenreResponse> Genres { get; set; }
 
     #endregion
     
@@ -50,7 +54,10 @@ public class MovieResponse : Movie, IQueryOrderable<MovieResponse>
         ReleaseDate = mediaMovie.Media.ReleaseDate;
         Length = mediaMovie.Media.Length;
         Budget = mediaMovie.Budget;
-        Rating = RatingResponse.Create(mediaMovie.Media.RatingMedia);
+        Rating = RatingResponseBuilder.Initialize()
+                                      .Add(mediaMovie.Media.RatingMedia, x => x.Rating)
+                                      .Build();
+        Genres = mediaMovie.Media.Genres.Select(x => new GenreResponse(x)).ToList();
     }
 
     #endregion

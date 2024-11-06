@@ -7,10 +7,10 @@ using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Model.Series;
 using WatchIt.Website.Layout;
-using WatchIt.Website.Services.Utility.Authentication;
-using WatchIt.Website.Services.WebAPI.Media;
-using WatchIt.Website.Services.WebAPI.Movies;
-using WatchIt.Website.Services.WebAPI.Series;
+using WatchIt.Website.Services.Authentication;
+using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Movies;
+using WatchIt.Website.Services.Client.Series;
 
 namespace WatchIt.Website.Pages;
 
@@ -20,9 +20,9 @@ public partial class MediaPage : ComponentBase
 
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
     [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
-    [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
-    [Inject] public IMoviesWebAPIService MoviesWebAPIService { get; set; } = default!;
-    [Inject] public ISeriesWebAPIService SeriesWebAPIService { get; set; } = default!;
+    [Inject] public IMediaClientService MediaClientService { get; set; } = default!;
+    [Inject] public IMoviesClientService MoviesClientService { get; set; } = default!;
+    [Inject] public ISeriesClientService SeriesClientService { get; set; } = default!;
     
     #endregion
     
@@ -74,7 +74,7 @@ public partial class MediaPage : ComponentBase
             // STEP 0
             step1Tasks.AddRange(
             [
-                MediaWebAPIService.GetMedia(Id, data => _media = data, () => _error = $"Media with id {Id} was not found")
+                MediaClientService.GetMedia(Id, data => _media = data, () => _error = $"Media with id {Id} was not found")
             ]);
             
             // STEP 1
@@ -88,11 +88,11 @@ public partial class MediaPage : ComponentBase
                 
                 endTasks.AddRange(
                 [
-                    MediaWebAPIService.PostMediaView(Id),
-                    MediaWebAPIService.GetMediaPhotoRandomBackground(Id, data => Layout.BackgroundPhoto = data),
-                    MediaWebAPIService.GetMediaGenres(Id, data => _genres = data),
-                    MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data),
-                    _media.Type == MediaType.Movie ? MoviesWebAPIService.GetMovie(Id, data => _movie = data) : SeriesWebAPIService.GetSeries(Id, data => _series = data),
+                    MediaClientService.PostMediaView(Id),
+                    MediaClientService.GetMediaPhotoRandomBackground(Id, data => Layout.BackgroundPhoto = data),
+                    MediaClientService.GetMediaGenres(Id, data => _genres = data),
+                    MediaClientService.GetMediaRating(Id, data => _globalRating = data),
+                    _media.Type == MediaType.Movie ? MoviesClientService.GetMovie(Id, data => _movie = data) : SeriesClientService.GetSeries(Id, data => _series = data),
                 ]);
             }
             
@@ -102,7 +102,7 @@ public partial class MediaPage : ComponentBase
             {
                 endTasks.AddRange(
                 [
-                    MediaWebAPIService.GetMediaRatingByUser(Id, _user.Id, data => _userRating = data)
+                    MediaClientService.GetMediaRatingByUser(Id, _user.Id, data => _userRating = data)
                 ]);
             }
             
@@ -118,15 +118,15 @@ public partial class MediaPage : ComponentBase
     {
         if (_userRating == rating)
         {
-            await MediaWebAPIService.DeleteMediaRating(Id);
+            await MediaClientService.DeleteMediaRating(Id);
             _userRating = null;
         }
         else
         {
-            await MediaWebAPIService.PutMediaRating(Id, new RatingRequest(rating));
+            await MediaClientService.PutMediaRating(Id, new RatingRequest(rating));
             _userRating = rating;
         }
-        await MediaWebAPIService.GetMediaRating(Id, data => _globalRating = data);
+        await MediaClientService.GetMediaRating(Id, data => _globalRating = data);
     }
 
     #endregion

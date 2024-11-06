@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model;
 using WatchIt.Common.Model.Rating;
-using WatchIt.Website.Services.Utility.Authentication;
+using WatchIt.Website.Services.Authentication;
 
 namespace WatchIt.Website.Components.Common.Subcomponents;
 
@@ -27,6 +27,9 @@ public partial class ListItemComponent : ComponentBase
     [Parameter] public required Func<Action<Picture>, Task> PosterDownloadingTask { get; set; }
     
     [Parameter] public RatingResponse? GlobalRating { get; set; }
+    [Parameter] public short? SecondaryRatingSingle { get; set; }
+    [Parameter] public RatingResponse? SecondaryRatingMultiple { get; set; }
+    [Parameter] public string? SecondaryRatingTitle { get; set; }
     [Parameter] public required Func<Action<RatingResponse>, Task> GetGlobalRatingMethod { get; set; }
     [Parameter] public Func<long, Action<short>, Action, Task>? GetUserRatingMethod { get; set; }
     [Parameter] public Func<RatingRequest, Task>? PutRatingMethod { get; set; }

@@ -32,5 +32,9 @@ public class RatingPersonActorRoleConfiguration : IEntityTypeConfiguration<Ratin
 
         builder.Property(x => x.Rating)
                .IsRequired();
+        
+        builder.Property(x => x.Date)
+               .IsRequired()
+               .HasDefaultValueSql("now()");
     }
 }

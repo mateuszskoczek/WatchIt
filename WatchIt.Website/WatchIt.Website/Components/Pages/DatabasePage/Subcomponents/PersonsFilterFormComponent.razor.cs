@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Genders;
 using WatchIt.Common.Model.Persons;
-using WatchIt.Website.Services.WebAPI.Genders;
+using WatchIt.Website.Components.Common.ListComponent;
+using WatchIt.Website.Services.Client.Genders;
 
 namespace WatchIt.Website.Components.Pages.DatabasePage.Subcomponents;
 
@@ -9,7 +10,7 @@ public partial class PersonsFilterFormComponent : FilterFormComponent<PersonResp
 {
     #region SERVICES
 
-    [Inject] private IGendersWebAPIService GendersWebAPIService { get; set; } = default!;
+    [Inject] private IGendersClientService GendersClientService { get; set; } = default!;
 
     #endregion
     
@@ -34,7 +35,7 @@ public partial class PersonsFilterFormComponent : FilterFormComponent<PersonResp
             // STEP 0
             endTasks.AddRange(
             [
-                GendersWebAPIService.GetAllGenders(successAction: data => _genders = data)
+                GendersClientService.GetAllGenders(successAction: data => _genders = data)
             ]);
             
             // END

@@ -26,7 +26,7 @@
                                                   Subname="@(_person.FullName)"
                                                   Description="@(_person.Description)"
                                                   PosterPlaceholder="/assets/person_poster.png"
-                                                  GetPosterMethod="@(action => PersonsWebAPIService.GetPersonPhoto(_person.Id, action))"/>
+                                                  GetPosterMethod="@(action => PersonsClientService.GetPersonPhoto(_person.Id, action))"/>
                 </div>
             </div>
             <div class="row mt-default gx-default">
@@ -44,7 +44,7 @@
                     <Tabs Pills
                           RenderMode="TabsRenderMode.LazyLoad"
                           SelectedTab="actor"
-                          Class="panel panel-menu panel-background-menu">
+                          Class="panel panel-menu panel-background-menu justify-content-center">
                         <Items>
                             <Tab Name="actor">Actor</Tab>
                             <Tab Name="creator">Creator</Tab>

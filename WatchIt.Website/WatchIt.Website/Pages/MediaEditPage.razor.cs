@@ -7,12 +7,12 @@ using WatchIt.Common.Model.Persons;
 using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Series;
 using WatchIt.Website.Layout;
-using WatchIt.Website.Services.Utility.Authentication;
-using WatchIt.Website.Services.WebAPI.Media;
-using WatchIt.Website.Services.WebAPI.Movies;
-using WatchIt.Website.Services.WebAPI.Persons;
-using WatchIt.Website.Services.WebAPI.Photos;
-using WatchIt.Website.Services.WebAPI.Series;
+using WatchIt.Website.Services.Authentication;
+using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Movies;
+using WatchIt.Website.Services.Client.Persons;
+using WatchIt.Website.Services.Client.Photos;
+using WatchIt.Website.Services.Client.Series;
 
 namespace WatchIt.Website.Pages;
 
@@ -22,11 +22,11 @@ public partial class MediaEditPage : ComponentBase
 
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
     [Inject] public IAuthenticationService AuthenticationService { get; set; } = default!;
-    [Inject] public IMediaWebAPIService MediaWebAPIService { get; set; } = default!;
-    [Inject] public IMoviesWebAPIService MoviesWebAPIService { get; set; } = default!;
-    [Inject] public ISeriesWebAPIService SeriesWebAPIService { get; set; } = default!;
-    [Inject] public IPhotosWebAPIService PhotosWebAPIService { get; set; } = default!;
-    [Inject] public IPersonsWebAPIService PersonsWebAPIService { get; set; } = default!;
+    [Inject] public IMediaClientService MediaClientService { get; set; } = default!;
+    [Inject] public IMoviesClientService MoviesClientService { get; set; } = default!;
+    [Inject] public ISeriesClientService SeriesClientService { get; set; } = default!;
+    [Inject] public IPhotosClientService PhotosClientService { get; set; } = default!;
+    [Inject] public IPersonsClientService PersonsClientService { get; set; } = default!;
     
     #endregion
     
@@ -114,7 +114,7 @@ public partial class MediaEditPage : ComponentBase
                 ]);
                 endTasks.AddRange(
                 [
-                    PersonsWebAPIService.GetAllPersons(successAction: data => _persons = data.ToDictionary(x => x.Id, x => x))
+                    PersonsClientService.GetAllPersons(successAction: data => _persons = data.ToDictionary(x => x.Id, x => x))
                 ]);
             }
             
@@ -124,13 +124,13 @@ public partial class MediaEditPage : ComponentBase
             {
                 endTasks.AddRange(
                 [
-                    MediaWebAPIService.GetMediaPhotoRandomBackground(Id.Value, data => Layout.BackgroundPhoto = data),
-                    MediaWebAPIService.GetMediaPoster(Id.Value, data =>
+                    MediaClientService.GetMediaPhotoRandomBackground(Id.Value, data => Layout.BackgroundPhoto = data),
+                    MediaClientService.GetMediaPoster(Id.Value, data =>
                     {
                         _mediaPosterSaved = data;
                         _mediaPosterRequest = new MediaPosterRequest(data);
                     }),
-                    MediaWebAPIService.GetMediaPhotos(Id.Value, successAction: data => _photos = data)
+                    MediaClientService.GetMediaPhotos(Id.Value, successAction: data => _photos = data)
                 ]);
             }
 
@@ -145,14 +145,14 @@ public partial class MediaEditPage : ComponentBase
     {
         if (Id.HasValue)
         {
-            await MediaWebAPIService.GetMedia(Id.Value, data => _media = data, () => NavigationManager.NavigateTo("/media/new/movie"));
+            await MediaClientService.GetMedia(Id.Value, data => _media = data, () => NavigationManager.NavigateTo("/media/new/movie"));
             if (_media.Type == MediaType.Movie)
             {
-                await MoviesWebAPIService.GetMovie(Id.Value, data => _movieRequest = new MovieRequest(data));
+                await MoviesClientService.GetMovie(Id.Value, data => _movieRequest = new MovieRequest(data));
             }
             else
             {
-                await SeriesWebAPIService.GetSeries(Id.Value, data => _seriesRequest = new SeriesRequest(data));
+                await SeriesClientService.GetSeries(Id.Value, data => _seriesRequest = new SeriesRequest(data));
             }
         }
         else
@@ -210,7 +210,7 @@ public partial class MediaEditPage : ComponentBase
         }
         
         _mediaPosterSaving = true;
-        await MediaWebAPIService.PutMediaPoster(Id.Value, _mediaPosterRequest, Success);
+        await MediaClientService.PutMediaPoster(Id.Value, _mediaPosterRequest, Success);
     }
 
     private void CancelPoster()
@@ -230,7 +230,7 @@ public partial class MediaEditPage : ComponentBase
         }
         
         _mediaPosterDeleting = true;
-        await MediaWebAPIService.DeleteMediaPoster(Id.Value, Success);
+        await MediaClientService.DeleteMediaPoster(Id.Value, Success);
     }
     
     #endregion
@@ -259,22 +259,22 @@ public partial class MediaEditPage : ComponentBase
         {
             if (_movieRequest is not null)
             {
-                await MoviesWebAPIService.PostMovie(_movieRequest, data => SuccessPost(data.Id), BadRequest);
+                await MoviesClientService.PostMovie(_movieRequest, data => SuccessPost(data.Id), BadRequest);
             }
             else
             {
-                await SeriesWebAPIService.PostSeries(_seriesRequest, data => SuccessPost(data.Id), BadRequest);
+                await SeriesClientService.PostSeries(_seriesRequest, data => SuccessPost(data.Id), BadRequest);
             }
         }
         else
         {
             if (_movieRequest is not null)
             {
-                await MoviesWebAPIService.PutMovie(Id.Value, _movieRequest, () => _basicDataSaving = false, BadRequest);
+                await MoviesClientService.PutMovie(Id.Value, _movieRequest, () => _basicDataSaving = false, BadRequest);
             }
             else
             {
-                await SeriesWebAPIService.PutSeries(Id.Value, _seriesRequest, () => _basicDataSaving = false, BadRequest);
+                await SeriesClientService.PutSeries(Id.Value, _seriesRequest, () => _basicDataSaving = false, BadRequest);
             }
         }
     }
@@ -291,7 +291,7 @@ public partial class MediaEditPage : ComponentBase
         }
         
         _photoDeleting.Add(id);
-        await PhotosWebAPIService.DeletePhoto(id, async () => await Success());
+        await PhotosClientService.DeletePhoto(id, async () => await Success());
     }
 
     private void InitEditPhoto(Guid? id)
@@ -345,17 +345,17 @@ public partial class MediaEditPage : ComponentBase
         if (_photoEditId is null)
         {
             _photoEditRequest.Background = _photoEditIsBackground ? _photoEditBackgroundData : null;
-            await MediaWebAPIService.PostMediaPhoto(Id.Value, _photoEditRequest, Success, BadRequest);
+            await MediaClientService.PostMediaPhoto(Id.Value, _photoEditRequest, Success, BadRequest);
         }
         else
         {
             if (_photoEditIsBackground)
             {
-                await PhotosWebAPIService.PutPhotoBackgroundData(_photoEditId.Value, _photoEditBackgroundData, Success, BadRequest);
+                await PhotosClientService.PutPhotoBackgroundData(_photoEditId.Value, _photoEditBackgroundData, Success, BadRequest);
             }
             else
             {
-                await PhotosWebAPIService.DeletePhotoBackgroundData(_photoEditId.Value, Success);
+                await PhotosClientService.DeletePhotoBackgroundData(_photoEditId.Value, Success);
             }
         }
     }

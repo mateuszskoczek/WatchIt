@@ -3,6 +3,7 @@
 @using WatchIt.Common.Model.Series
 @using WatchIt.Website.Components.Pages.DatabasePage
 @using WatchIt.Website.Components.Pages.DatabasePage.Subcomponents
+@using WatchIt.Website.Components.Common.ListComponent
 
 @page "/database/{type?}"
 
@@ -30,78 +31,78 @@
 @switch (Type)
 {
     case "movies":
-        <DatabasePageComponent TItem="MovieResponse"
-                               TQuery="MovieQueryParameters"
-                               Title="Movies database"
-                               IdSource="@(item => item.Id)"
-                               NameSource="@(item => item.Title)"
-                               AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
-                               RatingSource="@(item => item.Rating)"
-                               UrlIdTemplate="/media/{0}"
-                               PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
-                               ItemDownloadingTask="@(MoviesWebAPIService.GetAllMovies)"
-                               SortingOptions="@(new Dictionary<string, string>
-                               {
-                                   { "rating.count", "Number of ratings" },
-                                   { "rating.average", "Average rating" },
-                                   { "title", "Title" },
-                                   { "release_date", "Release date" },
-                               })"
-                               PosterPlaceholder="/assets/media_poster.png"
-                               GetGlobalRatingMethod="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"
-                               GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaWebAPIService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
-                               PutRatingMethod="@((id, request) => MediaWebAPIService.PutMediaRating(id, request))"
-                               DeleteRatingMethod="@(id => MediaWebAPIService.DeleteMediaRating(id))">
+        <ListComponent TItem="MovieResponse"
+                       TQuery="MovieQueryParameters"
+                       Title="Movies database"
+                       IdSource="@(item => item.Id)"
+                       NameSource="@(item => item.Title)"
+                       AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                       RatingSource="@(item => item.Rating)"
+                       UrlIdTemplate="/media/{0}"
+                       PictureDownloadingTask="@((id, action) => MediaClientService.GetMediaPoster(id, action))"
+                       ItemDownloadingTask="@(MoviesClientService.GetAllMovies)"
+                       SortingOptions="@(new Dictionary<string, string>
+                       {
+                           { "rating.count", "Number of ratings" },
+                           { "rating.average", "Average rating" },
+                           { "title", "Title" },
+                           { "release_date", "Release date" },
+                       })"
+                       PosterPlaceholder="/assets/media_poster.png"
+                       GetGlobalRatingMethod="@((id, action) => MediaClientService.GetMediaRating(id, action))"
+                       GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaClientService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
+                       PutRatingMethod="@((id, request) => MediaClientService.PutMediaRating(id, request))"
+                       DeleteRatingMethod="@(id => MediaClientService.DeleteMediaRating(id))">
             <MoviesFilterFormComponent/>
-        </DatabasePageComponent>
+        </ListComponent>
         break;
     case "series":
-        <DatabasePageComponent TItem="SeriesResponse"
-                               TQuery="SeriesQueryParameters"
-                               Title="TV series database"
-                               IdSource="@(item => item.Id)"
-                               NameSource="@(item => item.Title)"
-                               AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
-                               RatingSource="@(item => item.Rating)"
-                               UrlIdTemplate="/media/{0}"
-                               PictureDownloadingTask="@((id, action) => MediaWebAPIService.GetMediaPoster(id, action))"
-                               ItemDownloadingTask="@(SeriesWebAPIService.GetAllSeries)"
-                               SortingOptions="@(new Dictionary<string, string>
-                               {
-                                   { "rating.count", "Number of ratings" },
-                                   { "rating.average", "Average rating" },
-                                   { "title", "Title" },
-                                   { "release_date", "Release date" },
-                               })"
-                               PosterPlaceholder="/assets/media_poster.png"
-                               GetGlobalRatingMethod="@((id, action) => MediaWebAPIService.GetMediaRating(id, action))"
-                               GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaWebAPIService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
-                               PutRatingMethod="@((id, request) => MediaWebAPIService.PutMediaRating(id, request))"
-                               DeleteRatingMethod="@(id => MediaWebAPIService.DeleteMediaRating(id))">
+        <ListComponent TItem="SeriesResponse"
+                       TQuery="SeriesQueryParameters"
+                       Title="TV series database"
+                       IdSource="@(item => item.Id)"
+                       NameSource="@(item => item.Title)"
+                       AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                       RatingSource="@(item => item.Rating)"
+                       UrlIdTemplate="/media/{0}"
+                       PictureDownloadingTask="@((id, action) => MediaClientService.GetMediaPoster(id, action))"
+                       ItemDownloadingTask="@(SeriesClientService.GetAllSeries)"
+                       SortingOptions="@(new Dictionary<string, string>
+                       {
+                           { "rating.count", "Number of ratings" },
+                           { "rating.average", "Average rating" },
+                           { "title", "Title" },
+                           { "release_date", "Release date" },
+                       })"
+                       PosterPlaceholder="/assets/media_poster.png"
+                       GetGlobalRatingMethod="@((id, action) => MediaClientService.GetMediaRating(id, action))"
+                       GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaClientService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
+                       PutRatingMethod="@((id, request) => MediaClientService.PutMediaRating(id, request))"
+                       DeleteRatingMethod="@(id => MediaClientService.DeleteMediaRating(id))">
             <SeriesFilterFormComponent/>
-        </DatabasePageComponent>
+        </ListComponent>
         break;
     case "people":
-        <DatabasePageComponent TItem="PersonResponse"
-                               TQuery="PersonQueryParameters"
-                               Title="People database"
-                               IdSource="@(item => item.Id)"
-                               NameSource="@(item => item.Name)"
-                               RatingSource="@(item => item.Rating)"
-                               UrlIdTemplate="/person/{0}"
-                               PictureDownloadingTask="@((id, action) => PersonsWebAPIService.GetPersonPhoto(id, action))"
-                               ItemDownloadingTask="@(PersonsWebAPIService.GetAllPersons)"
-                               SortingOptions="@(new Dictionary<string, string>
-                                               {
-                                                   { "rating.count", "Number of ratings" },
-                                                   { "rating.average", "Average rating" },
-                                                   { "name", "Name" },
-                                                   { "birth_date", "Birth date" },
-                                                   { "death_date", "Death date" },
-                                               })"
-                               PosterPlaceholder="/assets/person_poster.png"
-                               GetGlobalRatingMethod="@((id, action) => PersonsWebAPIService.GetPersonGlobalRating(id, action))">
+        <ListComponent TItem="PersonResponse"
+                       TQuery="PersonQueryParameters"
+                       Title="People database"
+                       IdSource="@(item => item.Id)"
+                       NameSource="@(item => item.Name)"
+                       RatingSource="@(item => item.Rating)"
+                       UrlIdTemplate="/person/{0}"
+                       PictureDownloadingTask="@((id, action) => PersonsClientService.GetPersonPhoto(id, action))"
+                       ItemDownloadingTask="@(PersonsClientService.GetAllPersons)"
+                       SortingOptions="@(new Dictionary<string, string>
+                                       {
+                                           { "rating.count", "Number of ratings" },
+                                           { "rating.average", "Average rating" },
+                                           { "name", "Name" },
+                                           { "birth_date", "Birth date" },
+                                           { "death_date", "Death date" },
+                                       })"
+                       PosterPlaceholder="/assets/person_poster.png"
+                       GetGlobalRatingMethod="@((id, action) => PersonsClientService.GetPersonGlobalRating(id, action))">
             <PersonsFilterFormComponent/>
-        </DatabasePageComponent>
+        </ListComponent>
         break;     
 }

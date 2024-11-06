@@ -54,6 +54,9 @@ public class MediaQueryParameters : QueryParameters<MediaResponse>
 
     [FromQuery(Name = "rating_count_to")]
     public long? RatingCountTo { get; set; }
+    
+    [FromQuery(Name = "genre")]
+    public IEnumerable<short>? Genres { get; set; }
 
     #endregion
     
@@ -78,6 +81,8 @@ public class MediaQueryParameters : QueryParameters<MediaResponse>
         TestComparable(item.Rating.Average, RatingAverage, RatingAverageFrom, RatingAverageTo)
         &&
         TestComparable(item.Rating.Count, RatingCount, RatingCountFrom, RatingCountTo)
+        &&
+        TestContains(Genres, item.Genres.Select(x => x.Id))
     );
 
     #endregion

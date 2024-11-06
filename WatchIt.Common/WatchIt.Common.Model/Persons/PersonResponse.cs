@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using WatchIt.Common.Model.Genders;
 using WatchIt.Common.Model.Rating;
 using WatchIt.Common.Query;
+using WatchIt.Database.Model.Rating;
 
 namespace WatchIt.Common.Model.Persons;
 
@@ -53,7 +54,10 @@ public class PersonResponse : Person, IQueryOrderable<PersonResponse>
         BirthDate = person.BirthDate;
         DeathDate = person.DeathDate;
         Gender = person.Gender is not null ? new GenderResponse(person.Gender) : null;
-        Rating = RatingResponse.Create(person.PersonActorRoles, person.PersonCreatorRoles);
+        Rating = RatingResponseBuilder.Initialize()
+                                      .Add(person.PersonActorRoles.SelectMany(x => x.RatingPersonActorRole), x => x.Rating)
+                                      .Add(person.PersonCreatorRoles.SelectMany(x => x.RatingPersonCreatorRole), x => x.Rating)
+                                      .Build();
     }
 
     #endregion

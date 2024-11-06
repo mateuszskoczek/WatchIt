@@ -1,0 +1,35 @@
+@typeparam TItem
+
+
+
+<div class="panel">
+    <div class="vstack gap-3">
+        <span class="panel-text-title">@(Title)</span>
+        @if (_loaded)
+        {
+            <div class="container-grid">
+                <div class="row">
+                    @for (int i = 0; i < Count; i++)
+                    {
+                        <div class="col">
+                            @if (_items.Count() > i)
+                            {
+                                <a class="text-reset text-decoration-none" href="@(string.Format(ItemUrlFormatString, IdSource(_items.ElementAt(i))))">
+                                    @{int iCopy = i;}
+                                    <HorizontalListItemComponent Place="@(HidePlace ? null : i + 1)"
+                                                                 Name="@(NameSource(_items.ElementAt(iCopy)))"
+                                                                 PosterPlaceholder="@(PosterPlaceholder)"
+                                                                 GetPosterAction="@(action => GetPictureAction(IdSource(_items.ElementAt(iCopy)), action))"/>
+                                </a>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <LoadingComponent Color="@(LoadingComponent.LoadingComponentColors.Light)"/>
+        }
+    </div>
+</div>

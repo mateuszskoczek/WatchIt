@@ -5,17 +5,17 @@ using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Components.Authorization;
 using WatchIt.Common.Services.HttpClient;
-using WatchIt.Website.Services.Utility.Authentication;
-using WatchIt.Website.Services.Utility.Configuration;
-using WatchIt.Website.Services.Utility.Tokens;
-using WatchIt.Website.Services.WebAPI.Accounts;
-using WatchIt.Website.Services.WebAPI.Genders;
-using WatchIt.Website.Services.WebAPI.Media;
-using WatchIt.Website.Services.WebAPI.Movies;
-using WatchIt.Website.Services.WebAPI.Persons;
-using WatchIt.Website.Services.WebAPI.Photos;
-using WatchIt.Website.Services.WebAPI.Roles;
-using WatchIt.Website.Services.WebAPI.Series;
+using WatchIt.Website.Services.Authentication;
+using WatchIt.Website.Services.Configuration;
+using WatchIt.Website.Services.Tokens;
+using WatchIt.Website.Services.Client.Accounts;
+using WatchIt.Website.Services.Client.Genders;
+using WatchIt.Website.Services.Client.Media;
+using WatchIt.Website.Services.Client.Movies;
+using WatchIt.Website.Services.Client.Persons;
+using WatchIt.Website.Services.Client.Photos;
+using WatchIt.Website.Services.Client.Roles;
+using WatchIt.Website.Services.Client.Series;
 
 namespace WatchIt.Website;
 
@@ -73,14 +73,14 @@ public static class Program
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         
         // WebAPI
-        builder.Services.AddScoped<IAccountsWebAPIService, AccountsWebAPIService>();
-        builder.Services.AddSingleton<IGendersWebAPIService, GendersWebAPIService>();
-        builder.Services.AddSingleton<IMediaWebAPIService, MediaWebAPIService>();
-        builder.Services.AddSingleton<IMoviesWebAPIService, MoviesWebAPIService>();
-        builder.Services.AddSingleton<ISeriesWebAPIService, SeriesWebAPIService>();
-        builder.Services.AddSingleton<IPhotosWebAPIService, PhotosWebAPIService>();
-        builder.Services.AddSingleton<IPersonsWebAPIService, PersonsWebAPIService>();
-        builder.Services.AddSingleton<IRolesWebAPIService, RolesWebAPIService>();
+        builder.Services.AddScoped<IAccountsClientService, AccountsClientService>();
+        builder.Services.AddSingleton<IGendersClientService, GendersClientService>();
+        builder.Services.AddSingleton<IMediaClientService, MediaClientService>();
+        builder.Services.AddSingleton<IMoviesClientService, MoviesClientService>();
+        builder.Services.AddSingleton<ISeriesClientService, SeriesClientService>();
+        builder.Services.AddSingleton<IPhotosClientService, PhotosClientService>();
+        builder.Services.AddSingleton<IPersonsClientService, PersonsClientService>();
+        builder.Services.AddSingleton<IRolesClientService, RolesClientService>();
         
         return builder;
     }

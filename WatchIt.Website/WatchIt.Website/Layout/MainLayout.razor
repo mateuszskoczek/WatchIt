@@ -1,6 +1,6 @@
 ﻿@using System.Net
 @using WatchIt.Common.Model.Photos
-@using WatchIt.Website.Services.WebAPI.Photos
+@using WatchIt.Website.Services.Client.Photos
 
 @inherits LayoutComponentBase
 
@@ -53,16 +53,19 @@
                                         else
                                         {
                                             <Dropdown RightAligned>
-                                                <Button Color="Color.Default">
+                                                <Button Color="Color.Default" Clicked="@(() => NavigationManager.NavigateTo("/user"))">
                                                     <div class="d-flex gap-2 align-items-center">
-                                                        <img class="rounded-circle" alt="avatar" height="30" src="@(_userProfilePicture is null ? "assets/user_placeholder.png" : _userProfilePicture.ToString())"/>
-                                                        <span>@(_user.Username)</span>
+                                                        <AccountPictureComponent @ref="_profilePicture" Id="@(_user.Id)" Size="30"/>
+                                                        <span>@(_accountData!.Username)</span>
                                                     </div>
                                                 </Button>
                                                 <DropdownToggle Color="Color.Default" Split />
-                                                <DropdownMenu >
+                                                <DropdownMenu>
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/user"))">Your profile</DropdownItem>
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/user/edit"))">User settings</DropdownItem>
                                                     @if (_user.IsAdmin)
                                                     {
+                                                        <DropdownDivider/>
                                                         <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/admin"))">Administrator panel</DropdownItem>
                                                     }
                                                     <DropdownDivider/>
@@ -77,7 +80,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row pt-3 pb-3">
                 <div class="col">
                     @Body
                 </div>
