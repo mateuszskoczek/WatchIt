@@ -7,7 +7,7 @@ public partial class HorizontalListItemComponent : ComponentBase
 {
     #region PARAMETERS
     
-    [Parameter] public required int Place { get; set; }
+    [Parameter] public int? Place { get; set; }
     [Parameter] public required string Name { get; set; }
     [Parameter] public required string PosterPlaceholder { get; set; }
     [Parameter] public required Func<Action<Picture>, Task> GetPosterAction { get; set; }

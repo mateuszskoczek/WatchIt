@@ -1,0 +1,46 @@
+<div class="panel">
+    <div class="vstack gap-3">
+        <h4 class="fw-bold">Change email</h4>
+        @if (_data is not null)
+        {
+            <EditForm Model="@(_data)">
+                <AntiforgeryToken/>
+                <div class="container-grid">
+                    <div class="row form-group my-1">
+                        <label for="email" class="col-2 col-form-label">New email</label>
+                        <div class="col-10">
+                            <InputText id="email" class="form-control" @bind-Value="_data!.NewEmail"/>
+                        </div>
+                    </div>
+                    <div class="row form-group my-1">
+                        <label for="password" class="col-2 col-form-label">Password</label>
+                        <div class="col-10">
+                            <InputText id="password" type="password" class="form-control" @bind-Value="_data!.Password"/>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col align-self-center">
+                            @if (!string.IsNullOrWhiteSpace(_error))
+                            {
+                                <span class="text-danger">@(_error)</span>
+                            }
+                            else if (_saved)
+                            {
+                                <span class="text-success">New email saved!</span>
+                            }
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-secondary" disabled="@(_saving)" @onclick="@(Save)">
+                                <LoadingButtonContentComponent IsLoading="@(_saving)" Content="Save" LoadingContent="Saving..."/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        }
+        else
+        {
+            <LoadingComponent Color="@(LoadingComponent.LoadingComponentColors.Light)"/>
+        }
+    </div>
+</div>

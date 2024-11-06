@@ -1,26 +1,26 @@
 <div id="base" class="vstack">
-    <AccountPictureComponent Class="shadow position-absolute z-1 start-50 translate-middle" Id="@(AccountData.Id)" Size="240"/>
+    <AccountPictureComponent Class="shadow position-absolute z-1 start-50 translate-middle" Id="@(AccountProfileInfoData.Id)" Size="240"/>
     <div class="panel z-0">
         <div class="vstack gap-3">
             <div id="space" class="container-grid"></div>
             <div class="d-flex justify-content-center">
-                <h3 class="fw-bold">@(AccountData.Username)</h3>
+                <h3 class="fw-bold m-0">@(AccountProfileInfoData.Username)</h3>
             </div>
-            @if (!string.IsNullOrWhiteSpace(AccountData.Description))
+            @if (!string.IsNullOrWhiteSpace(AccountProfileInfoData.Description))
             {
-                <span>
-                    @(AccountData.Description)
+                <span class="text-center w-100 mb-2">
+                    @(AccountProfileInfoData.Description)
                 </span>
             }
             <div class="d-flex flex-wrap justify-content-center metadata-pill-container">
-                <div class="metadata-pill"><strong>Email:</strong> @(AccountData.Email)</div>
-                @if (!string.IsNullOrWhiteSpace(AccountData.Gender?.Name))
+                <div class="metadata-pill"><strong>Email:</strong> @(AccountProfileInfoData.Email)</div>
+                @if (!string.IsNullOrWhiteSpace(AccountProfileInfoData.Gender?.Name))
                 {
-                    <div class="metadata-pill"><strong>Gender:</strong> @(AccountData.Gender?.Name)</div>
+                    <div class="metadata-pill"><strong>Gender:</strong> @(AccountProfileInfoData.Gender?.Name)</div>
                 }
-                <div class="metadata-pill"><strong>Account created:</strong> @(AccountData.CreationDate.ToShortDateString())</div>
-                <div class="metadata-pill"><strong>Last active:</strong> @(AccountData.LastActive.ToShortDateString())</div>
-                @if (AccountData.IsAdmin)
+                <div class="metadata-pill"><strong>Account created:</strong> @(AccountProfileInfoData.CreationDate.ToShortDateString())</div>
+                <div class="metadata-pill"><strong>Last active:</strong> @(AccountProfileInfoData.LastActive.ToShortDateString())</div>
+                @if (AccountProfileInfoData.IsAdmin)
                 {
                     <div class="metadata-pill"><strong>Admin</strong></div>
                 }

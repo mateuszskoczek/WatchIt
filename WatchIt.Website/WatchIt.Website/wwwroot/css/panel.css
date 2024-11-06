@@ -28,7 +28,7 @@
     gap: 1rem;
     padding: 1rem 1.5rem !important;
     
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .panel-menu > li > a {
@@ -48,6 +48,14 @@
 .panel-menu > li > a.active {
     --bs-nav-link-color: white;
     border-color: white;
+}
+
+
+
+/* SECTION HEADER */
+
+.panel-section-header {
+    padding: 0.75rem 1.5rem;
 }
 
 

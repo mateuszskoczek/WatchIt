@@ -1,0 +1,23 @@
+/* IDS */
+
+#scrollPhotos {
+    overflow-x: scroll;
+
+    border-color: grey;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 10px;
+}
+
+#backgroundIndicator {
+    height: 30px;
+    width: 30px;
+}
+
+
+
+/* CLASSES */
+
+.photo-container {
+    width: 350px;
+}

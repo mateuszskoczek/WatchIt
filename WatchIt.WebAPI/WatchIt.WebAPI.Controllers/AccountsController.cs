@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Movies;
 using WatchIt.Common.Model.Persons;
+using WatchIt.Common.Model.Photos;
 using WatchIt.Common.Model.Series;
 using WatchIt.WebAPI.Services.Controllers.Accounts;
 
@@ -14,6 +15,8 @@ namespace WatchIt.WebAPI.Controllers;
 [Route("accounts")]
 public class AccountsController(IAccountsControllerService accountsControllerService) : ControllerBase
 {
+    #region Basic
+    
     [HttpPost("register")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(RegisterResponse), StatusCodes.Status201Created)]
@@ -27,7 +30,7 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> Authenticate([FromBody]AuthenticateRequest body) => await accountsControllerService.Authenticate(body);
     
-    [HttpPost("authenticate-refresh")]
+    [HttpPost("authenticate_refresh")]
     [Authorize(AuthenticationSchemes = "refresh")]
     [ProducesResponseType(typeof(AuthenticateResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -39,12 +42,57 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     public async Task<ActionResult> Logout() => await accountsControllerService.Logout();
 
-    [HttpGet("{id}/profile-picture")]
+    #endregion
+    
+    #region Profile picture
+    
+    [HttpGet("{id}/profile_picture")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AccountProfilePictureResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetAccountProfilePicture([FromRoute(Name = "id")]long id) => await accountsControllerService.GetAccountProfilePicture(id);
+    
+    [HttpPut("profile_picture")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(AccountProfilePictureResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> PutAccountProfilePicture([FromBody]AccountProfilePictureRequest body) => await accountsControllerService.PutAccountProfilePicture(body);
+    
+    [HttpDelete("profile_picture")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> DeleteAccountProfilePicture() => await accountsControllerService.DeleteAccountProfilePicture();
+    
+    #endregion
+    
+    #region Profile background
+    
+    [HttpGet("{id}/profile_background")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(PhotoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetAccountProfileBackground([FromRoute(Name = "id")]long id) => await accountsControllerService.GetAccountProfileBackground(id);
+    
+    [HttpPut("profile_background")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(PhotoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> PutAccountProfileBackground([FromBody]AccountProfileBackgroundRequest body) => await accountsControllerService.PutAccountProfileBackground(body);
+    
+    [HttpDelete("profile_background")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> DeleteAccountProfileBackground() => await accountsControllerService.DeleteAccountProfileBackground();
+    
+    #endregion
+    
+    #region Info
     
     [HttpGet("{id}/info")]
     [AllowAnonymous]
@@ -52,12 +100,35 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetAccountInfo([FromRoute]long id) => await accountsControllerService.GetAccountInfo(id);
     
-    [HttpPut("info")]
+    [HttpPut("profile_info")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [ProducesResponseType(typeof(AccountResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PutAccountInfo([FromBody]AccountRequest data) => await accountsControllerService.PutAccountInfo(data);
+    public async Task<ActionResult> PutAccountProfileInfo([FromBody]AccountProfileInfoRequest data) => await accountsControllerService.PutAccountProfileInfo(data);
+    
+    [HttpPatch("username")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> PatchAccountUsername([FromBody]AccountUsernameRequest data) => await accountsControllerService.PatchAccountUsername(data);
+    
+    [HttpPatch("email")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> PatchAccountEmail([FromBody]AccountEmailRequest data) => await accountsControllerService.PatchAccountEmail(data);
+    
+    [HttpPatch("password")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> PatchAccountPassword([FromBody]AccountPasswordRequest data) => await accountsControllerService.PatchAccountPassword(data);
+    
+    #endregion
     
     [HttpGet("{id}/movies")]
     [AllowAnonymous]
