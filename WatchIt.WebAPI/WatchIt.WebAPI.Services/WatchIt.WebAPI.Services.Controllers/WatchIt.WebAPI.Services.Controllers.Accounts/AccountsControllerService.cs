@@ -37,18 +37,13 @@ public class AccountsControllerService(
     
     public async Task<RequestResult> Register(RegisterRequest data)
     {
-        string leftSalt = StringExtensions.CreateRandom(20);
-        string rightSalt = StringExtensions.CreateRandom(20);
-        byte[] hash = ComputeHash(data.Password, leftSalt, rightSalt);
-
         Account account = new Account
         {
             Username = data.Username,
             Email = data.Email,
-            Password = hash,
-            LeftSalt = leftSalt,
-            RightSalt = rightSalt,
         };
+        
+        SetPassword(account, data.Password);
         await database.Accounts.AddAsync(account);
         await database.SaveChangesAsync();
         
@@ -283,6 +278,36 @@ public class AccountsControllerService(
         
         return RequestResult.Ok();
     }
+
+    public async Task<RequestResult> PatchAccountEmail(AccountEmailRequest data)
+    {
+        Account account = await database.Accounts.FirstAsync(x => x.Id == userService.GetUserId());
+        
+        if (!ComputeHash(data.Password, account.LeftSalt, account.RightSalt).SequenceEqual(account.Password))
+        {
+            return RequestResult.Unauthorized();
+        }
+        
+        data.UpdateAccount(account);
+        await database.SaveChangesAsync();
+        
+        return RequestResult.Ok();
+    }
+
+    public async Task<RequestResult> PatchAccountPassword(AccountPasswordRequest data)
+    {
+        Account account = await database.Accounts.FirstAsync(x => x.Id == userService.GetUserId());
+        
+        if (!ComputeHash(data.OldPassword, account.LeftSalt, account.RightSalt).SequenceEqual(account.Password))
+        {
+            return RequestResult.Unauthorized();
+        }
+        
+        SetPassword(account, data.NewPassword);
+        await database.SaveChangesAsync();
+        
+        return RequestResult.Ok();
+    }
     
     #endregion
     
@@ -337,6 +362,17 @@ public class AccountsControllerService(
     #region PRIVATE METHODS
 
     protected byte[] ComputeHash(string password, string leftSalt, string rightSalt) => SHA512.HashData(Encoding.UTF8.GetBytes($"{leftSalt}{password}{rightSalt}"));
+
+    private void SetPassword(Account account, string password)
+    {
+        string leftSalt = StringExtensions.CreateRandom(20);
+        string rightSalt = StringExtensions.CreateRandom(20);
+        byte[] hash = ComputeHash(password, leftSalt, rightSalt);
+        
+        account.Password = hash;
+        account.LeftSalt = leftSalt;
+        account.RightSalt = rightSalt;
+    }
 
     #endregion
 }

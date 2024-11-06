@@ -22,6 +22,8 @@ public interface IAccountsControllerService
     Task<RequestResult> GetAccountInfo(long id);
     Task<RequestResult> PutAccountProfileInfo(AccountProfileInfoRequest data);
     Task<RequestResult> PatchAccountUsername(AccountUsernameRequest data);
+    Task<RequestResult> PatchAccountEmail(AccountEmailRequest data);
+    Task<RequestResult> PatchAccountPassword(AccountPasswordRequest data);
     Task<RequestResult> GetAccountRatedMovies(long id, MovieRatedQueryParameters query);
     Task<RequestResult> GetAccountRatedSeries(long id, SeriesRatedQueryParameters query);
     Task<RequestResult> GetAccountRatedPersons(long id, PersonRatedQueryParameters query);

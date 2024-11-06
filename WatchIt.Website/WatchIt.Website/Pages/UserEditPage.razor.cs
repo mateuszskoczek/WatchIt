@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model;
+using WatchIt.Common.Model.Accounts;
 using WatchIt.Common.Model.Photos;
 using WatchIt.Website.Components.Pages.UserEditPage.Panels;
 using WatchIt.Website.Layout;
@@ -31,7 +32,7 @@ public partial class UserEditPage : ComponentBase
     
     #region FIELDS
 
-    private User? _user;
+    private AccountResponse? _accountData;
 
     private UserEditPageHeaderPanelComponent _header = default!;
     
@@ -47,15 +48,19 @@ public partial class UserEditPage : ComponentBase
         {
             Layout.BackgroundPhoto = null;
             
-            _user = await AuthenticationService.GetUserAsync();
-            if (_user is null)
+            User? user = await AuthenticationService.GetUserAsync();
+            if (user is null)
             {
                 NavigationManager.NavigateTo($"/auth?redirect_to={WebUtility.UrlEncode("/user/edit")}");
                 return;
             }
             StateHasChanged();
             
-            await AccountsClientService.GetAccountProfileBackground(_user.Id, data => Layout.BackgroundPhoto = data);
+            await Task.WhenAll(
+            [
+                AccountsClientService.GetAccountInfo(user.Id, data => _accountData = data),
+                AccountsClientService.GetAccountProfileBackground(user.Id, data => Layout.BackgroundPhoto = data)
+            ]);
             StateHasChanged();
         }
     }

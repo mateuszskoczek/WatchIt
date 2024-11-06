@@ -9,7 +9,7 @@
 @{
     StringBuilder sb = new StringBuilder(" - WatchIt");
 
-    if (_user is null) sb.Insert(0, "Loading...");
+    if (_accountData is null) sb.Insert(0, "Loading...");
     else sb.Insert(0, "User settings");
 
     <PageTitle>@(sb.ToString())</PageTitle>
@@ -18,11 +18,11 @@
 
 
 <div class="container-grid">
-    @if (_user is not null)
+    @if (_accountData is not null)
     {
         <div class="row">
             <div class="col">
-                <UserEditPageHeaderPanelComponent @ref="@(_header)" User="@(_user)"/>
+                <UserEditPageHeaderPanelComponent @ref="@(_header)" AccountData="@(_accountData)"/>
             </div>
         </div>
         <div class="row mt-default">
@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="row mt-default gx-default">
                                     <div class="col-auto">
-                                        <PictureEditorPanelComponent Id="@(_user.Id)"
+                                        <PictureEditorPanelComponent Id="@(_accountData.Id)"
                                                                      Class="h-100"
                                                                      PicturePlaceholder="assets/user_placeholder.png"
                                                                      Circle="true"
@@ -55,13 +55,13 @@
                                                                      OnPictureChanged="@(async (_) => await PictureChanged())"/>
                                     </div>
                                     <div class="col">
-                                        <ProfileEditFormPanelComponent Id="@(_user.Id)"
+                                        <ProfileEditFormPanelComponent AccountData="@(_accountData)"
                                                                        Class="h-100"/>
                                     </div>
                                 </div>
                                 <div class="row mt-default">
                                     <div class="col">
-                                        <ProfileBackgroundEditorPanelComponent Id="@(_user.Id)"
+                                        <ProfileBackgroundEditorPanelComponent Id="@(_accountData.Id)"
                                                                                OnBackgroundChanged="BackgroundChanged"/>
                                     </div>
                                 </div>
@@ -70,7 +70,9 @@
                         <TabPanel Name="account">
                             <div class="vstack mt-default gap-default">
                                 <AccountEditHeaderPanelComponent/>
-                                <NewUsernamePanelComponent Id="@(_user.Id)"/>
+                                <NewUsernamePanelComponent AccountData="@(_accountData)"/>
+                                <NewEmailPanelComponent AccountData="@(_accountData)"/>
+                                <NewPasswordPanelComponent/>
                             </div>
                         </TabPanel>
                     </Content>

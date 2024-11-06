@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using WatchIt.Common.Model.Accounts;
 using WatchIt.Website.Components.Common.Subcomponents;
 using WatchIt.Website.Services.Authentication;
 using WatchIt.Website.Services.Client.Accounts;
@@ -18,7 +19,7 @@ public partial class UserEditPageHeaderPanelComponent : ComponentBase
     
     #region PARAMETERS
     
-    [Parameter] public required User User { get; set; }
+    [Parameter] public required AccountResponse AccountData { get; set; }
     
     #endregion
     
@@ -27,7 +28,6 @@ public partial class UserEditPageHeaderPanelComponent : ComponentBase
     #region FIELDS
 
     private AccountPictureComponent _accountPicture = default!;
-    private string? _username;
     
     #endregion
 
@@ -37,23 +37,5 @@ public partial class UserEditPageHeaderPanelComponent : ComponentBase
 
     public async Task ReloadPicture() => await _accountPicture.Reload();
 
-    #endregion
-    
-    
-    
-    #region PRIVATE METHODS
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await AccountsClientService.GetAccountInfo(User.Id, data =>
-            {
-                _username = data.Username;
-                StateHasChanged();
-            });
-        }
-    }
-    
     #endregion
 }

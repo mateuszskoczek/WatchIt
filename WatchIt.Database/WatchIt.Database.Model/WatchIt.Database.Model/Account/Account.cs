@@ -15,9 +15,9 @@ public class Account
     public short? GenderId { get; set; }
     public Guid? ProfilePictureId { get; set; }
     public Guid? BackgroundPictureId { get; set; }
-    public required byte[] Password { get; set; }
-    public required string LeftSalt { get; set; }
-    public required string RightSalt { get; set; }
+    public byte[] Password { get; set; }
+    public string LeftSalt { get; set; }
+    public string RightSalt { get; set; }
     public bool IsAdmin { get; set; } = false;
     public DateTime CreationDate { get; set; }
     public DateTime LastActive { get; set; }

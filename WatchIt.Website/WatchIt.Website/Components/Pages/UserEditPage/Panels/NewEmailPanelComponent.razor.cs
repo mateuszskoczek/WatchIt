@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
-using WatchIt.Website.Services.Authentication;
 using WatchIt.Website.Services.Client.Accounts;
 
 namespace WatchIt.Website.Components.Pages.UserEditPage.Panels;
 
-public partial class NewUsernamePanelComponent : ComponentBase
+public partial class NewEmailPanelComponent : ComponentBase
 {
     #region SERVICES
     
@@ -26,7 +25,7 @@ public partial class NewUsernamePanelComponent : ComponentBase
     
     #region FIELDS
 
-    private AccountUsernameRequest? _data;
+    private AccountEmailRequest? _data;
     private string? _error;
     private bool _saving;
     private bool _saved;
@@ -41,9 +40,9 @@ public partial class NewUsernamePanelComponent : ComponentBase
     {
         if (firstRender)
         {
-            _data = new AccountUsernameRequest
+            _data = new AccountEmailRequest
             {
-                NewUsername = AccountData.Username,
+                NewEmail = AccountData.Email,
             };
             StateHasChanged();
         }
@@ -55,9 +54,9 @@ public partial class NewUsernamePanelComponent : ComponentBase
         {
             _saved = true;
             _saving = false;
-            _data = new AccountUsernameRequest
+            _data = new AccountEmailRequest
             {
-                NewUsername = _data!.NewUsername
+                NewEmail = _data!.NewEmail
             };
             NavigationManager.Refresh(true);
         }
@@ -77,7 +76,7 @@ public partial class NewUsernamePanelComponent : ComponentBase
         _saving = true;
         _saved = false;
         _error = null;
-        await AccountsClientService.PatchAccountUsername(_data!, Success, BadRequest, Unauthorized);
+        await AccountsClientService.PatchAccountEmail(_data!, Success, BadRequest, Unauthorized);
     }
 
     #endregion

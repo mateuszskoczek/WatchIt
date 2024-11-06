@@ -20,7 +20,7 @@ public partial class ProfileEditFormPanelComponent : ComponentBase
     
     #region PARAMETERS
     
-    [Parameter] public long Id { get; set; }
+    [Parameter] public required AccountResponse AccountData { get; set; }
     [Parameter] public string Class { get; set; } = string.Empty;
     
     #endregion
@@ -47,11 +47,8 @@ public partial class ProfileEditFormPanelComponent : ComponentBase
     {
         if (firstRender)
         {
-            await Task.WhenAll(
-            [
-                GendersClientService.GetAllGenders(successAction: data => _genders = data),
-                AccountsClientService.GetAccountInfo(Id, data => _accountProfileInfo = new AccountProfileInfoRequest(data))
-            ]);
+            _accountProfileInfo = new AccountProfileInfoRequest(AccountData);
+            await GendersClientService.GetAllGenders(successAction: data => _genders = data);
             
             _loaded = true;
             StateHasChanged();

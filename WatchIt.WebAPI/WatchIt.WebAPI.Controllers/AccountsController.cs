@@ -114,6 +114,20 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> PatchAccountUsername([FromBody]AccountUsernameRequest data) => await accountsControllerService.PatchAccountUsername(data);
     
+    [HttpPatch("email")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> PatchAccountEmail([FromBody]AccountEmailRequest data) => await accountsControllerService.PatchAccountEmail(data);
+    
+    [HttpPatch("password")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> PatchAccountPassword([FromBody]AccountPasswordRequest data) => await accountsControllerService.PatchAccountPassword(data);
+    
     #endregion
     
     [HttpGet("{id}/movies")]

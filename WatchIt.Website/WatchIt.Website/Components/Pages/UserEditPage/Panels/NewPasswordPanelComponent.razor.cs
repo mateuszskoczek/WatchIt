@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
-using WatchIt.Website.Services.Authentication;
 using WatchIt.Website.Services.Client.Accounts;
 
 namespace WatchIt.Website.Components.Pages.UserEditPage.Panels;
 
-public partial class NewUsernamePanelComponent : ComponentBase
+public partial class NewPasswordPanelComponent : ComponentBase
 {
     #region SERVICES
     
@@ -16,17 +15,9 @@ public partial class NewUsernamePanelComponent : ComponentBase
     
     
     
-    #region PARAMETERS
-    
-    [Parameter] public required AccountResponse AccountData { get; set; }
-    
-    #endregion
-    
-    
-    
     #region FIELDS
 
-    private AccountUsernameRequest? _data;
+    private AccountPasswordRequest _data = new AccountPasswordRequest();
     private string? _error;
     private bool _saving;
     private bool _saved;
@@ -37,28 +28,13 @@ public partial class NewUsernamePanelComponent : ComponentBase
     
     #region PRIVATE METHODS
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _data = new AccountUsernameRequest
-            {
-                NewUsername = AccountData.Username,
-            };
-            StateHasChanged();
-        }
-    }
-
     private async Task Save()
     {
         void Success()
         {
             _saved = true;
             _saving = false;
-            _data = new AccountUsernameRequest
-            {
-                NewUsername = _data!.NewUsername
-            };
+            _data = new AccountPasswordRequest();
             NavigationManager.Refresh(true);
         }
 
@@ -77,7 +53,7 @@ public partial class NewUsernamePanelComponent : ComponentBase
         _saving = true;
         _saved = false;
         _error = null;
-        await AccountsClientService.PatchAccountUsername(_data!, Success, BadRequest, Unauthorized);
+        await AccountsClientService.PatchAccountPassword(_data, Success, BadRequest, Unauthorized);
     }
 
     #endregion
