@@ -36,6 +36,7 @@ public partial class ListComponent<TItem, TQuery> : ComponentBase where TItem : 
     [Parameter] public Func<long, RatingRequest, Task>? PutRatingMethod { get; set; }
     [Parameter] public Func<long, Task>? DeleteRatingMethod { get; set; }
     [Parameter] public required string PosterPlaceholder { get; set; }
+    [Parameter] public TQuery Query { get; set; } = Activator.CreateInstance<TQuery>()!;
 
     #endregion
     
@@ -49,14 +50,6 @@ public partial class ListComponent<TItem, TQuery> : ComponentBase where TItem : 
     private List<TItem> _items = new List<TItem>();
     private bool _allItemsLoaded;
     private bool _itemsLoading;
-    
-    #endregion
-    
-    
-    
-    #region PROPERTIES
-    
-    public TQuery Query { get; set; } = Activator.CreateInstance<TQuery>()!;
     
     #endregion
 

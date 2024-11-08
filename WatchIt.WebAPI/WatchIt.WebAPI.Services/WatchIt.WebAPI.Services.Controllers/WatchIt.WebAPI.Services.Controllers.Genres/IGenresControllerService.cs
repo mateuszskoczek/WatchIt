@@ -1,13 +1,15 @@
 ﻿using WatchIt.Common.Model.Genres;
+using WatchIt.Common.Model.Media;
 using WatchIt.WebAPI.Services.Controllers.Common;
 
 namespace WatchIt.WebAPI.Services.Controllers.Genres;
 
 public interface IGenresControllerService
 {
-    Task<RequestResult> GetAll(GenreQueryParameters query);
-    Task<RequestResult> Get(short id);
-    Task<RequestResult> Post(GenreRequest data);
-    Task<RequestResult> Put(short id, GenreRequest data);
-    Task<RequestResult> Delete(short id);
+    Task<RequestResult> GetGenres(GenreQueryParameters query);
+    Task<RequestResult> GetGenre(short id);
+    Task<RequestResult> PostGenre(GenreRequest data);
+    Task<RequestResult> PutGenre(short id, GenreRequest data);
+    Task<RequestResult> DeleteGenre(short id);
+    Task<RequestResult> GetGenreMedia(short id, MediaQueryParameters query);
 }

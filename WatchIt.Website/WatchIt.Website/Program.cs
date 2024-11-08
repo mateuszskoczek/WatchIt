@@ -10,6 +10,7 @@ using WatchIt.Website.Services.Configuration;
 using WatchIt.Website.Services.Tokens;
 using WatchIt.Website.Services.Client.Accounts;
 using WatchIt.Website.Services.Client.Genders;
+using WatchIt.Website.Services.Client.Genres;
 using WatchIt.Website.Services.Client.Media;
 using WatchIt.Website.Services.Client.Movies;
 using WatchIt.Website.Services.Client.Persons;
@@ -75,6 +76,7 @@ public static class Program
         // WebAPI
         builder.Services.AddScoped<IAccountsClientService, AccountsClientService>();
         builder.Services.AddSingleton<IGendersClientService, GendersClientService>();
+        builder.Services.AddSingleton<IGenresClientService, GenresClientService>();
         builder.Services.AddSingleton<IMediaClientService, MediaClientService>();
         builder.Services.AddSingleton<IMoviesClientService, MoviesClientService>();
         builder.Services.AddSingleton<ISeriesClientService, SeriesClientService>();

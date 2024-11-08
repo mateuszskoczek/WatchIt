@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WatchIt.Common.Model.Genres;
+using WatchIt.Common.Model.Media;
 using WatchIt.Database;
 using WatchIt.Database.Model.Media;
 using WatchIt.WebAPI.Services.Controllers.Common;
@@ -12,14 +13,16 @@ public class GenresControllerService(DatabaseContext database, IUserService user
 {
     #region PUBLIC METHODS
 
-    public async Task<RequestResult> GetAll(GenreQueryParameters query)
+    #region Main
+    
+    public async Task<RequestResult> GetGenres(GenreQueryParameters query)
     {
         IEnumerable<GenreResponse> data = await database.Genres.Select(x => new GenreResponse(x)).ToListAsync();
         data = query.PrepareData(data);
         return RequestResult.Ok(data);
     }
 
-    public async Task<RequestResult> Get(short id)
+    public async Task<RequestResult> GetGenre(short id)
     {
         Genre? item = await database.Genres.FirstOrDefaultAsync(x => x.Id == id);
         if (item is null)
@@ -31,7 +34,7 @@ public class GenresControllerService(DatabaseContext database, IUserService user
         return RequestResult.Ok(data);
     }
 
-    public async Task<RequestResult> Post(GenreRequest data)
+    public async Task<RequestResult> PostGenre(GenreRequest data)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -46,7 +49,7 @@ public class GenresControllerService(DatabaseContext database, IUserService user
         return RequestResult.Created($"genres/{item.Id}", new GenreResponse(item));
     }
 
-    public async Task<RequestResult> Put(short id, GenreRequest data)
+    public async Task<RequestResult> PutGenre(short id, GenreRequest data)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -66,7 +69,7 @@ public class GenresControllerService(DatabaseContext database, IUserService user
         return RequestResult.Ok();
     }
 
-    public async Task<RequestResult> Delete(short id)
+    public async Task<RequestResult> DeleteGenre(short id)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();
         if (!validator.IsValid)
@@ -88,6 +91,26 @@ public class GenresControllerService(DatabaseContext database, IUserService user
         
         return RequestResult.Ok();
     }
+
+    #endregion
+
+    #region Media
+
+    public async Task<RequestResult> GetGenreMedia(short id, MediaQueryParameters query)
+    {
+        if (!database.Genres.Any(x => x.Id == id))
+        {
+            return RequestResult.NotFound();
+        }
+        
+        IEnumerable<Database.Model.Media.Media> rawData = await database.Media.Where(x => x.MediaGenres.Any(y => y.GenreId == id))
+                                                                              .ToListAsync();
+        IEnumerable<MediaResponse> data = rawData.Select(x => new MediaResponse(x, database.MediaMovies.Any(y => y.Id == x.Id) ? MediaType.Movie : MediaType.Series));
+        data = query.PrepareData(data);
+        return RequestResult.Ok(data);
+    }
+
+    #endregion
     
     #endregion 
 }
