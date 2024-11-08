@@ -1,0 +1,54 @@
+@using System.Text
+@using WatchIt.Website.Components.Common.ListComponent
+
+@page "/genre/{id:int}"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+
+    if (!_loaded)           sb.Insert(0, "Loading...");
+    else if (_data is null) sb.Insert(0, "Error");
+    else                    sb.Insert(0, $"\"{_data.Name}\" genre");
+
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+@if (!_loaded)
+{
+    <div class="m-5">
+        <LoadingComponent/>
+    </div>
+}
+else if (_data is null)
+{
+    <ErrorPanelComponent ErrorMessage="@($"Genre with ID {Id} was not found")"/>
+}
+else
+{
+    <ListComponent TItem="MediaResponse"
+                   TQuery="MediaQueryParameters"
+                   Title="@(_data.Name)"
+                   IdSource="@(item => item.Id)"
+                   NameSource="@(item => item.Title)"
+                   AdditionalNameInfoSource="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                   RatingSource="@(item => item.Rating)"
+                   UrlIdTemplate="/media/{0}"
+                   PictureDownloadingTask="@((id, action) => MediaClientService.GetMediaPoster(id, action))"
+                   ItemDownloadingTask="@((query, action) => GenresClientService.GetGenreMedia(_data.Id, query, action))"
+                   SortingOptions="@(new Dictionary<string, string>
+                                   {
+                                       { "rating.count", "Number of ratings" },
+                                       { "rating.average", "Average rating" },
+                                       { "title", "Title" },
+                                       { "release_date", "Release date" },
+                                   })"
+                   PosterPlaceholder="/assets/media_poster.png"
+                   GetGlobalRatingMethod="@((id, action) => MediaClientService.GetMediaRating(id, action))"
+                   GetUserRatingMethod="@((id, userId, successAction, notfoundAction) => MediaClientService.GetMediaRatingByUser(id, userId, successAction, notfoundAction))"
+                   PutRatingMethod="@((id, request) => MediaClientService.PutMediaRating(id, request))"
+                   DeleteRatingMethod="@(id => MediaClientService.DeleteMediaRating(id))">
+        <MediaFilterFormComponent/>
+    </ListComponent>
+}

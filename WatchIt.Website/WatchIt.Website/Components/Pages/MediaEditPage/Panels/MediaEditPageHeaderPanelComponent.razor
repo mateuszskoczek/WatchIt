@@ -1,0 +1,18 @@
+<div class="panel" role="button" @onclick="@(MediaData is not null ? () => NavigationManager.NavigateTo($"/media/{MediaData.Id}") : null)" style="cursor: @(MediaData is null ? "default" : "pointer")">
+    <div class="d-flex gap-3 align-items-center">
+        <PictureComponent Picture="_poster" Height="60" Placeholder="/assets/media_poster.png" AlternativeText="poster"/>
+        <div class="d-flex-inline flex-column">
+            <h2 id="primaryText" class="m-0">
+                @if (MediaData is null)
+                {
+                    <span class="fw-bold">New @(MediaType)</span>
+                }
+                else
+                {
+                    <span><span class="fw-bold">@(MediaData.Title)</span>@(MediaData.ReleaseDate.HasValue ? $" ({MediaData.ReleaseDate.Value.Year})" : string.Empty)</span>
+                }
+            </h2>
+            <span id="secondaryText" class="text-secondary">Media settings</span>
+        </div>
+    </div>
+</div>

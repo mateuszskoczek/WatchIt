@@ -1,4 +1,5 @@
-﻿@using Microsoft.IdentityModel.Tokens
+﻿@using System.Text
+@using Microsoft.IdentityModel.Tokens
 @using WatchIt.Common.Model.Movies
 @using WatchIt.Common.Model.Photos
 @using WatchIt.Common.Model.Series
@@ -7,361 +8,319 @@
 @page "/media/{id:long}/edit"
 @page "/media/new/{type?}"
 
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
 
-<PageTitle>
-    WatchIt - 
-    @if (_loaded)
+    if (!_loaded)                                                           sb.Insert(0, "Loading...");
+    else if (!string.IsNullOrWhiteSpace(_error) || _user?.IsAdmin != true)  sb.Insert(0, "Error");
+    else
     {
-        if (string.IsNullOrWhiteSpace(_error) && _user?.IsAdmin == true)
-        {
-            if (_media is not null)
-            {
-                @($"Edit \"")@(_media.Title)@("\"")
-            }
-            else
-            {
-                if (_movieRequest is null)
-                {
-                    @("New TV series")
-                }
-                else
-                {
-                    @("New movie")
-                }
-            }
-        }
+        if (_media is not null)     sb.Insert(0, $"Edit \"{_media.Title}\"");
         else
         {
-            @("Error")
+            if (_movieRequest is null)  sb.Insert(0, "TV series");
+            else                        sb.Insert(0, "movie");
+            sb.Insert(0, "New ");
         }
+    }
+
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+<div class="vstack gap-default">
+    @if (!_loaded)
+    {
+        <div class="m-5">
+            <LoadingComponent/>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(_error))
+    {
+        <ErrorPanelComponent ErrorMessage="@_error"/>
+    }
+    else if (_user?.IsAdmin != true)
+    {
+        <ErrorPanelComponent ErrorMessage="You do not have permission to view this site"/>
     }
     else
     {
-        @("Loading")
-    }
-</PageTitle>
-
-<div class="container-grid">
-    @if (_loaded)
-    {
-        if (string.IsNullOrWhiteSpace(_error))
-        {
-            if (_user?.IsAdmin == true)
-            {
-                <div class="row">
-                    <div class="col">
-                        <div class="rounded-3 panel panel-regular p-2">
-                            <div class="m-0 mx-2 mb-1 p-0">
-                                @if (_media is not null)
-                                {
-                                    <a class="text-decoration-none text-reset" href="/media/@(_media.Id)">
-                                        <h3>Edit @(_movieRequest is not null ? "movie" : "series") "@(_media.Title)"</h3>
-                                    </a>
-                                }
-                                else
-                                {
-                                    <h3>Create new @(_movieRequest is not null ? "movie" : "series")</h3>
-                                }
+        <MediaEditPageHeaderPanelComponent MediaData="@(_media)"
+                                           MediaType="@(_movieRequest is null ? "TV series" : "movie")"/>
+        <div class="d-flex align-items-stretch gap-3">
+            <PictureEditorPanelComponent Id="@(Id)"
+                                         PictureGetTask="@(async (id, action) => await MediaClientService.GetMediaPoster(id, action))"
+                                         PicturePutTask="@(async (id, data, action) => await MediaClientService.PutMediaPoster(id, new MediaPosterRequest(data), action))"
+                                         PictureDeleteTask="@(async (id, action) => await MediaClientService.DeleteMediaPoster(id, action))"
+                                         PicturePlaceholder="/assets/media_poster.png"/>
+            <div class="rounded-3 panel panel-regular p-4 w-100">
+                <EditForm Model="_mediaRequest">
+                    <AntiforgeryToken/>
+                    <div class="container-grid">
+                        <div class="row form-group mb-1">
+                            <label for="title" class="col-2 col-form-label">Title*</label>
+                            <div class="col-10">
+                                <InputText id="title" class="form-control" @bind-Value="_mediaRequest!.Title"/>
+                            </div>
+                        </div>
+                        <div class="row form-group my-1">
+                            <label for="og-title" class="col-2 col-form-label">Original title</label>
+                            <div class="col-10">
+                                <InputText id="og-title" class="form-control" @bind-Value="_mediaRequest!.OriginalTitle"/>
+                            </div>
+                        </div>
+                        <div class="row form-group my-1">
+                            <label for="desc" class="col-2 col-form-label">Description</label>
+                            <div class="col-10">
+                                <InputTextArea id="desc" class="form-control" @bind-Value="_mediaRequest!.Description"/>
+                            </div>
+                        </div>
+                        <div class="row form-group my-1">
+                            <label for="rel-date" class="col-2 col-form-label">Release date</label>
+                            <div class="col-4">
+                                <InputDate TValue="DateOnly?" id="rel-date" class="form-control" @bind-Value="_mediaRequest!.ReleaseDate"/>
+                            </div>
+                            <label for="length" class="col-2 col-form-label">Length</label>
+                            <div class="col-4">
+                                <InputNumber TValue="short?" id="length" class="form-control" @bind-Value="_mediaRequest!.Length"/>
+                            </div>
+                        </div>
+                        @if (_mediaRequest is MovieRequest)
+                        {
+                            <div class="row form-group mt-1">
+                                <label for="budget" class="col-2 col-form-label">Budget</label>
+                                <div class="col-10">
+                                    <InputNumber TValue="decimal?" id="budget" class="form-control" @bind-Value="((MovieRequest)_mediaRequest)!.Budget"/>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row form-group mt-1">
+                                <label class="col-2 col-form-label">Has ended</label>
+                                <div class="col-10 col-form-label">
+                                    <div class="d-flex gap-3">
+                                        <InputRadioGroup TValue="bool" @bind-Value="((SeriesRequest)_mediaRequest)!.HasEnded">
+                                            <div class="d-flex gap-2">
+                                                <InputRadio TValue="bool" Value="true"/>
+                                                Yes
+                                            </div>
+                                            <div class="d-flex gap-2">
+                                                <InputRadio TValue="bool" Value="false"/>
+                                                No
+                                            </div>
+                                        </InputRadioGroup>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="row mt-4">
+                            <div class="col">
+                                <div class="d-flex justify-content-end align-items-center gap-3">
+                                    @if (!string.IsNullOrWhiteSpace(_basicDataError))
+                                    {
+                                        <div class="text-danger">@_basicDataError</div>
+                                    }
+                                    <button type="button" class="btn btn-secondary" @onclick="SaveBasicData">
+                                        @if (!_basicDataSaving)
+                                        {
+                                            <span>Save</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <span>Saving...</span>
+                                        }
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row mt-3 gx-3">
-                    <div class="col-auto">
-                        <PictureEditorPanelComponent Id="@(Id)"
-                                                     PictureGetTask="@(async (id, action) => await MediaClientService.GetMediaPoster(id, action))"
-                                                     PicturePutTask="@(async (id, data, action) => await MediaClientService.PutMediaPoster(id, new MediaPosterRequest(data), action))"
-                                                     PictureDeleteTask="@(async (id, action) => await MediaClientService.DeleteMediaPoster(id, action))"
-                                                     PicturePlaceholder="/assets/media_poster.png"
-                                                     Class="h-100"/>
-                    </div>
-                    <div class="col">
-                        <div class="rounded-3 panel panel-regular p-4 h-100">
-                            <EditForm Model="_mediaRequest">
-                                <AntiforgeryToken/>
-                                <div class="container-grid">
-                                    <div class="row form-group mb-1">
-                                        <label for="title" class="col-2 col-form-label">Title*</label>
-                                        <div class="col-10">
-                                            <InputText id="title" class="form-control" @bind-Value="_mediaRequest!.Title"/>
-                                        </div>
+                </EditForm>
+            </div>
+        </div>
+        <Tabs Pills
+              RenderMode="TabsRenderMode.LazyLoad"
+              Class="panel panel-menu panel-background-menu justify-content-center"
+              SelectedTab="genres">
+            <Items>
+                <Tab Name="genres">Genres</Tab>
+                <Tab Name="actors">Actors</Tab>
+                <Tab Name="creators">Creators</Tab>
+                <Tab Name="photos">Photos</Tab>
+            </Items>
+            <Content>
+                <TabPanel Name="genres">
+                    <MediaGenresEditPanelComponent Data="@(_media)"/>
+                </TabPanel>
+                <TabPanel Name="actors">
+                    <MediaActorRolesEditPanelComponent Id="@(Id)"
+                                                       Persons="@(_persons)"/>
+                </TabPanel>
+                <TabPanel Name="creators">
+                    <MediaCreatorRolesEditPanelComponent Id="@(Id)"
+                                                         Persons="@(_persons)"/>
+                </TabPanel>
+                <TabPanel Name="photos">
+                    <div class="rounded-3 panel panel-regular p-4">
+                        <div class="container-grid">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <div class="d-flex align-items-center h-100">
+                                        <h4 class="m-0"><strong>Photos</strong></h4>
                                     </div>
-                                    <div class="row form-group my-1">
-                                        <label for="og-title" class="col-2 col-form-label">Original title</label>
-                                        <div class="col-10">
-                                            <InputText id="og-title" class="form-control" @bind-Value="_mediaRequest!.OriginalTitle"/>
-                                        </div>
-                                    </div>
-                                    <div class="row form-group my-1">
-                                        <label for="desc" class="col-2 col-form-label">Description</label>
-                                        <div class="col-10">
-                                            <InputTextArea id="desc" class="form-control" @bind-Value="_mediaRequest!.Description"/>
-                                        </div>
-                                    </div>
-                                    <div class="row form-group my-1">
-                                        <label for="rel-date" class="col-2 col-form-label">Release date</label>
-                                        <div class="col-4">
-                                            <InputDate TValue="DateOnly?" id="rel-date" class="form-control" @bind-Value="_mediaRequest!.ReleaseDate"/>
-                                        </div>
-                                        <label for="length" class="col-2 col-form-label">Length</label>
-                                        <div class="col-4">
-                                            <InputNumber TValue="short?" id="length" class="form-control" @bind-Value="_mediaRequest!.Length"/>
-                                        </div>
-                                    </div>
-                                    @if (_mediaRequest is MovieRequest)
+                                </div>
+                                <div class="col-auto">
+                                    @if (!_photoEditMode)
                                     {
-                                        <div class="row form-group mt-1">
-                                            <label for="budget" class="col-2 col-form-label">Budget</label>
-                                            <div class="col-10">
-                                                <InputNumber TValue="decimal?" id="budget" class="form-control" @bind-Value="((MovieRequest)_mediaRequest)!.Budget"/>
-                                            </div>
-                                        </div>
+                                    <button type="button" class="btn btn-secondary" disabled="@(!Id.HasValue)" @onclick="() => InitEditPhoto(null)">Add new photo</button>
                                     }
                                     else
                                     {
-                                        <div class="row form-group mt-1">
-                                            <label class="col-2 col-form-label">Has ended</label>
-                                            <div class="col-10 col-form-label">
-                                                <div class="d-flex gap-3">
-                                                    <InputRadioGroup TValue="bool" @bind-Value="((SeriesRequest)_mediaRequest)!.HasEnded">
-                                                        <div class="d-flex gap-2">
-                                                            <InputRadio TValue="bool" Value="true"/>
-                                                            Yes
-                                                        </div>
-                                                        <div class="d-flex gap-2">
-                                                            <InputRadio TValue="bool" Value="false"/>
-                                                            No
-                                                        </div>
-                                                    </InputRadioGroup>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                    <div class="row mt-4">
-                                        <div class="col">
-                                            <div class="d-flex justify-content-end align-items-center gap-3">
-                                                @if (!string.IsNullOrWhiteSpace(_basicDataError))
-                                                {
-                                                    <div class="text-danger">@_basicDataError</div>
-                                                }
-                                                <button type="button" class="btn btn-secondary" @onclick="SaveBasicData">
-                                                    @if (!_basicDataSaving)
-                                                    {
-                                                        <span>Save</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                        <span>Saving...</span>
-                                                    }
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </EditForm>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col">
-                        <MediaActorRolesEditPanelComponent Id="@(Id)"
-                                                           Persons="@(_persons)"/>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col">
-                        <MediaCreatorRolesEditPanelComponent Id="@(Id)"
-                                                             Persons="@(_persons)"/>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col">
-                        <div class="rounded-3 panel panel-regular p-4">
-                            <div class="container-grid">
-                                <div class="row mb-3">
-                                    <div class="col">
-                                        <div class="d-flex align-items-center h-100">
-                                            <h4 class="m-0"><strong>Photos</strong></h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        @if (!_photoEditMode)
+                                    <div class="d-flex gap-3 align-items-center">
+                                        @if (!string.IsNullOrWhiteSpace(_photoEditError))
                                         {
-                                            <button type="button" class="btn btn-secondary" disabled="@(!Id.HasValue)" @onclick="() => InitEditPhoto(null)">Add new photo</button>
+                                        <div class="text-danger">
+                                            @_photoEditError
+                                        </div>
                                         }
-                                        else
-                                        {
-                                            <div class="d-flex gap-3 align-items-center">
-                                                @if (!string.IsNullOrWhiteSpace(_photoEditError))
-                                                {
-                                                    <div class="text-danger">
-                                                        @_photoEditError
-                                                    </div>
-                                                }
-                                                <button type="button" class="btn btn-secondary" disabled="@(_photoEditSaving)" @onclick="SaveEditPhoto">
-                                                    @if (!_photoEditSaving)
-                                                    {
-                                                        <span>Save</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                        <span>Saving...</span>
-                                                    }
-                                                </button>
-                                                <button type="button" class="btn btn-secondary" disabled="@(_photoEditSaving)" @onclick="CancelEditPhoto">Cancel</button>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        @if (!_photoEditMode)
-                                        {
-                                            if (!_photos.IsNullOrEmpty())
+                                        <button type="button" class="btn btn-secondary" disabled="@(_photoEditSaving)" @onclick="SaveEditPhoto">
+                                            @if (!_photoEditSaving)
                                             {
-                                                <div id="scrollPhotos" class="d-flex p-3 gap-3" data-bs-spy="scroll" tabindex="0">
-                                                    @foreach (PhotoResponse photo in _photos)
-                                                    {
-                                                        <div class="container-grid photo-container">
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <PictureComponent Picture="@(photo)" AlternativeText="photo" Width="350" Placeholder="/assets/photo.png" AspectRatio="PictureComponent.PictureComponentAspectRatio.Photo"/>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row mt-2 gx-2">
-                                                                @if (photo.Background is not null)
-                                                                {
-                                                                    <div class="col-auto">
-                                                                        <div class="d-flex align-items-center">
-                                                                            <div id="backgroundIndicator" class="border rounded-circle circle-@(photo.Background.IsUniversalBackground ? "blue" : "grey") p-1" data-toggle="tooltip" data-placement="top" title="@(photo.Background.IsUniversalBackground ? "Universal" : "Media-only") background">
-                                                                                <img class="no-vertical-align" src="assets/icons/background.png" alt="background_icon" height="20px" width="20px"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                }
-                                                                <div class="col">
-                                                                    <div class="d-flex align-items-center h-100 text-size-upload-date">
-                                                                        Upload: @(photo.UploadDate.ToString())
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-auto">
-                                                                    <button type="button" class="btn btn-secondary btn-sm" @onclick="() => InitEditPhoto(photo.Id)" disabled="@(_photoDeleting.Contains(photo.Id))">
-                                                                        <img src="assets/icons/edit.png" alt="edit_icon" height="20px" width="20px"/>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="col-auto">
-                                                                    <button type="button" class="btn btn-danger btn-sm" disabled="@(_photoDeleting.Contains(photo.Id))" @onclick="() => DeletePhoto(photo.Id)">
-                                                                        @if (!_photoDeleting.Contains(photo.Id))
-                                                                        {
-                                                                            <img src="assets/icons/delete.png" alt="delete_icon" height="20px" width="20px"/>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                                        }
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    }
-                                                </div>
+                                            <span>Save</span>
                                             }
                                             else
                                             {
-                                                <div class="d-flex justify-content-center">
-                                                    Photo list is empty
-                                                </div>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <span>Saving...</span>
                                             }
-                                        }
-                                        else
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" disabled="@(_photoEditSaving)" @onclick="CancelEditPhoto">Cancel</button>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    @if (!_photoEditMode)
+                                    {
+                                    if (!_photos.IsNullOrEmpty())
+                                    {
+                                    <div id="scrollPhotos" class="d-flex p-3 gap-3" data-bs-spy="scroll" tabindex="0">
+                                        @foreach (PhotoResponse photo in _photos)
                                         {
-                                            <div class="container-grid">
-                                                <div class="row">
-                                                    <div class="col-auto">
-                                                        <div class="container-grid">
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <PictureComponent Picture="@(_photoEditRequest)" Placeholder="/assets/photo.png" AlternativeText="edit_photo" Width="300" AspectRatio="PictureComponent.PictureComponentAspectRatio.Photo"/>
-                                                                </div>
-                                                            </div>
-                                                            @if (_photoEditId is null)
-                                                            {
-                                                                <div class="row mt-2">
-                                                                    <div class="col">
-                                                                        <InputFile class="form-control" OnChange="LoadPhoto" autocomplete="off" style="width: 300px;"/>
-                                                                    </div>
-                                                                </div>
-                                                            }
+                                        <div class="container-grid photo-container">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <PictureComponent Picture="@(photo)" AlternativeText="photo" Width="350" Placeholder="/assets/photo.png" AspectRatio="PictureComponent.PictureComponentAspectRatio.Photo"/>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2 gx-2">
+                                                @if (photo.Background is not null)
+                                                {
+                                                <div class="col-auto">
+                                                    <div class="d-flex align-items-center">
+                                                        <div id="backgroundIndicator" class="border rounded-circle circle-@(photo.Background.IsUniversalBackground ? "blue" : "grey") p-1" data-toggle="tooltip" data-placement="top" title="@(photo.Background.IsUniversalBackground ? "Universal" : "Media-only") background">
+                                                            <img class="no-vertical-align" src="assets/icons/background.png" alt="background_icon" height="20px" width="20px"/>
                                                         </div>
                                                     </div>
-                                                    <div class="col">
-                                                        <div class="container-grid">
-                                                            <div class="row form-group">
-                                                                <div class="col">
-                                                                    <div class="form-check">
-                                                                        <InputCheckbox class="form-check-input" @bind-Value="_photoEditIsBackground"/>
-                                                                        <label class="form-check-label">Use as background</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <div class="form-check">
-                                                                        <InputCheckbox class="form-check-input" @bind-Value="_photoEditBackgroundData.IsUniversalBackground" disabled="@(!_photoEditIsBackground)"/>
-                                                                        <label class="form-check-label">Use as universal background</label>
-                                                                    </div>
-                                                                </div>
+                                                </div>
+                                                }
+                                                <div class="col">
+                                                    <div class="d-flex align-items-center h-100 text-size-upload-date">
+                                                        Upload: @(photo.UploadDate.ToString())
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <button type="button" class="btn btn-secondary btn-sm" @onclick="() => InitEditPhoto(photo.Id)" disabled="@(_photoDeleting.Contains(photo.Id))">
+                                                        <img src="assets/icons/edit.png" alt="edit_icon" height="20px" width="20px"/>
+                                                    </button>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <button type="button" class="btn btn-danger btn-sm" disabled="@(_photoDeleting.Contains(photo.Id))" @onclick="() => DeletePhoto(photo.Id)">
+                                                        @if (!_photoDeleting.Contains(photo.Id))
+                                                        {
+                                                        <img src="assets/icons/delete.png" alt="delete_icon" height="20px" width="20px"/>
+                                                        }
+                                                        else
+                                                        {
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        }
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        }
+                                    </div>
+                                    }
+                                    else
+                                    {
+                                    <div class="d-flex justify-content-center">
+                                        Photo list is empty
+                                    </div>
+                                    }
+                                    }
+                                    else
+                                    {
+                                    <div class="container-grid">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <div class="container-grid">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <PictureComponent Picture="@(_photoEditRequest)" Placeholder="/assets/photo.png" AlternativeText="edit_photo" Width="300" AspectRatio="PictureComponent.PictureComponentAspectRatio.Photo"/>
+                                                        </div>
+                                                    </div>
+                                                    @if (_photoEditId is null)
+                                                    {
+                                                    <div class="row mt-2">
+                                                        <div class="col">
+                                                            <InputFile class="form-control" OnChange="LoadPhoto" autocomplete="off" style="width: 300px;"/>
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="container-grid">
+                                                    <div class="row form-group">
+                                                        <div class="col">
+                                                            <div class="form-check">
+                                                                <InputCheckbox class="form-check-input" @bind-Value="_photoEditIsBackground"/>
+                                                                <label class="form-check-label">Use as background</label>
                                                             </div>
-                                                            <div class="row form-group my-1">
-                                                                <label for="first-gradient-color" class="col-4 col-form-label">First gradient color</label>
-                                                                <div class="col-8">
-                                                                    <input type="color" class="form-control form-control-color w-100" id="first-gradient-color" value="#@(Convert.ToHexString(_photoEditBackgroundData.FirstGradientColor))" disabled="@(!_photoEditIsBackground)" @onchange="EditPhotoFirstGradientColorChanged">
-                                                                </div>
+                                                        </div>
+                                                        <div class="col">
+                                                            <div class="form-check">
+                                                                <InputCheckbox class="form-check-input" @bind-Value="_photoEditBackgroundData.IsUniversalBackground" disabled="@(!_photoEditIsBackground)"/>
+                                                                <label class="form-check-label">Use as universal background</label>
                                                             </div>
-                                                            <div class="row form-group">
-                                                                <label for="second-gradient-color" class="col-4 col-form-label">Second gradient color</label>
-                                                                <div class="col-8">
-                                                                    <input type="color" class="form-control form-control-color w-100" id="second-gradient-color" value="#@(Convert.ToHexString(_photoEditBackgroundData.SecondGradientColor))" disabled="@(!_photoEditIsBackground)" @onchange="EditPhotoSecondGradientColorChanged">
-                                                                </div>
-                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group my-1">
+                                                        <label for="first-gradient-color" class="col-4 col-form-label">First gradient color</label>
+                                                        <div class="col-8">
+                                                            <input type="color" class="form-control form-control-color w-100" id="first-gradient-color" value="#@(Convert.ToHexString(_photoEditBackgroundData.FirstGradientColor))" disabled="@(!_photoEditIsBackground)" @onchange="EditPhotoFirstGradientColorChanged">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="second-gradient-color" class="col-4 col-form-label">Second gradient color</label>
+                                                        <div class="col-8">
+                                                            <input type="color" class="form-control form-control-color w-100" id="second-gradient-color" value="#@(Convert.ToHexString(_photoEditBackgroundData.SecondGradientColor))" disabled="@(!_photoEditIsBackground)" @onchange="EditPhotoSecondGradientColorChanged">
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        }
+                                        </div>
                                     </div>
+                                    }
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
-            else
-            {
-                <div class="row">
-                    <div class="col">
-                        <ErrorPanelComponent ErrorMessage="You do not have permission to view this site"/>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="row">
-                <div class="col">
-                    <ErrorPanelComponent ErrorMessage="@_error"/>
-                </div>
-            </div>
-        }
-    }
-    else
-    {
-        <div class="row">
-            <div class="col">
-                <div class="m-5">
-                    <LoadingComponent/>
-                </div>
-            </div>
-        </div>
+                </TabPanel>
+            </Content>
+        </Tabs>
     }
 </div>
