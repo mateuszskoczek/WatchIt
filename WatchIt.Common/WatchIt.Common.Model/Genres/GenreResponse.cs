@@ -12,8 +12,7 @@ public class GenreResponse : Genre, IQueryOrderable<GenreResponse>
     public static IDictionary<string, Func<GenreResponse, IComparable>> OrderableProperties { get; } = new Dictionary<string, Func<GenreResponse, IComparable>>
     {
         { "id", x => x.Id },
-        { "name", x => x.Name },
-        { "description", x => x.Description }
+        { "name", x => x.Name }
     };
 
     
@@ -34,7 +33,6 @@ public class GenreResponse : Genre, IQueryOrderable<GenreResponse>
     {
         Id = genre.Id;
         Name = genre.Name;
-        Description = genre.Description;
     }
     
     #endregion

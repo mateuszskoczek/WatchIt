@@ -10,9 +10,6 @@ public class GenreQueryParameters : QueryParameters<GenreResponse>
     [FromQuery(Name = "name")]
     public string? Name { get; set; }
     
-    [FromQuery(Name = "description")]
-    public string? Description { get; set; }
-    
     #endregion
     
     
@@ -22,8 +19,6 @@ public class GenreQueryParameters : QueryParameters<GenreResponse>
     protected override bool IsMeetingConditions(GenreResponse item) =>
     (
         TestStringWithRegex(item.Name, Name)
-        &&
-        TestStringWithRegex(item.Description, Description)
     );
 
     #endregion

@@ -34,14 +34,6 @@ public class GenresController(IGenresControllerService genresControllerService) 
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> PostGenre([FromBody]GenreRequest body) => await genresControllerService.PostGenre(body);
     
-    [HttpPut("{id}")]
-    [Authorize]
-    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> PutGenre([FromRoute]short id, [FromBody]GenreRequest body) => await genresControllerService.PutGenre(id, body);
-    
     [HttpDelete("{id}")]
     [Authorize]
     [ProducesResponseType(typeof(GenreResponse), StatusCodes.Status200OK)]

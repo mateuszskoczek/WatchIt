@@ -20,9 +20,6 @@ public class GenreConfiguration : IEntityTypeConfiguration<Genre>
                .HasMaxLength(100)
                .IsRequired();
 
-        builder.Property(x => x.Description)
-               .HasMaxLength(1000);
-
         // Navigation
         builder.HasMany(x => x.Media)
                .WithMany(x => x.Genres)
