@@ -1,4 +1,5 @@
 ﻿@using System.Net
+@using WatchIt.Common.Model.Genres
 @using WatchIt.Common.Model.Photos
 @using WatchIt.Website.Services.Client.Photos
 
@@ -35,9 +36,18 @@
                                             <Dropdown>
                                                 <DropdownToggle Color="Color.Default" Size="Size.Small" ToggleIconVisible="false">Database</DropdownToggle>
                                                 <DropdownMenu>
-                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/database/movies"))">Movies</DropdownItem>
-                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/database/series"))">TV Series</DropdownItem>
-                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/database/people"))">People</DropdownItem>
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/database/movies", true))">Movies</DropdownItem>
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/database/series", true))">TV Series</DropdownItem>
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/database/people", true))">People</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                            <Dropdown>
+                                                <DropdownToggle Color="Color.Default" Size="Size.Small" ToggleIconVisible="false">Genres</DropdownToggle>
+                                                <DropdownMenu MaxMenuHeight="250px">
+                                                    @foreach (GenreResponse genre in _genres)
+                                                    {
+                                                        <DropdownItem Clicked="@(() => NavigationManager.NavigateTo($"/genre/{genre.Id}", true))">@(genre.Name)</DropdownItem>
+                                                    }
                                                 </DropdownMenu>
                                             </Dropdown>
                                             <button type="button" class="btn btn-sm" @onclick="@(() => _searchbarVisible = true)">⌕</button>

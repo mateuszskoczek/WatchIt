@@ -1,11 +1,13 @@
 using System.Net;
 using Microsoft.AspNetCore.Components;
 using WatchIt.Common.Model.Accounts;
+using WatchIt.Common.Model.Genres;
 using WatchIt.Common.Model.Photos;
 using WatchIt.Website.Components.Common.Subcomponents;
 using WatchIt.Website.Services.Authentication;
 using WatchIt.Website.Services.Tokens;
 using WatchIt.Website.Services.Client.Accounts;
+using WatchIt.Website.Services.Client.Genres;
 using WatchIt.Website.Services.Client.Media;
 using WatchIt.Website.Services.Client.Photos;
 
@@ -22,6 +24,7 @@ public partial class MainLayout : LayoutComponentBase
     [Inject] public IMediaClientService MediaClientService { get; set; } = default!;
     [Inject] public IPhotosClientService PhotosClientService { get; set; } = default!;
     [Inject] public IAccountsClientService AccountsClientService { get; set; } = default!;
+    [Inject] public IGenresClientService GenresClientService { get; set; } = default!;
     
     #endregion
     
@@ -39,6 +42,8 @@ public partial class MainLayout : LayoutComponentBase
     
     private bool _searchbarVisible;
     private string _searchbarText = string.Empty;
+
+    private List<GenreResponse> _genres = [];
     
     #endregion
     
@@ -86,7 +91,8 @@ public partial class MainLayout : LayoutComponentBase
             await Task.WhenAll(
             [
                 Task.Run(async () => _user = await AuthenticationService.GetUserAsync()),
-                PhotosClientService.GetPhotoRandomBackground(data => _defaultBackgroundPhoto = data)
+                PhotosClientService.GetPhotoRandomBackground(data => _defaultBackgroundPhoto = data),
+                GenresClientService.GetGenres(successAction: _genres.AddRange)
             ]);
 
             if (_user is not null)
