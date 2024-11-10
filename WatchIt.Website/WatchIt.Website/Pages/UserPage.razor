@@ -48,10 +48,12 @@
     {
         <div class="row mt-header">
             <div class="col">
-                <UserPageHeaderPanelComponent AccountProfileInfoData="@(_accountData)"/>
+                <UserPageHeaderPanelComponent Data="@(_accountData)"
+                                              Followers="@(_followers)"
+                                              LoggedUserData="@(_loggedUserData)"/>
             </div>
         </div>
-        <div class="row mt-over-panel-menu">
+        <div class="row mt-default">
             <div class="col">
                 <Tabs Pills
                       RenderMode="TabsRenderMode.LazyLoad"
@@ -62,6 +64,8 @@
                         <Tab Name="movies">Movies</Tab>
                         <Tab Name="series">TV Series</Tab>
                         <Tab Name="people">People</Tab>
+                        <Tab Name="follows">Follows</Tab>
+                        <Tab Name="followers">Followers</Tab>
                     </Items>
                     <Content>
                         <TabPanel Name="summary">
@@ -160,20 +164,32 @@
                                                PictureDownloadingTask="@((id, action) => PersonsClientService.GetPersonPhoto(id, action))"
                                                ItemDownloadingTask="@((query, action) => AccountsClientService.GetAccountRatedPersons(_accountData.Id, query, action))"
                                                SortingOptions="@(new Dictionary<string, string>
-                                               {
-                                                   { "user_rating.average", "Average user rating" },
-                                                   { "user_rating.count", "Number of user ratings" },
-                                                   { "user_rating_last_date", "User rating date" },
-                                                   { "rating.average", "Average rating" },
-                                                   { "rating.count", "Number of ratings" },
-                                                   { "name", "Name" },
-                                                   { "birth_date", "Birth date" },
-                                                   { "death_date", "Death date" },
-                                               })"
+                                                               {
+                                                                   { "user_rating.average", "Average user rating" },
+                                                                   { "user_rating.count", "Number of user ratings" },
+                                                                   { "user_rating_last_date", "User rating date" },
+                                                                   { "rating.average", "Average rating" },
+                                                                   { "rating.count", "Number of ratings" },
+                                                                   { "name", "Name" },
+                                                                   { "birth_date", "Birth date" },
+                                                                   { "death_date", "Death date" },
+                                                               })"
                                                PosterPlaceholder="/assets/person_poster.png"
                                                GetGlobalRatingMethod="@((id, action) => PersonsClientService.GetPersonGlobalRating(id, action))">
                                     <PersonsRatedFilterFormComponent/>
                                 </ListComponent>
+                            </div>
+                        </TabPanel>
+                        <TabPanel Name="follows">
+                            <div class="mt-default">
+                                <FollowListPanelComponent Title="Follows"
+                                                          DownloadItemsMethod="action => AccountsClientService.GetAccountFollows(_accountData.Id, successAction: action)"/>
+                            </div>
+                        </TabPanel>
+                        <TabPanel Name="followers">
+                            <div class="mt-default">
+                                <FollowListPanelComponent Title="Followers"
+                                                          DownloadItemsMethod="action => AccountsClientService.GetAccountFollowers(_accountData.Id, successAction: action)"/>
                             </div>
                         </TabPanel>
                     </Content>

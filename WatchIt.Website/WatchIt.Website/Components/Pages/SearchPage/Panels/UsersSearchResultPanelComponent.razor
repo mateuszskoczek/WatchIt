@@ -1,5 +1,4 @@
 @using Blazorise.Extensions
-@using WatchIt.Website.Components.Pages.SearchPage.Subcomponents
 
 
 
@@ -29,7 +28,7 @@
                             @{
                                 int iCopy = i;
                             }
-                            <UserSearchResultItemComponent Item="@(_items[iCopy])"/>
+                            <UserListItemComponent Item="@(_items[iCopy])"/>
                         </div>
                     </div>
                 }

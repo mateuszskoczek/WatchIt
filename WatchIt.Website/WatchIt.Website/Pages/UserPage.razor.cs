@@ -38,7 +38,11 @@ public partial class UserPage : ComponentBase
     private bool _loaded;
     private bool _redirection;
     private bool _owner;
+    private User? _user;
+
+    private AccountResponse? _loggedUserData;
     private AccountResponse? _accountData;
+    private List<AccountResponse> _followers;
     
     #endregion
 
@@ -66,8 +70,13 @@ public partial class UserPage : ComponentBase
             await Task.WhenAll(step1Tasks);
             endTasks.AddRange(
             [
-                AccountsClientService.GetAccountProfileBackground(_accountData.Id, data => Layout.BackgroundPhoto = data)
+                AccountsClientService.GetAccountProfileBackground(_accountData.Id, data => Layout.BackgroundPhoto = data),
+                AccountsClientService.GetAccountFollowers(_accountData.Id, successAction: data => _followers = data.ToList())
             ]);
+            if (_user is not null)
+            {
+                endTasks.Add(AccountsClientService.GetAccount(_user.Id, data => _loggedUserData = data));
+            }
             
             // END
             await Task.WhenAll(endTasks);
@@ -79,20 +88,20 @@ public partial class UserPage : ComponentBase
 
     private async Task GetUserData()
     {
-        User? user = await AuthenticationService.GetUserAsync();
+        _user = await AuthenticationService.GetUserAsync();
         if (!Id.HasValue)
         {
-            if (user is null)
+            if (_user is null)
             {
                 NavigationManager.NavigateTo($"/auth?redirect_to={WebUtility.UrlEncode("/user")}");
                 _redirection = true;
                 return;
             }
-            Id = user.Id;
+            Id = _user.Id;
         }
         
         await AccountsClientService.GetAccount(Id.Value, data => _accountData = data);
-        _owner = Id.Value == user?.Id;
+        _owner = Id.Value == _user?.Id;
     }
     
 

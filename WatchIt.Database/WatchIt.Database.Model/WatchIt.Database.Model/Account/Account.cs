@@ -41,7 +41,7 @@ public class Account
     public virtual IEnumerable<AccountRefreshToken> AccountRefreshTokens { get; set; } = new List<AccountRefreshToken>();
     
     public virtual IEnumerable<AccountFollow> AccountFollows { get; set; } = new List<AccountFollow>();
-    public virtual IEnumerable<AccountFollow> AccountFollowedBy { get; set; } = new List<AccountFollow>();
+    public virtual IEnumerable<AccountFollow> AccountFollowers { get; set; } = new List<AccountFollow>();
 
     #endregion
 }

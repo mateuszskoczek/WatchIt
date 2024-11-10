@@ -66,6 +66,11 @@ body, html {
     gap: 1rem;
 }
 
+.metadata-pill-hoverable:hover {
+    background-color: gray;
+    color: black;
+}
+
 
 
 

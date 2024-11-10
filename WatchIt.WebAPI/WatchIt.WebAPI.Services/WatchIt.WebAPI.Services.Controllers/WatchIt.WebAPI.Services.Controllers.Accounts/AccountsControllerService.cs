@@ -319,6 +319,8 @@ public class AccountsControllerService(
     
     #endregion
     
+    #region Media
+    
     public async Task<RequestResult> GetAccountRatedMovies(long id, MovieRatedQueryParameters query)
     {
         Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
@@ -362,6 +364,79 @@ public class AccountsControllerService(
         response = query.PrepareData(response);
         return RequestResult.Ok(response);
     }
+    
+    #endregion
+    
+    #region Follows
+
+    public async Task<RequestResult> GetAccountFollows(long id, AccountQueryParameters query)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        IEnumerable<AccountResponse> data = account.AccountFollows.Select(x => new AccountResponse(x.AccountFollowed));
+        data = query.PrepareData(data);
+        return RequestResult.Ok(data);
+    }
+    
+    public async Task<RequestResult> GetAccountFollowers(long id, AccountQueryParameters query)
+    {
+        Account? account = await database.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+        if (account is null)
+        {
+            return RequestResult.NotFound();
+        }
+
+        IEnumerable<AccountResponse> data = account.AccountFollowers.Select(x => new AccountResponse(x.AccountFollower));
+        data = query.PrepareData(data);
+        return RequestResult.Ok(data);
+    }
+    
+    public async Task<RequestResult> PostAccountFollow(long userId)
+    {
+        long followerId = userService.GetUserId();
+        if (userId == followerId)
+        {
+            return RequestResult.BadRequest().AddValidationError("user_id", "You cannot follow yourself");
+        }
+        if (!database.Accounts.Any(x => x.Id == userId))
+        {
+            return RequestResult.BadRequest().AddValidationError("user_id", "User with this id doesn't exist");
+        }
+        
+        Account account = await database.Accounts.FirstAsync(x => x.Id == followerId);
+        if (account.AccountFollows.All(x => x.AccountFollowedId != userId))
+        {
+            AccountFollow follow = new AccountFollow()
+            {
+                AccountFollowerId = followerId,
+                AccountFollowedId = userId,
+            };
+            await database.AccountFollows.AddAsync(follow);
+            await database.SaveChangesAsync();
+        }
+        
+        return RequestResult.Ok();
+    }
+
+    public async Task<RequestResult> DeleteAccountFollow(long userId)
+    {
+        AccountFollow? accountFollow = await database.AccountFollows.FirstOrDefaultAsync(x => x.AccountFollowerId == userService.GetUserId() && x.AccountFollowedId == userId);
+
+        if (accountFollow is not null)
+        {
+            database.AccountFollows.Attach(accountFollow);
+            database.AccountFollows.Remove(accountFollow);
+            await database.SaveChangesAsync();
+        }
+        
+        return RequestResult.Ok();
+    }
+    
+    #endregion
 
     #endregion
 

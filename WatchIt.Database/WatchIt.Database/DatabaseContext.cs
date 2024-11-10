@@ -40,6 +40,7 @@ public class DatabaseContext : DbContext
 
     // Account
     public virtual DbSet<Account> Accounts { get; set; }
+    public virtual DbSet<AccountFollow> AccountFollows { get; set; }
     public virtual DbSet<AccountProfilePicture> AccountProfilePictures { get; set; }
     public virtual DbSet<AccountRefreshToken> AccountRefreshTokens { get; set; }
 

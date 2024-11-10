@@ -22,4 +22,8 @@ public class Accounts
     public string GetAccountRatedMovies { get; set; }
     public string GetAccountRatedSeries { get; set; }
     public string GetAccountRatedPersons { get; set; }
+    public string GetAccountFollows { get; set; }
+    public string GetAccountFollowers { get; set; }
+    public string PostAccountFollow { get; set; }
+    public string DeleteAccountFollow { get; set; }
 }

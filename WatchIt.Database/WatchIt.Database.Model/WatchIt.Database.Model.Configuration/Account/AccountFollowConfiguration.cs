@@ -22,7 +22,7 @@ public class AccountFollowConfiguration : IEntityTypeConfiguration<AccountFollow
                .IsRequired();
         
         builder.HasOne(x => x.AccountFollowed)
-               .WithMany(x => x.AccountFollowedBy)
+               .WithMany(x => x.AccountFollowers)
                .HasForeignKey(x => x.AccountFollowedId)
                .IsRequired();
         builder.Property(x => x.AccountFollowedId)
