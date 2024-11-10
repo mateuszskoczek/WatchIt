@@ -1,0 +1,29 @@
+<div class="vstack gap-default">
+    <div class="panel panel-section-header">
+        <h3 class="fw-bold m-0">@(Title)</h3>
+    </div>
+    @if (!_loaded)
+    {
+        <div class="panel">
+            <LoadingComponent Color="LoadingComponent.LoadingComponentColors.Light"/>
+        </div>
+    }
+    else if (!_items.Any())
+    {
+        <div class="panel">
+            <div class="d-flex justify-content-center">
+                No items
+            </div>
+        </div>
+    }
+    else
+    {
+        foreach (AccountResponse item in _items)
+        {
+            <div class="panel">
+                <UserListItemComponent Item="item"
+                                       PictureSize="50"/>
+            </div>
+        }
+    }
+</div>

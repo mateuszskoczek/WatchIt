@@ -135,6 +135,8 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     
     #endregion
     
+    #region Media
+    
     [HttpGet("{id}/movies")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(IEnumerable<MovieRatedResponse>), StatusCodes.Status200OK)]
@@ -152,4 +154,35 @@ public class AccountsController(IAccountsControllerService accountsControllerSer
     [ProducesResponseType(typeof(IEnumerable<PersonRatedResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetAccountRatedPersons([FromRoute]long id, PersonRatedQueryParameters query) => await accountsControllerService.GetAccountRatedPersons(id, query);
+    
+    #endregion
+
+    #region Follows
+
+    [HttpGet("{id}/follows")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<AccountResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetAccountFollows([FromRoute]long id, AccountQueryParameters query) => await accountsControllerService.GetAccountFollows(id, query);
+    
+    [HttpGet("{id}/followers")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<AccountResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetAccountFollowers([FromRoute]long id, AccountQueryParameters query) => await accountsControllerService.GetAccountFollowers(id, query);
+    
+    [HttpPost("follows/{user_id}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> PostAccountFollow([FromRoute(Name = "user_id")]long userId) => await accountsControllerService.PostAccountFollow(userId);
+    
+    [HttpDelete("follows/{user_id}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> DeleteAccountFollow([FromRoute(Name = "user_id")]long userId) => await accountsControllerService.DeleteAccountFollow(userId);
+
+    #endregion
 }

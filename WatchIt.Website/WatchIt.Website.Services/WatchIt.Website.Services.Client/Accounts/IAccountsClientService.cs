@@ -18,13 +18,17 @@ public interface IAccountsClientService
     Task GetAccountProfileBackground(long id, Action<PhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null);
     Task PutAccountProfileBackground(AccountProfileBackgroundRequest data, Action<PhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
     Task DeleteAccountProfileBackground(Action? successAction = null, Action? unauthorizedAction = null);
-    Task GetAccounts(AccountQueryParameters query, Action<IEnumerable<AccountResponse>>? successAction = null);
+    Task GetAccounts(AccountQueryParameters? query = null, Action<IEnumerable<AccountResponse>>? successAction = null);
     Task GetAccount(long id, Action<AccountResponse>? successAction = null, Action? notFoundAction = null);
     Task PutAccountProfileInfo(AccountProfileInfoRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
     Task PatchAccountUsername(AccountUsernameRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
     Task PatchAccountEmail(AccountEmailRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
     Task PatchAccountPassword(AccountPasswordRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
-    Task GetAccountRatedMovies(long id, MovieRatedQueryParameters query, Action<IEnumerable<MovieRatedResponse>>? successAction = null, Action? notFoundAction = null);
-    Task GetAccountRatedSeries(long id, SeriesRatedQueryParameters query, Action<IEnumerable<SeriesRatedResponse>>? successAction = null, Action? notFoundAction = null);
-    Task GetAccountRatedPersons(long id, PersonRatedQueryParameters query, Action<IEnumerable<PersonRatedResponse>>? successAction = null, Action? notFoundAction = null);
+    Task GetAccountRatedMovies(long id, MovieRatedQueryParameters? query = null, Action<IEnumerable<MovieRatedResponse>>? successAction = null, Action? notFoundAction = null);
+    Task GetAccountRatedSeries(long id, SeriesRatedQueryParameters? query = null, Action<IEnumerable<SeriesRatedResponse>>? successAction = null, Action? notFoundAction = null);
+    Task GetAccountRatedPersons(long id, PersonRatedQueryParameters? query = null, Action<IEnumerable<PersonRatedResponse>>? successAction = null, Action? notFoundAction = null);
+    Task GetAccountFollows(long id, AccountQueryParameters? query = null, Action<IEnumerable<AccountResponse>>? successAction = null, Action? notFoundAction = null);
+    Task GetAccountFollowers(long id, AccountQueryParameters? query = null, Action<IEnumerable<AccountResponse>>? successAction = null, Action? notFoundAction = null);
+    Task PostAccountFollow(long userId, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null);
+    Task DeleteAccountFollow(long userId, Action? successAction = null, Action? unauthorizedAction = null);
 }

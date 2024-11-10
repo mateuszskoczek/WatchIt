@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WatchIt.Database;
@@ -11,9 +12,11 @@ using WatchIt.Database;
 namespace WatchIt.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20241108200642_GenreDescriptionRemoved")]
+    partial class GenreDescriptionRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,35 +111,11 @@ namespace WatchIt.Database.Migrations
                             Email = "root@watch.it",
                             IsAdmin = true,
                             LastActive = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LeftSalt = "QkJky0:m43g!mRL_-0S'",
-                            Password = new byte[] { 104, 21, 33, 198, 192, 7, 229, 80, 195, 46, 190, 26, 125, 243, 113, 195, 194, 9, 145, 142, 56, 34, 125, 141, 133, 113, 14, 172, 29, 90, 194, 60, 98, 40, 121, 132, 218, 157, 80, 128, 70, 136, 201, 208, 36, 37, 124, 215, 144, 242, 212, 68, 209, 27, 248, 191, 212, 84, 250, 35, 230, 51, 218, 15 },
-                            RightSalt = "~-jO$aMa{Q9lAW~>)Z+Z",
+                            LeftSalt = "HIZYSU/94oe$[jAy\\{7V",
+                            Password = new byte[] { 118, 180, 133, 0, 25, 6, 65, 230, 20, 221, 180, 8, 111, 189, 191, 158, 98, 160, 80, 196, 146, 99, 90, 55, 196, 219, 245, 244, 167, 89, 123, 74, 37, 92, 234, 81, 74, 199, 149, 128, 7, 213, 202, 191, 162, 62, 19, 144, 206, 83, 80, 237, 37, 179, 12, 215, 61, 179, 94, 189, 30, 98, 100, 164 },
+                            RightSalt = "#(^8YBkY;<X=LKE_7$2p",
                             Username = "root"
                         });
-                });
-
-            modelBuilder.Entity("WatchIt.Database.Model.Account.AccountFollow", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<long>("AccountFollowedId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("AccountFollowerId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountFollowedId");
-
-                    b.HasIndex("AccountFollowerId");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.ToTable("AccountFollows");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Account.AccountProfilePicture", b =>
@@ -1017,25 +996,6 @@ namespace WatchIt.Database.Migrations
                     b.Navigation("ProfilePicture");
                 });
 
-            modelBuilder.Entity("WatchIt.Database.Model.Account.AccountFollow", b =>
-                {
-                    b.HasOne("WatchIt.Database.Model.Account.Account", "AccountFollowed")
-                        .WithMany("AccountFollowers")
-                        .HasForeignKey("AccountFollowedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WatchIt.Database.Model.Account.Account", "AccountFollower")
-                        .WithMany("AccountFollows")
-                        .HasForeignKey("AccountFollowerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AccountFollowed");
-
-                    b.Navigation("AccountFollower");
-                });
-
             modelBuilder.Entity("WatchIt.Database.Model.Account.AccountRefreshToken", b =>
                 {
                     b.HasOne("WatchIt.Database.Model.Account.Account", "Account")
@@ -1348,10 +1308,6 @@ namespace WatchIt.Database.Migrations
 
             modelBuilder.Entity("WatchIt.Database.Model.Account.Account", b =>
                 {
-                    b.Navigation("AccountFollowers");
-
-                    b.Navigation("AccountFollows");
-
                     b.Navigation("AccountRefreshTokens");
 
                     b.Navigation("RatingMedia");

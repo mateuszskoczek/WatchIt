@@ -9,7 +9,6 @@ public partial class UserPageHeaderPanelComponent : ComponentBase
 {
     #region SERVICES
 
-    [Inject] private IAuthenticationService AuthenticationService { get; set; } = default!;
     [Inject] private IAccountsClientService AccountsClientService { get; set; } = default!;
 
     #endregion
@@ -18,38 +17,45 @@ public partial class UserPageHeaderPanelComponent : ComponentBase
     
     #region PARAMETERS
     
-    [Parameter] public required AccountResponse AccountProfileInfoData { get; set; }
+    [Parameter] public required AccountResponse Data { get; set; }
+    [Parameter] public required List<AccountResponse> Followers { get; set; }
+    [Parameter] public AccountResponse? LoggedUserData { get; set; }
+    [Parameter] public Action<bool>? FollowingChanged { get; set; }
     
     #endregion
     
     
     
     #region FIELDS
+
+    private bool _followLoading;
     
-    private AccountProfilePictureResponse? _accountProfilePicture;
-
     #endregion
-
-
-
+    
+    
+    
     #region PRIVATE METHODS
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private async Task Follow()
     {
-        if (firstRender)
+        _followLoading = true;
+        if (Followers.Any(x => x.Id == LoggedUserData!.Id))
         {
-            List<Task> endTasks = new List<Task>();
-            
-            // STEP 0
-            endTasks.AddRange(
-            [
-                AccountsClientService.GetAccountProfilePicture(AccountProfileInfoData.Id, data => _accountProfilePicture = data),
-            ]);
-            
-            // END
-            await Task.WhenAll(endTasks);
-            
-            StateHasChanged();
+            await AccountsClientService.DeleteAccountFollow(Data.Id, () =>
+            {
+                Followers.RemoveAll(x => x.Id == LoggedUserData!.Id);
+                FollowingChanged?.Invoke(false);
+                _followLoading = false;
+            });
+        }
+        else
+        {
+            await AccountsClientService.PostAccountFollow(Data.Id, () =>
+            {
+                Followers.Add(LoggedUserData);
+                FollowingChanged?.Invoke(true);
+                _followLoading = false;
+            });
         }
     }
 

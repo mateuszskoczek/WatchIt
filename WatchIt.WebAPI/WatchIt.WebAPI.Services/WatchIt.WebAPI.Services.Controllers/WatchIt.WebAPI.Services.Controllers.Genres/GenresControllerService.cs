@@ -49,26 +49,6 @@ public class GenresControllerService(DatabaseContext database, IUserService user
         return RequestResult.Created($"genres/{item.Id}", new GenreResponse(item));
     }
 
-    public async Task<RequestResult> PutGenre(short id, GenreRequest data)
-    {
-        UserValidator validator = userService.GetValidator().MustBeAdmin();
-        if (!validator.IsValid)
-        {
-            return RequestResult.Forbidden();
-        }
-        
-        Genre? item = await database.Genres.FirstOrDefaultAsync(x => x.Id == id);
-        if (item is null)
-        {
-            return RequestResult.NotFound();
-        }
-        
-        data.UpdateGenre(item);
-        await database.SaveChangesAsync();
-        
-        return RequestResult.Ok();
-    }
-
     public async Task<RequestResult> DeleteGenre(short id)
     {
         UserValidator validator = userService.GetValidator().MustBeAdmin();
@@ -98,14 +78,13 @@ public class GenresControllerService(DatabaseContext database, IUserService user
 
     public async Task<RequestResult> GetGenreMedia(short id, MediaQueryParameters query)
     {
-        if (!database.Genres.Any(x => x.Id == id))
+        Genre? genre = await database.Genres.FirstOrDefaultAsync(x => x.Id == id);
+        if (genre is null)
         {
             return RequestResult.NotFound();
         }
         
-        IEnumerable<Database.Model.Media.Media> rawData = await database.Media.Where(x => x.MediaGenres.Any(y => y.GenreId == id))
-                                                                              .ToListAsync();
-        IEnumerable<MediaResponse> data = rawData.Select(x => new MediaResponse(x, database.MediaMovies.Any(y => y.Id == x.Id) ? MediaType.Movie : MediaType.Series));
+        IEnumerable<MediaResponse> data = genre.Media.Select(x => new MediaResponse(x, database.MediaMovies.Any(y => y.Id == x.Id) ? MediaType.Movie : MediaType.Series));
         data = query.PrepareData(data);
         return RequestResult.Ok(data);
     }

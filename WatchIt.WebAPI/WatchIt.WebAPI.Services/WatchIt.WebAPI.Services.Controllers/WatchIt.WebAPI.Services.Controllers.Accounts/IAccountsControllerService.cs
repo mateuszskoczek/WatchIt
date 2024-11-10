@@ -28,4 +28,8 @@ public interface IAccountsControllerService
     Task<RequestResult> GetAccountRatedMovies(long id, MovieRatedQueryParameters query);
     Task<RequestResult> GetAccountRatedSeries(long id, SeriesRatedQueryParameters query);
     Task<RequestResult> GetAccountRatedPersons(long id, PersonRatedQueryParameters query);
+    Task<RequestResult> GetAccountFollows(long id, AccountQueryParameters query);
+    Task<RequestResult> GetAccountFollowers(long id, AccountQueryParameters query);
+    Task<RequestResult> PostAccountFollow(long userId);
+    Task<RequestResult> DeleteAccountFollow(long userId);
 }

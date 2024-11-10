@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WatchIt.Database;
@@ -11,9 +12,11 @@ using WatchIt.Database;
 namespace WatchIt.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20241108211519_AccountFollowAdded")]
+    partial class AccountFollowAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,9 +111,9 @@ namespace WatchIt.Database.Migrations
                             Email = "root@watch.it",
                             IsAdmin = true,
                             LastActive = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LeftSalt = "QkJky0:m43g!mRL_-0S'",
-                            Password = new byte[] { 104, 21, 33, 198, 192, 7, 229, 80, 195, 46, 190, 26, 125, 243, 113, 195, 194, 9, 145, 142, 56, 34, 125, 141, 133, 113, 14, 172, 29, 90, 194, 60, 98, 40, 121, 132, 218, 157, 80, 128, 70, 136, 201, 208, 36, 37, 124, 215, 144, 242, 212, 68, 209, 27, 248, 191, 212, 84, 250, 35, 230, 51, 218, 15 },
-                            RightSalt = "~-jO$aMa{Q9lAW~>)Z+Z",
+                            LeftSalt = "sfA:fW!3D=GbwXn]X+rm",
+                            Password = new byte[] { 95, 134, 48, 126, 85, 131, 129, 152, 252, 161, 69, 133, 62, 112, 45, 111, 3, 163, 80, 99, 167, 66, 169, 121, 140, 69, 242, 14, 89, 126, 184, 43, 62, 87, 22, 1, 88, 246, 34, 181, 231, 110, 14, 54, 120, 114, 37, 67, 240, 82, 112, 125, 84, 155, 194, 90, 14, 189, 90, 68, 30, 146, 204, 105 },
+                            RightSalt = "@$rr>fSvr5Ls|D+Wp;?D",
                             Username = "root"
                         });
                 });
@@ -136,7 +139,7 @@ namespace WatchIt.Database.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("AccountFollows");
+                    b.ToTable("AccountFollow");
                 });
 
             modelBuilder.Entity("WatchIt.Database.Model.Account.AccountProfilePicture", b =>
@@ -1020,7 +1023,7 @@ namespace WatchIt.Database.Migrations
             modelBuilder.Entity("WatchIt.Database.Model.Account.AccountFollow", b =>
                 {
                     b.HasOne("WatchIt.Database.Model.Account.Account", "AccountFollowed")
-                        .WithMany("AccountFollowers")
+                        .WithMany("AccountFollowedBy")
                         .HasForeignKey("AccountFollowedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1348,7 +1351,7 @@ namespace WatchIt.Database.Migrations
 
             modelBuilder.Entity("WatchIt.Database.Model.Account.Account", b =>
                 {
-                    b.Navigation("AccountFollowers");
+                    b.Navigation("AccountFollowedBy");
 
                     b.Navigation("AccountFollows");
 

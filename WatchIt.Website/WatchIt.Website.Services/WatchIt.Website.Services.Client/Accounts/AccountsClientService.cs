@@ -13,6 +13,36 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
 {
     #region PUBLIC METHODS
     
+    #region Main
+    
+    public async Task GetAccounts(AccountQueryParameters? query = null, Action<IEnumerable<AccountResponse>>? successAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccounts);
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url)
+        {
+            Query = query
+        };
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .ExecuteAction();
+    }
+    
+    public async Task GetAccount(long id, Action<AccountResponse>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccount, id);
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    #endregion
+    
+    #region Authentication
+    
     public async Task Register(RegisterRequest data, Action<RegisterResponse>? createdAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Accounts.Register);
@@ -69,7 +99,11 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
         response.RegisterActionFor2XXSuccess(successAction)
                 .ExecuteAction();
     }
+    
+    #endregion
 
+    #region Profile picture
+    
     public async Task GetAccountProfilePicture(long id, Action<AccountProfilePictureResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountProfilePicture, id);
@@ -109,7 +143,11 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
                 .RegisterActionFor401Unauthorized(unauthorizedAction)
                 .ExecuteAction();
     }
-
+    
+    #endregion
+    
+    #region Profile background
+    
     public async Task GetAccountProfileBackground(long id, Action<PhotoResponse>? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountProfileBackground, id);
@@ -150,29 +188,9 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
                 .ExecuteAction();
     }
     
-    public async Task GetAccounts(AccountQueryParameters query, Action<IEnumerable<AccountResponse>>? successAction = null)
-    {
-        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccounts);
-        HttpRequest request = new HttpRequest(HttpMethodType.Get, url)
-        {
-            Query = query
-        };
-        
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
-        response.RegisterActionFor2XXSuccess(successAction)
-                .ExecuteAction();
-    }
+    #endregion
     
-    public async Task GetAccount(long id, Action<AccountResponse>? successAction = null, Action? notFoundAction = null)
-    {
-        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccount, id);
-        HttpRequest request = new HttpRequest(HttpMethodType.Get, url);
-        
-        HttpResponse response = await httpClientService.SendRequestAsync(request);
-        response.RegisterActionFor2XXSuccess(successAction)
-                .RegisterActionFor404NotFound(notFoundAction)
-                .ExecuteAction();
-    }
+    #region Account management
     
     public async Task PutAccountProfileInfo(AccountProfileInfoRequest data, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null)
     {
@@ -234,6 +252,10 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
                 .ExecuteAction();
     }
     
+    #endregion
+
+    #region Media
+
     public async Task GetAccountRatedMovies(long id, MovieRatedQueryParameters query, Action<IEnumerable<MovieRatedResponse>>? successAction = null, Action? notFoundAction = null)
     {
         string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountRatedMovies, id);
@@ -275,6 +297,63 @@ public class AccountsClientService(IHttpClientService httpClientService, IConfig
                 .RegisterActionFor404NotFound(notFoundAction)
                 .ExecuteAction();
     }
+
+    #endregion
+
+    #region Follows
+
+    public async Task GetAccountFollows(long id, AccountQueryParameters? query = null, Action<IEnumerable<AccountResponse>>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountFollows, id);
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url)
+        {
+            Query = query
+        };
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task GetAccountFollowers(long id, AccountQueryParameters? query = null, Action<IEnumerable<AccountResponse>>? successAction = null, Action? notFoundAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.GetAccountFollowers, id);
+        HttpRequest request = new HttpRequest(HttpMethodType.Get, url)
+        {
+            Query = query
+        };
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor404NotFound(notFoundAction)
+                .ExecuteAction();
+    }
+    
+    public async Task PostAccountFollow(long userId, Action? successAction = null, Action<IDictionary<string, string[]>>? badRequestAction = null, Action? unauthorizedAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.PostAccountFollow, userId);
+        HttpRequest request = new HttpRequest(HttpMethodType.Post, url);
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor400BadRequest(badRequestAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .ExecuteAction();
+    }
+    
+    public async Task DeleteAccountFollow(long userId, Action? successAction = null, Action? unauthorizedAction = null)
+    {
+        string url = GetUrl(EndpointsConfiguration.Accounts.DeleteAccountFollow, userId);
+        HttpRequest request = new HttpRequest(HttpMethodType.Delete, url);
+        
+        HttpResponse response = await httpClientService.SendRequestAsync(request);
+        response.RegisterActionFor2XXSuccess(successAction)
+                .RegisterActionFor401Unauthorized(unauthorizedAction)
+                .ExecuteAction();
+    }
+
+    #endregion
     
     #endregion
 
