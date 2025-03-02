@@ -1,0 +1,74 @@
+@using System.Net
+@using Blazorise.Snackbar
+@using Refit
+@using WatchIt.Database.Model.Media
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Query
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Response
+@using WatchIt.DTO.Models.Generics.Rating
+@using WatchIt.Website.Components.List
+
+@inherits Page
+
+@page "/media/movies"
+
+<PageTitle>Movies - WatchIt</PageTitle>
+
+
+
+<List TItem="MediumMovieResponse"
+      TEntity="MediumMovie"
+      TQuery="MediumMovieFilterQuery"
+      Title="Movies database"
+      IdFunc="@(item => item.Id)"
+      NameFunc="@(item => item.Title)"
+      AdditionalNameInfoFunc="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+      GlobalRatingFunc="@(item => item.Rating)"
+      PictureFunc="@(item => Task.FromResult(item.Picture))"
+      UrlIdTemplate="/media/{0}"
+      PicturePlaceholder="/assets/placeholders/medium.png"
+      GetItemsMethod="@(async (filterQuery, orderQuery, pagingQuery) =>
+                      {
+                          IApiResponse<IEnumerable<MediumMovieResponse>> response = await MediaClient.GetMediumMovies(filterQuery, orderQuery, pagingQuery, true);
+                          if (!response.IsSuccessful)
+                          {
+                              await Base.SnackbarStack.PushAsync($"An error occured. Movies could not be obtained.", SnackbarColor.Danger);
+                          }
+                          return response.Content ?? [];
+                      })"
+      SortingOptions="@(new Dictionary<string, string>
+                      {
+                          { "rating.count", "Number of ratings" },
+                          { "rating.average", "Average rating" },
+                          { "title", "Title" },
+                          { "release_date", "Release date" },
+                      })"
+      GetGlobalRatingMethod="@(async x => (await MediaClient.GetMediumRating(x.Id)).Content)"
+      GetYourRatingMethod="@(async (item, userId) =>
+                           {
+                               IApiResponse<RatingUserResponse> response = await MediaClient.GetMediumUserRating(item.Id, userId);
+                               if (!response.IsSuccessful && response.StatusCode != HttpStatusCode.NotFound)
+                               {
+                                   await Base.SnackbarStack.PushAsync($"An error has occured. Your rating for movie with id {item.Id} could not be loaded.", SnackbarColor.Danger);
+                               }
+                               return response.Content;
+                           })"
+      PutYourRatingMethod="@(async (item, request) =>
+                           {
+                               string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                               IApiResponse response = await MediaClient.PutMediumRating(token, item.Id, request);
+                               if (!response.IsSuccessful)
+                               {
+                                   await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate movies", SnackbarColor.Danger);
+                               }
+                           })"
+      DeleteYourRatingMethod="@(async item =>
+                              {
+                                  string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                  IApiResponse response = await MediaClient.DeleteMediumRating(token, item.Id);
+                                  if (!response.IsSuccessful)
+                                  {
+                                      await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate movies", SnackbarColor.Danger);
+                                  }
+                              })">
+    <MediumMoviesFilter/>
+</List>

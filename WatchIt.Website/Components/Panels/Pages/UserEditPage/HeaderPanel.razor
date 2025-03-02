@@ -1,0 +1,15 @@
+@using WatchIt.Website.Components.Subcomponents.Common
+
+@inherits Component
+
+
+
+<div class="panel" role="button" @onclick="@(() => NavigationManager.NavigateTo("/user"))">
+    <div class="d-flex gap-3 align-items-center">
+        <AccountPicture Item="@(Data)" Size="60"/>
+        <div class="d-flex-inline flex-column">
+            <h2 id="primaryText" class="fw-bold m-0">@(Data.Username)</h2>
+            <span id="secondaryText" class="text-secondary">User settings</span>
+        </div>
+    </div>
+</div>

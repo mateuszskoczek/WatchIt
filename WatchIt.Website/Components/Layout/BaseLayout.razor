@@ -1,0 +1,16 @@
+@using Blazorise.Snackbar
+
+@inherits LayoutComponentBase
+
+<CascadingValue Value="@(this)">
+    @(Body)
+
+    <SnackbarStack @ref="SnackbarStack" Location="SnackbarStackLocation.Bottom" />
+    
+    <style>
+        /* TAGS */
+        body {
+            background-image: url('@(Background?.ToString() ?? "assets/placeholders/background.jpg")');
+        }
+    </style>
+</CascadingValue>

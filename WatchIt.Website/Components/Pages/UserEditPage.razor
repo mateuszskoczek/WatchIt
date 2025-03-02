@@ -1,0 +1,120 @@
+@using System.Net
+@using System.Text
+@using WatchIt.Website.Components.Panels.Pages.UserEditPage
+@using Blazorise
+@using Blazorise.Snackbar
+@using Refit
+@using WatchIt.DTO.Models.Generics.Image
+@using WatchIt.Website.Components.Subcomponents.Common
+@using WatchIt.Website.Components.Panels.Common
+@using Authorization = WatchIt.Website.Components.Subcomponents.Common.Authorization
+
+@inherits Page
+
+@page "/user_settings"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+
+    if (_data is null)  sb.Insert(0, "Loading...");
+    else                sb.Insert(0, "User settings");
+
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+<Authorization>
+    <Authorized>
+        <div class="vstack gap-default">
+            <HeaderPanel Data="@(Base.AuthorizedAccount)"/>
+            <Tabs Pills
+                  RenderMode="TabsRenderMode.LazyLoad"
+                  Class="panel panel-menu panel-background-menu justify-content-center"
+                  SelectedTab="profile">
+                <Items>
+                    <Tab Name="profile">Profile</Tab>
+                    <Tab Name="account">Account</Tab>
+                </Items>
+                <Content>
+                    <TabPanel Name="profile">
+                        <div class="vstack gap-default">
+                            <div class="container-grid">
+                                <div class="row gx-default">
+                                    <div class="col-auto">
+                                        <ImageEditorPanel Image="@(Base.AuthorizedAccount.ProfilePicture)"
+                                                          Class="h-100"
+                                                          ImagePlaceholder="assets/placeholders/user.png"
+                                                          Circle="true"
+                                                          ImageGetMethod="@(async () =>
+                                                                          {
+                                                                              IApiResponse<ImageResponse> response = await AccountsClient.GetAccountProfilePicture(Base.AuthorizedAccount.Id);
+                                                                              if (!response.IsSuccessful && response.StatusCode != HttpStatusCode.NotFound)
+                                                                              {
+                                                                                  await Base.SnackbarStack.PushAsync("An error occured. Profile picture could not be obtained.", SnackbarColor.Danger);
+                                                                              }
+
+                                                                              return response.Content;
+                                                                          })"
+                                                          ImagePutMethod="@(async request =>
+                                                                          {
+                                                                              string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                                              IApiResponse<ImageResponse> response = await AccountsClient.PutAccountProfilePicture(token, request);
+                                                                              if (response.IsSuccessful)
+                                                                              {
+                                                                                  Base.AuthorizedAccount.ProfilePicture = response.Content;
+                                                                                  NavigationManager.Refresh(true);
+                                                                              }
+                                                                              else
+                                                                              {
+                                                                                  await Base.SnackbarStack.PushAsync("An error occured. Profile picture could not be saved.", SnackbarColor.Danger);
+                                                                              }
+
+                                                                              return response.Content;
+                                                                          })"
+                                                          ImageDeleteMethod="@(async () =>
+                                                                             {
+                                                                                 string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                                                 IApiResponse response = await AccountsClient.DeleteAccountProfilePicture(token);
+                                                                                 if (response.IsSuccessful)
+                                                                                 {
+                                                                                     Base.AuthorizedAccount.ProfilePicture = null;
+                                                                                     NavigationManager.Refresh(true);
+                                                                                 }
+                                                                                 else
+                                                                                 {
+                                                                                     await Base.SnackbarStack.PushAsync("An error occured. Profile picture could not be removed.", SnackbarColor.Danger);
+                                                                                 }
+
+                                                                                 return response.IsSuccessful;
+                                                                             })"/>
+                                    </div>
+                                    <div class="col">
+                                        <EditFormPanel Data="@(Base.AuthorizedAccount)"
+                                                       Class="h-100"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <ProfileBackgroundEditorPanel Id="@(Base.AuthorizedAccount.Id)"/>
+                        </div>
+                    </TabPanel>
+                    <TabPanel Name="account">
+                        <div class="vstack gap-default">
+                            <NewEmailPanel Data="@(Base.AuthorizedAccount)"/>
+                            <NewUsernamePanel Data="@(Base.AuthorizedAccount)"/>
+                            <NewPasswordPanel Data="@(Base.AuthorizedAccount)"/>
+                        </div>
+                    </TabPanel>
+                </Content>
+            </Tabs>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <ErrorPanel ErrorMessage="You must be logged in to access this site."/>
+    </NotAuthorized>
+    <Loading>
+        <div class="m-5">
+            <Loading/>
+        </div>
+    </Loading>
+</Authorization>

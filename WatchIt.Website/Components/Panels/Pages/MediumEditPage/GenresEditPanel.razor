@@ -1,0 +1,51 @@
+@using Blazorise.Extensions
+@using WatchIt.DTO.Models.Controllers.Genres.Genre
+@using WatchIt.Website.Components.Subcomponents.Common
+
+@inherits Component
+
+
+
+<div class="panel">
+    <div class="vstack gap-3">
+        <h4 class="fw-bold">Genres</h4>
+        <div class="d-flex gap-3">
+            <InputSelect class="w-100 form-control" TValue="short?" @bind-Value="@(_selectedGenre)" disabled="@(Data is null || _addLoading || _chosenGenres.Values.Any(x => x))">
+                <option value="@(default(short?))" selected hidden="hidden">Choose genre...</option>
+                @foreach (GenreResponse genre in _availableGenres)
+                {
+                    <option value="@(genre.Id)">@(genre.Name)</option>
+                }
+            </InputSelect>
+            <button class="btn btn-secondary" @onclick="AddGenre" disabled="@(Data is null || _selectedGenre is null || _addLoading || _chosenGenres.Values.Any(x => x))">
+                <LoadingButtonContent Content="Add" LoadingContent="Adding..." IsLoading="@(_addLoading)"/>
+            </button>
+        </div>
+        @if (_chosenGenres.IsNullOrEmpty())
+        {
+            <span class="text-center">No items</span>
+        }
+        else
+        {
+            <table class="table table-sm table-transparent">
+                <tbody>
+                    @foreach (KeyValuePair<GenreResponse, bool> genre in _chosenGenres)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                @(genre.Key.Name)
+                            </td>
+                            <td class="align-middle table-cell-fit">
+                                <button class="btn btn-outline-danger btn-sm w-100" type="button" disabled="@(_addLoading || genre.Value)" @onclick="@(() => RemoveGenre(genre.Key))">
+                                    <LoadingButtonContent IsLoading="@(genre.Value)">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </LoadingButtonContent>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

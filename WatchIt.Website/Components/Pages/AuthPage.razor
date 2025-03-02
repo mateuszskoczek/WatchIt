@@ -1,0 +1,54 @@
+﻿@using System.Drawing
+@using System.Text
+@using WatchIt.Website.Components.Layout
+@using Blazorise.Snackbar
+@using WatchIt.Website.Components.Subcomponents.Pages.AuthPage
+
+@inherits Page
+
+@layout EmptyLayout
+
+@page "/auth"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+
+    if (_isSingUp)      sb.Insert(0, $"Sing up");
+    else                sb.Insert(0, $"Sing in");
+
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+<CascadingValue Value="this">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="panel panel-auth">
+            <div class="d-flex flex-column align-items-center gap-3">
+                <a id="logo" class="logo m-0" href="/">WatchIt</a>
+                @if (_isSingUp)
+                {
+                    <RegisterForm RegisteredSuccessfully="@(() => _isSingUp = false)"/>
+                }
+                else
+                {
+                    <LoginForm RedirectTo="@(RedirectTo)"/>
+                }
+                <div class="btn-group w-100">
+                    <input type="radio" class="btn-check" name="signtype" id="signin" autocomplete="off" checked="@(!_isSingUp)" @onclick="() => { _isSingUp = false; }">
+                    <label class="btn btn-outline-secondary btn-sm" for="signin">Sign in</label>
+                    <input type="radio" class="btn-check" name="signtype" id="signup" autocomplete="off" checked="@(_isSingUp)" @onclick="() => { _isSingUp = true; }">
+                    <label class="btn btn-outline-secondary btn-sm" for="signup">Sign up</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* IDS */
+
+        #logo {
+            background-image: linear-gradient(45deg, @($"{ColorTranslator.ToHtml(Base.BackgroundSettings.FirstGradientColor)}, {ColorTranslator.ToHtml(Base.BackgroundSettings.SecondGradientColor)}"));
+        }
+    </style>
+</CascadingValue>

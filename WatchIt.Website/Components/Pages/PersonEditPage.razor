@@ -1,0 +1,138 @@
+@using System.Net
+@using System.Text
+@using Blazorise.Snackbar
+@using Refit
+@using WatchIt.DTO.Models.Generics.Image
+@using WatchIt.Website.Components.Subcomponents.Common
+@using WatchIt.Website.Components.Panels.Common
+@using WatchIt.Website.Components.Panels.Pages.PersonEditPage
+@using Authorization = WatchIt.Website.Components.Subcomponents.Common.Authorization
+@using Blazorise
+
+@inherits Page
+
+@page "/people/{id:long}/edit"
+@page "/people/new"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+
+    if (!_loaded)                                       sb.Insert(0, "Loading...");
+    else if (Base.AuthorizedAccount?.IsAdmin == true)   sb.Insert(0, "Error");
+    else
+    {
+        if (_data is null)  sb.Insert(0, "Create new person");
+        else                sb.Insert(0, $"Edit \"{_data.Name}\"");
+    }
+
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+@if (_loaded)
+{
+    <Authorization Admin="true">
+        <Authorized>
+            <div class="vstack gap-default">
+                <HeaderPanel Data=@(_data)/>
+                <div class="container-grid">
+                    <div class="row gx-default">
+                        <div class="col-auto">
+                            <ImageEditorPanel Disabled="@(_data is null)"
+                                              Image="@(_data?.Picture)"
+                                              OnImageChanged="@(pic => _data!.Picture = pic)"
+                                              ImageGetMethod="@(async () =>
+                                                              {
+                                                                  if (_data is not null)
+                                                                  {
+                                                                      IApiResponse<ImageResponse> response = await PeopleClient.GetPersonPicture(_data.Id);
+                                                                      if (response.IsSuccessful || response.StatusCode == HttpStatusCode.NotFound)
+                                                                      {
+                                                                          return response.Content;
+                                                                      }
+                                                                      await Base.SnackbarStack.PushAsync("An error occured. Picture of edited person could not be obtained", SnackbarColor.Danger);
+                                                                  }
+                                                                  return null;
+                                                              })"
+                                              ImagePutMethod="@(async image =>
+                                                              {
+                                                                  if (_data is not null)
+                                                                  {
+                                                                      string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                                      IApiResponse<ImageResponse> response = await PeopleClient.PutPersonPicture(token, _data.Id, image);
+                                                                      if (response.IsSuccessful)
+                                                                      {
+                                                                          return response.Content;
+                                                                      }
+                                                                      await Base.SnackbarStack.PushAsync("An error occured. Picture of person could not be changed", SnackbarColor.Danger);
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                      await Base.SnackbarStack.PushAsync("An error occured. There is no person data, needed for picture saving", SnackbarColor.Danger);
+                                                                  }
+                                                                  return null;
+                                                              })"
+                                              ImageDeleteMethod="@(async () =>
+                                                                 {
+                                                                     if (_data is not null)
+                                                                     {
+                                                                         string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                                         IApiResponse response = await PeopleClient.DeletePersonPicture(token, _data.Id);
+                                                                         if (!response.IsSuccessful)
+                                                                         {
+                                                                             await Base.SnackbarStack.PushAsync("An error occured. Picture of person could not be deleted", SnackbarColor.Danger);
+                                                                         }
+                                                                         return response.IsSuccessful;
+                                                                     }
+                                                                     await Base.SnackbarStack.PushAsync("An error occured. There is no person data, needed for picture saving", SnackbarColor.Danger);
+                                                                     return false;
+                                                                 })"
+                                              ImagePlaceholder="/assets/placeholders/person.png"
+                                              Class="h-100"/>
+                        </div>
+                        <div class="col">
+                            <EditFormPanel Data="@(_data)"
+                                           Class="h-100"/>
+                        </div>
+                    </div>
+                </div>
+                <Tabs Pills
+                      RenderMode="TabsRenderMode.LazyLoad"
+                      Class="panel panel-menu panel-background-menu justify-content-center"
+                      SelectedTab="actor">
+                    <Items>
+                        <Tab Name="actor">Actor</Tab>
+                        <Tab Name="creator">Creator</Tab>
+                    </Items>
+                    <Content>
+                        <TabPanel Name="actor">
+                            <ActorRolesEditPanel Data="@(_data)"
+                                                 Disabled="@(_data is null)"
+                                                 Media="@(_media)"/>
+                        </TabPanel>
+                        <TabPanel Name="creator">
+                            <CreatorRolesEditPanel Data="@(_data)"
+                                                   Disabled="@(_data is null)"
+                                                   Media="@(_media)"/>
+                        </TabPanel>
+                    </Content>
+                </Tabs>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <ErrorPanel ErrorMessage="You do not have permission to view this site"/>
+        </NotAuthorized>
+        <Loading>
+            <div class="m-5">
+                <Loading/>
+            </div>
+        </Loading>
+    </Authorization>
+}
+else
+{
+    <div class="m-5">
+        <Loading/>
+    </div>
+}

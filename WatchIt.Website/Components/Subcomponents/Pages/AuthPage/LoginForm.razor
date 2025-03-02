@@ -1,0 +1,34 @@
+@inherits Component
+
+
+
+<EditForm Model="@(_model)">
+    <AntiforgeryToken/>
+    <div class="container-grid">
+        <div class="row form-group mb-1">
+            <label for="username" class="col-5 col-form-label">Username or email:</label>
+            <div class="col">
+                <InputText id="username" class="form-control" @bind-Value="_model.UsernameOrEmail"/>
+            </div>
+        </div>
+        <div class="row form-group my-1">
+            <label for="password" class="col-5 col-form-label">Password:</label>
+            <div class="col">
+                <InputText id="password" type="password" class="form-control" @bind-Value="_model.Password"/>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col align-self-center">
+                <div class="form-check">
+                    <InputCheckbox class="form-check-input" @bind-Value="_model.RememberMe"/>
+                    <label class="form-check-label">Remember me</label>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="d-flex justify-content-stretch">
+                    <button type="submit" class="btn btn-secondary" @onclick="@(Login)">Sign in</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>

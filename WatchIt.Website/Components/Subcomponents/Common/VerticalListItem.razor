@@ -1,0 +1,96 @@
+@inherits Component
+
+
+
+<div class="container-grid">
+    <div class="row">
+        <div class="col-auto">
+            <a class="text-reset text-decoration-none" href="@(ItemUrl)">
+                <Image Content="@(_picture)" Placeholder="@(PicturePlaceholder)" AlternativeText="poster" Height="@(PictureHeight)"/>
+            </a>
+        </div>
+        <div class="col">
+            <div class="d-flex align-items-start flex-column h-100">
+                <div class="mb-auto">
+                    <a style="font-size: @(NameSize)px" class="text-reset text-decoration-none" href="@(ItemUrl)">
+                        <strong>@(Name)</strong>@(string.IsNullOrWhiteSpace(AdditionalInfo) ? string.Empty : AdditionalInfo)
+                    </a>
+                </div>
+                <table id="ratingTable" class="table table-transparent table-bordered align-middle m-0">
+                    <thead>
+                    <tr>
+                        @if (GlobalRating is not null)
+                        {
+                            <th scope="col">
+                                <span class="rating-name-text">Global rating:</span>
+                            </th>
+                        }
+                        @if (_secondaryRating is not null)
+                        {
+                            <th scope="col">
+                                <span class="rating-name-text">@(SecondaryRatingTitle):</span>
+                            </th>
+                        }
+                        @if (GetYourRatingMethod is not null && PutYourRatingMethod is not null && DeleteYourRatingMethod is not null)
+                        {
+                            <th class scope="col">
+                                <span class="rating-name-text">Your rating:</span>
+                            </th>
+                        }
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            @if (GlobalRating is not null)
+                            {
+                                <td>
+                                    @switch (_globalRatingLoaded)
+                                    {
+                                        case true: <DisplayRating Rating="@(GlobalRating)"
+                                                                  EmptyMode="DisplayRating.DisplayRatingComponentEmptyMode.DoubleDash"
+                                                                  Scale="0.85"/> break; 
+                                        case false: <LoadingInline/> break;
+                                    }
+                                </td>
+                            }
+                            @if (_secondaryRating is not null)
+                            {
+                                <td>
+                                    @switch (_secondaryRatingLoaded)
+                                    {
+                                        case true: <DisplayRating Rating="@(_secondaryRating)"
+                                                                  EmptyMode="DisplayRating.DisplayRatingComponentEmptyMode.DoubleDash"
+                                                                  Scale="0.85"/> break;
+                                        case false: <LoadingInline/> break;
+                                    }
+                                </td>
+                            }
+                            @if (GetYourRatingMethod is not null && PutYourRatingMethod is not null && DeleteYourRatingMethod is not null)
+                            {
+                                <td>
+                                    <div class="d-inline-flex align-items-center h-100">
+                                        <Authorization>
+                                            <Loading>
+                                                <LoadingInline/>
+                                            </Loading>
+                                            <NotAuthorized>
+                                                <span id="ratingLoginInfoText">You must be logged in to rate</span>
+                                            </NotAuthorized>
+                                            <Authorized>
+                                                @switch (_yourRatingLoaded)
+                                                {
+                                                    case true: <Blazorise.Rating Color="Blazorise.Color.Light" MaxValue="10" @bind-SelectedValue="@(_yourRating)" @onclick="@(RatingChanged)"/> break;
+                                                    case false: <LoadingInline/> break;
+                                                }
+                                            </Authorized>
+                                        </Authorization>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

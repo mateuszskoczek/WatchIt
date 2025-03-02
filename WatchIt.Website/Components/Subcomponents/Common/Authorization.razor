@@ -1,0 +1,26 @@
+@inherits Component
+
+@if (BaseLayout.AuthorizationLoaded)
+{
+    if (BaseLayout.AuthorizedAccount is null || (Admin && !BaseLayout.AuthorizedAccount.IsAdmin))
+    {
+        if (NotAuthorized is not null)
+        {
+            @(NotAuthorized)
+        }
+    }
+    else
+    {
+        if (Authorized is not null)
+        {
+            @(Authorized)
+        }
+    }
+}
+else
+{
+    if (Loading is not null)
+    {
+        @(Loading)
+    }
+}

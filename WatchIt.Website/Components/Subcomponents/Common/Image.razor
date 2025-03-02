@@ -1,0 +1,3 @@
+@inherits Component
+
+<img class="@(Circle ? "rounded-circle" : "rounded-2") @(Shadow ? "shadow" : string.Empty) object-fit-cover @(Class)" src="@(Content?.ToString() ?? Placeholder)" alt="@(AlternativeText)" @attributes="@(_attributes)" style="aspect-ratio: @(AspectRatio.ToString());"/>

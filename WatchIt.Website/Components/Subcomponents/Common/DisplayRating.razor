@@ -1,0 +1,54 @@
+@using Blazorise.Extensions
+@using WatchIt.DTO.Models.Generics.Rating
+
+@inherits Component
+
+
+
+<div class="d-flex align-items-center gap-2">
+    @if (Rating is not IRatingOverallResponse overallRating || overallRating.Count > 0 || EmptyMode == DisplayRatingComponentEmptyMode.DoubleDash)
+    {
+        <i id="star" class="fas fa-star"></i>
+    }
+    <div class="vstack">
+        @switch (Rating)
+        {
+            case RatingUserResponse userRating:
+                <span id="ratingSingleLine">@($"{userRating.Rating}/10")</span>
+                break;
+            case IRatingOverallResponse { Count: > 0 } overallResponse:
+                <span id="ratingAverage">@($"{Math.Round(overallResponse.Rating!.Value, 2)}/10")</span>
+                <span id="ratingCount">@(overallResponse.Count)</span>
+                break;
+            default:
+                <div id="ratingSingleLine">
+                    @switch (EmptyMode)
+                    {
+                        case DisplayRatingComponentEmptyMode.NoRatings: @("no ratings"); break;
+                        case DisplayRatingComponentEmptyMode.DoubleDash: @("--/10"); break;
+                    }
+                </div>
+                break;
+        }
+    </div>
+</div>
+
+<style>
+    #star {
+        font-size: @((2 * Scale).ToCultureInvariantString())rem;
+    }
+
+    #ratingAverage {
+        margin-top: @((-5 * Scale).ToCultureInvariantString())px;
+        font-size: @((1.3 * Scale).ToCultureInvariantString())rem;
+    }
+
+    #ratingSingleLine {
+        font-size: @((1.3 * Scale).ToCultureInvariantString())rem;
+    }
+
+    #ratingCount {
+        margin-top: @((-5 * Scale).ToCultureInvariantString())px;
+        font-size: @((0.8 * Scale).ToCultureInvariantString())rem;
+    }
+</style>

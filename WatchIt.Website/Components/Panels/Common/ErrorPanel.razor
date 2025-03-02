@@ -1,0 +1,20 @@
+@inherits Component
+
+
+
+<div class="panel">
+    <div class="vstack">
+        <div class="d-flex justify-content-center">
+            <div class="text-danger icon-size">⚠&#xFE0E;</div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <h3 class="text-danger">An error occured while loading a page</h3>
+        </div>
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <div class="d-flex justify-content-center">
+                <p>@ErrorMessage</p>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,135 @@
+@using System.Text
+@using WatchIt.Website.Components.Subcomponents.Common
+@using WatchIt.Website.Components.Panels.Common
+@using WatchIt.Website.Components.Panels.Pages.PersonPage
+@using Blazorise
+@using Blazorise.Snackbar
+@using Refit
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Response
+@using WatchIt.DTO.Models.Controllers.Roles.Role.Query
+@using WatchIt.DTO.Models.Controllers.Roles.Role.Response
+@using WatchIt.DTO.Models.Controllers.Roles.RoleActorType
+@using WatchIt.DTO.Models.Controllers.Roles.RoleCreatorType
+
+@inherits Page
+
+@page "/people/{id:long}"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+    
+    if (!_loaded)               sb.Insert(0, "Loading...");
+    else if (_data is null)     sb.Insert(0, "Error");
+    else                        sb.Insert(0, _data.Name);
+    
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+@if (!_loaded)
+{
+    <div class="m-5">
+        <Loading/>
+    </div>
+}
+else if (_data is null)
+{
+    <ErrorPanel ErrorMessage="@($"Person with ID {Id} was not found")"/>
+}
+else
+{
+    <div class="vstack gap-default">
+        <ItemPageHeaderPanel Name="@(_data.Name)"
+                             Description="@(_data.Description)"
+                             Subname="@(_data.FullName)"
+                             Poster="@(_data.Picture)"
+                             PosterPlaceholder="/assets/placeholders/person.png"/>
+        <div class="container-grid">
+            <div class="row gx-default">
+                <div class="col">
+                    <MetadataPanel Data="@(_data)"/>
+                </div>
+                <div class="col-auto">
+                    <RatingPanel @ref="@(_ratingPanel)" Data="@(_data)"/>
+                </div>
+            </div>
+        </div>
+        <Tabs Pills
+              RenderMode="TabsRenderMode.LazyLoad"
+              SelectedTab="actor"
+              Class="panel panel-menu panel-background-menu justify-content-center">
+            <Items>
+                <Tab Name="actor">Actor</Tab>
+                <Tab Name="creator">Creator</Tab>
+            </Items>
+            <Content>
+                <TabPanel Name="actor">
+                    <RolesPanel TRole="RoleActorResponse"
+                                TRoleParent="MediumResponse"
+                                Title="Actors"
+                                RoleParents="@(_media)"
+                                ParentName="Media"
+                                ParentFunc="@((role, parents) => parents.First(x => x.Id == role.MediumId))"
+                                NameFunc="@((_, parent) => parent.Title)"
+                                AdditionalInfoFunc="@((role, _) => $" as {role.Name}")"
+                                PicturePlaceholder="/assets/placeholders/medium.png"
+                                PictureFunc="@((_, parent) => Task.FromResult(parent.Picture))"
+                                UrlFunc="@((_, parent) => $"media/{parent.Id}")"
+                                GlobalRatingFunc="@((_, parent) => parent.Rating)"
+                                GetRoleTypesMethod="@(async () =>
+                                                    {
+                                                        IApiResponse<IEnumerable<RoleActorTypeResponse>> response = await RolesClient.GetRoleActorTypes();
+                                                        if (!response.IsSuccessful)
+                                                        {
+                                                            await Base.SnackbarStack.PushAsync("An error occured. Actor role types could not be loaded.", SnackbarColor.Danger);
+                                                        }
+                                                        return response.Content;
+                                                    })"
+                                GetRolesMethod="@(async () =>
+                                                {
+                                                    IApiResponse<IEnumerable<RoleActorResponse>> response = await RolesClient.GetRoleActors(new RoleActorFilterQuery { PersonId = _data.Id });
+                                                    if (!response.IsSuccessful)
+                                                    {
+                                                        await Base.SnackbarStack.PushAsync("An error occured. Actor roles could not be loaded.", SnackbarColor.Danger);
+                                                    }
+                                                    return response.Content;
+                                                })"
+                                OnRatingChanged="@(async () => await _ratingPanel.Update())"/>
+                </TabPanel>
+                <TabPanel Name="creator">
+                    <RolesPanel TRole="RoleCreatorResponse"
+                                TRoleParent="MediumResponse"
+                                Title="Creators"
+                                RoleParents="@(_media)"
+                                ParentName="Media"
+                                ParentFunc="@((role, parents) => parents.First(x => x.Id == role.MediumId))"
+                                NameFunc="@((_, parent) => parent.Title)"
+                                PicturePlaceholder="/assets/placeholders/medium.png"
+                                PictureFunc="@((_, parent) => Task.FromResult(parent.Picture))"
+                                UrlFunc="@((_, parent) => $"media/{parent.Id}")"
+                                GlobalRatingFunc="@((_, parent) => parent.Rating)"
+                                GetRoleTypesMethod="@(async () =>
+                                                    {
+                                                        IApiResponse<IEnumerable<RoleCreatorTypeResponse>> response = await RolesClient.GetRoleCreatorTypes();
+                                                        if (!response.IsSuccessful)
+                                                        {
+                                                            await Base.SnackbarStack.PushAsync("An error occured. Creator role types could not be loaded.", SnackbarColor.Danger);
+                                                        }
+                                                        return response.Content;
+                                                    })"
+                                GetRolesMethod="@(async () =>
+                                                {
+                                                    IApiResponse<IEnumerable<RoleCreatorResponse>> response = await RolesClient.GetRoleCreators(new RoleCreatorFilterQuery { PersonId = _data.Id });
+                                                    if (!response.IsSuccessful)
+                                                    {
+                                                        await Base.SnackbarStack.PushAsync("An error occured. Creator roles could not be loaded.", SnackbarColor.Danger);
+                                                    }
+                                                    return response.Content;
+                                                })"
+                                OnRatingChanged="@(async () => await _ratingPanel.Update())"/>
+                </TabPanel>
+            </Content>
+        </Tabs>
+    </div>
+}

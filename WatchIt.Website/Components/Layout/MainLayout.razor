@@ -1,0 +1,110 @@
+@using System.Drawing
+@using System.Net
+@using WatchIt.Website.Components.Subcomponents.Common
+@using Blazorise
+@using Microsoft.AspNetCore.Components.Authorization
+@using WatchIt.DTO.Models.Controllers.Genres.Genre
+@using Size = Blazorise.Size
+@using Color = Blazorise.Color
+
+@inherits LayoutComponentBase
+
+@layout BaseLayout
+
+
+
+<div class="container-xl">
+    <div class="row sticky-top top-3 mb-2rem">
+        <div class="col">
+            <div class="panel panel-header">
+                <div class="container-grid">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <a id="logo" class="logo default-gradient" href="/">
+                                WatchIt
+                            </a>
+                        </div>
+                        <div class="col-auto">
+                            @if (_searchbarVisible)
+                            {
+                                <Searchbar OnCloseButtonClicked="@(() => _searchbarVisible = false)"/>
+                            }
+                            else
+                            {
+                                <div class="d-flex gap-2 align-items-center">
+                                    <Dropdown>
+                                        <DropdownToggle Color="Color.Default" Size="Size.Small" ToggleIconVisible="false">Database</DropdownToggle>
+                                        <DropdownMenu>
+                                            <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/media/movies"))">Movies</DropdownItem>
+                                            <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/media/series"))">TV Series</DropdownItem>
+                                            <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/people"))">People</DropdownItem>
+                                        </DropdownMenu>
+                                    </Dropdown>
+                                    @if (_genres.Any())
+                                    {
+                                        <Dropdown>
+                                            <DropdownToggle Color="Color.Default" Size="Size.Small" ToggleIconVisible="false">Genres</DropdownToggle>
+                                            <DropdownMenu MaxMenuHeight="250px">
+                                                @foreach (GenreResponse genre in _genres)
+                                                {
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo($"/genres/{genre.Id}/media", true))">@(genre.Name)</DropdownItem>
+                                                }
+                                            </DropdownMenu>
+                                        </Dropdown>
+                                    }
+                                    <button type="button" class="btn btn-sm" @onclick="@(() => _searchbarVisible = true)">⌕</button>
+                                </div>
+                            }
+                        </div>
+                        <div class="col">
+                            <div class="float-end">
+                                <Authorization>
+                                    <Authorized>
+                                        <Dropdown RightAligned>
+                                            <Button Color="Color.Default" Clicked="@(() => NavigationManager.NavigateTo($"/users/{BaseLayout.AuthorizedAccount!.Id}"))">
+                                                <div class="d-flex gap-2 align-items-center">
+                                                    <AccountPicture Item="@(BaseLayout.AuthorizedAccount!)" Size="30"/>
+                                                    <span>@(BaseLayout.AuthorizedAccount!.Username)</span>
+                                                </div>
+                                            </Button>
+                                            <DropdownToggle Color="Color.Default" Split />
+                                            <DropdownMenu>
+                                                <DropdownItem Clicked="@(() => NavigationManager.NavigateTo($"/users/{BaseLayout.AuthorizedAccount!.Id}"))">Your profile</DropdownItem>
+                                                <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/user_settings"))">User settings</DropdownItem>
+                                                @if (BaseLayout.AuthorizedAccount!.IsAdmin)
+                                                {
+                                                    <DropdownDivider/>
+                                                    <DropdownItem Clicked="@(() => NavigationManager.NavigateTo("/admin"))">Administrator panel</DropdownItem>
+                                                }
+                                                <DropdownDivider/>
+                                                <DropdownItem TextColor="TextColor.Danger" Clicked="@(Logout)">Log out</DropdownItem>
+                                            </DropdownMenu>
+                                        </Dropdown>
+                                    </Authorized>
+                                    <NotAuthorized>
+                                        <a class="main-button default-gradient" href="/auth?redirect_to=@(WebUtility.UrlEncode(NavigationManager.Uri))">Sign in</a>
+                                    </NotAuthorized>
+                                    <Loading>
+                                        <LoadingInline/>
+                                    </Loading>
+                                </Authorization>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row pt-3 pb-3">
+        <div class="col">
+            @Body
+        </div>
+    </div>
+</div>
+
+<style>
+    /* CLASS */
+    .default-gradient {
+        background-image: linear-gradient(45deg, @($"{ColorTranslator.ToHtml(BaseLayout.BackgroundSettings.FirstGradientColor)}, {ColorTranslator.ToHtml(BaseLayout.BackgroundSettings.SecondGradientColor)}"));
+    }
+</style>

@@ -1,0 +1,78 @@
+@using Blazorise.Extensions
+@using WatchIt.DTO.Models.Controllers.Genres.Genre
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Response
+@inherits Component
+
+
+
+<div class="panel h-100">
+    <div class="container-grid">
+        <div class="row">
+            <div class="col">
+                <div class="d-flex flex-wrap metadata-pill-container">
+                    <div class="metadata-pill">
+                        <strong>@(Data is MediumMovieResponse ? "Movie" : "TV Series")</strong>
+                    </div>
+                    @if (Data.ReleaseDate is not null)
+                    {
+                        <div class="metadata-pill">
+                            <strong>Release date:</strong> @Data.ReleaseDate.ToString()
+                        </div>
+                    }
+                    @if (Data.Duration is not null)
+                    {
+                        <div class="metadata-pill">
+                            <strong>Length:</strong> @TimeSpan.FromMinutes(Data.Duration.Value).ToString(@"hh\:mm")
+                        </div>
+                    }
+                    @if (Data is MediumMovieResponse movieData)
+                    {
+                        if (movieData.Budget is not null)
+                        {
+                            <div class="metadata-pill">
+                                <strong>Budget:</strong> @(Math.Round(movieData.Budget.Value))$
+                            </div>
+                        }
+                    }
+                    @if (Data is MediumSeriesResponse seriesData)
+                    {
+                        if (seriesData.HasEnded)
+                        {
+                            <div class="metadata-pill">
+                                Ended
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <h4><strong>Genres:</strong></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="d-flex flex-wrap gap-3">
+                    @if (Data.Genres.IsNullOrEmpty())
+                    {
+                        <div>
+                            No genres assigned.
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (GenreResponse genre in Data.Genres)
+                        {
+                            <a class="text-decoration-none text-light" href="/genre/@genre.Id">
+                                <div class="metadata-pill">
+                                    @genre.Name
+                                </div>
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

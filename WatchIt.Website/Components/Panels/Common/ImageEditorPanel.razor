@@ -1,0 +1,72 @@
+@using WatchIt.Website.Components.Subcomponents.Common
+
+@inherits Component
+
+
+
+<div class="panel @(Class)">
+    @if (_loaded)
+    {
+        <div class="vstack gap-3">
+            <Image Content="@(_imageSelected)" Placeholder="@(ImagePlaceholder)" AlternativeText="loaded_image" Circle="@(Circle)" Width="@(ContentWidth)"/>
+            <Blazorise.FileEdit Width="@(Blazorise.Width.Px(ContentWidth - 100))" Changed="@(LoadImageFromFile)" Filter="image/jpeg, image/png, image/webp" Disabled="@(Disabled)"/>
+            @if (_imageChanged || _imageSaved is not null)
+            {
+                <div class="content-width">
+                    @if (_imageChanged)
+                    {
+                        <div class="container-grid">
+                            <div class="row gx-1">
+                                <div class="col">
+                                    <button type="button" class="btn btn-secondary btn-block btn-stretch-x" @onclick="@(SaveImage)" disabled=@(Disabled || _imageSaving || _imageDeleting) autocomplete="off">
+                                        @if (!_imageSaving)
+                                        {
+                                            <span>Save</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <span>Saving...</span>
+                                        }
+                                    </button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="@(CancelImage)" disabled=@(Disabled || _imageSaving || _imageDeleting) autocomplete="off">Drop changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (_imageSaved is not null)
+                    {
+                        <button type="button" class="btn btn-danger btn-block btn-stretch-x" @onclick="@(DeleteImage)" disabled=@(Disabled || _imageSaving || _imageDeleting) autocomplete="off">
+                            @if (!_imageSaving)
+                            {
+                                <span>Delete</span>
+                            }
+                            else
+                            {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span>Deleting...</span>
+                            }
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="d-flex align-items-center justify-content-center h-100 content-width">
+            <Loading Color="@(Loading.Colors.Light)"/>
+        </div>
+    }
+</div>
+
+
+<style>
+    /* CLASSES */
+    
+    .content-width {
+        width: @(ContentWidth)px;
+    }
+</style>

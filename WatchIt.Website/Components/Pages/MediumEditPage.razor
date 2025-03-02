@@ -1,0 +1,154 @@
+@using System.Net
+@using System.Text
+@using Blazorise.Snackbar
+@using Refit
+@using WatchIt.DTO.Models.Generics.Image
+@using WatchIt.Website.Components.Subcomponents.Common
+@using WatchIt.Website.Components.Panels.Common
+@using WatchIt.Website.Components.Panels.Pages.MediumEditPage
+@using Authorization = WatchIt.Website.Components.Subcomponents.Common.Authorization
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Response
+@using Blazorise
+
+@inherits Page
+
+@page "/media/{id:long}/edit"
+@page "/media/new/{type?}"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+    
+    if (!_loaded)                                       sb.Insert(0, "Loading...");
+    else if (Base.AuthorizedAccount?.IsAdmin != true)   sb.Insert(0, "Error");
+    else
+    {
+        if (_data is not null)      sb.Insert(0, $"Edit \"{_data.Title}\"");
+        else
+        {
+            if (Type == "series")   sb.Insert(0, "TV series");
+            else                    sb.Insert(0, "movie");
+            sb.Insert(0, "New ");
+        }
+    }
+
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+@if (_loaded)
+{
+    <Authorization Admin="true">
+        <Authorized>
+            <div class="vstack gap-default">
+                <HeaderPanel Data=@(_data)
+                             TypeIfNull="@(Type == "series" ? NullType.Series : NullType.Movie)"/>
+                <div class="container-grid">
+                    <div class="row gx-default">
+                        <div class="col-auto">
+                            <ImageEditorPanel Disabled="@(_data is null)"
+                                              Image="@(_data?.Picture)"
+                                              OnImageChanged="@(pic => _data!.Picture = pic)"
+                                              ImageGetMethod="@(async () =>
+                                                              {
+                                                                  if (_data is not null)
+                                                                  {
+                                                                      IApiResponse<ImageResponse> response = await MediaClient.GetMediumPicture(_data.Id);
+                                                                      if (response.IsSuccessful || response.StatusCode == HttpStatusCode.NotFound)
+                                                                      {
+                                                                          return response.Content;
+                                                                      }
+                                                                      await Base.SnackbarStack.PushAsync("An error occured. Picture of edited medium could not be obtained", SnackbarColor.Danger);
+                                                                  }
+                                                                  return null;
+                                                              })"
+                                              ImagePutMethod="@(async image =>
+                                                              {
+                                                                  if (_data is not null)
+                                                                  {
+                                                                      string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                                      IApiResponse<ImageResponse> response = await MediaClient.PutMediumPicture(token, _data.Id, image);
+                                                                      if (response.IsSuccessful)
+                                                                      {
+                                                                          return response.Content;
+                                                                      }
+                                                                      await Base.SnackbarStack.PushAsync("An error occured. Picture of medium could not be changed", SnackbarColor.Danger);
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                      await Base.SnackbarStack.PushAsync("An error occured. There is no medium data, needed for picture saving", SnackbarColor.Danger);
+                                                                  }
+                                                                  return null;
+                                                              })"
+                                              ImageDeleteMethod="@(async () =>
+                                                                 {
+                                                                     if (_data is not null)
+                                                                     {
+                                                                         string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                                         IApiResponse response = await MediaClient.DeleteMediumPicture(token, _data.Id);
+                                                                         if (!response.IsSuccessful)
+                                                                         {
+                                                                             await Base.SnackbarStack.PushAsync("An error occured. Picture of medium could not be deleted", SnackbarColor.Danger);
+                                                                         }
+                                                                         return response.IsSuccessful;
+                                                                     }
+                                                                     await Base.SnackbarStack.PushAsync("An error occured. There is no medium data, needed for picture saving", SnackbarColor.Danger);
+                                                                     return false;
+                                                                 })"
+                                              ImagePlaceholder="/assets/placeholders/medium.png"
+                                              Class="h-100"/>
+                        </div>
+                        <div class="col">
+                            <EditFormPanel Data="@(_data)"
+                                           TypeIfNull="@(Type == "series" ? NullType.Series : NullType.Movie)"
+                                           Class="h-100"/>
+                        </div>
+                    </div>
+                </div>
+                <Tabs Pills
+                      RenderMode="TabsRenderMode.LazyLoad"
+                      Class="panel panel-menu panel-background-menu justify-content-center"
+                      SelectedTab="genres">
+                    <Items>
+                        <Tab Name="genres">Genres</Tab>
+                        <Tab Name="actors">Actors</Tab>
+                        <Tab Name="creators">Creators</Tab>
+                        <Tab Name="photos">Photos</Tab>
+                    </Items>
+                    <Content>
+                        <TabPanel Name="genres">
+                            <GenresEditPanel Data="@(_data)"/>
+                        </TabPanel>
+                        <TabPanel Name="actors">
+                            <ActorRolesEditPanel Data="@(_data)"
+                                                 Disabled="@(_data is null)"
+                                                 People="@(_people)"/>
+                        </TabPanel>
+                        <TabPanel Name="creators">
+                            <CreatorRolesEditPanel Data="@(_data)"
+                                                   Disabled="@(_data is null)"
+                                                   People="@(_people)"/>
+                        </TabPanel>
+                        <TabPanel Name="photos">
+                            <PhotosEditPanel Id="@(_data?.Id)"/>
+                        </TabPanel>
+                    </Content>
+                </Tabs>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <ErrorPanel ErrorMessage="You do not have permission to view this site"/>
+        </NotAuthorized>
+        <Loading>
+            <div class="m-5">
+                <Loading/>
+            </div>
+        </Loading>
+    </Authorization>
+}
+else
+{
+    <div class="m-5">
+        <Loading/>
+    </div>
+}

@@ -1,0 +1,26 @@
+@using WatchIt.Website.Components.Subcomponents.Common
+@inherits Component
+
+
+
+<div class="panel" role="button" @onclick="@(Data is not null ? () => NavigationManager.NavigateTo($"/media/{Data.Id}") : null)" style="cursor: @(Data is null ? "default" : "pointer")">
+    <div class="d-flex gap-3 align-items-center">
+        <Image Content="@(Data?.Picture)" Height="60" Placeholder="/assets/placeholders/medium.png" AlternativeText="poster"/>
+        <div class="d-flex-inline flex-column">
+            <h2 id="primaryText" class="m-0">
+                @if (Data is null)
+                {
+                    <span class="fw-bold">New @(TypeIfNull == NullType.Movie ? "movie" : "TV series")</span>
+                }
+                else
+                {
+                    <span class="fw-bold">@(Data.Title)</span>
+                }
+            </h2>
+            @if (Data is not null)
+            {
+                <span id="secondaryText" class="text-secondary">Medium settings</span>
+            }
+        </div>
+    </div>
+</div>

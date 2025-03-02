@@ -1,0 +1,10 @@
+@inherits Component
+
+
+
+<div class="d-flex align-items-center gap-4" role="button" @onclick="@(() => NavigationManager.NavigateTo($"/users/{Item.Id}", true))">
+    <AccountPicture Item="@(Item)"
+                    ProfilePictureIncluded="@(ProfilePictureIncluded)"
+                    Size="@(PictureSize)"/>
+    <h4 class="fw-bold">@(Item.Username)</h4>
+</div>

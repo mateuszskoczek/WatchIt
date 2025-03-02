@@ -1,0 +1,129 @@
+@using System.Drawing
+@using WatchIt.DTO.Models.Controllers.Photos.Photo
+@using WatchIt.Website.Components.Subcomponents.Common
+@using Blazorise.Components
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Response
+
+@inherits Component
+
+
+
+<div class="panel">
+    @if (_loaded)
+    {
+        <div class="vstack gap-4">
+            <div class="d-flex align-items-center gap-3">
+                <h4 class="me-auto m-0 fw-bold">Profile background</h4>
+                @if (_editMode)
+                {
+                    <button class="btn btn-danger" @onclick="@(Cancel)">Cancel</button>
+                }
+                else
+                {
+                    <button class="btn btn-secondary" @onclick="@(Edit)">Edit</button>
+                    if (Base.CustomBackground is not null)
+                    {
+                        <button class="btn btn-danger" @onclick="@(Remove)">
+                            <LoadingButtonContent LoadingContent="Removing..." Content="Remove" IsLoading="@(_removeLoading)"/>
+                        </button>
+                    }
+                }
+            </div>
+            @if (_editMode)
+            {
+                <div class="vstack gap-3">
+                    <div class="container-grid">
+                        <div class="row gx-2">
+                            <div class="col">
+                                <Autocomplete ElementId="actorFormMedia"
+                                              TItem="MediumResponse"
+                                              TValue="long?"
+                                              Data="@(_mediaList)"
+                                              TextField="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                                              ValueField="@(item => item.Id)"
+                                              @bind-SelectedValue="@(_selectedMedia)"
+                                              Placeholder="Search media..."
+                                              Filter="AutocompleteFilter.Contains">
+                                    <NotFoundContent Context="not_found_context"> Sorry... @not_found_context was not found</NotFoundContent>
+                                </Autocomplete>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-secondary" disabled="@(_backgroundsLoading || _selectedMedia is null)" @onclick="@(LoadBackgrounds)">
+                                    <LoadingButtonContent LoadingContent="Loading..." Content="Load backgrounds" IsLoading="@(_backgroundsLoading)"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    @if (_mediaPhotos is null)
+                    {
+                        <span class="text-center">Select media first</span>
+                    }
+                    else if (!_mediaPhotos.Any())
+                    {
+                        <span class="text-center">No backgrounds for this media</span>
+                    }
+                    else
+                    {
+                        <div id="scrollPhotos" class="d-flex p-3 gap-3" data-bs-spy="scroll" tabindex="0">
+                            @foreach (PhotoResponse photo in _mediaPhotos)
+                            {
+                                <div class="photo-container">
+                                    <div class="container-grid">
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <Image Content="@(photo)" AlternativeText="photo" Width="350" Placeholder="/assets/photo.png" AspectRatio="Image.ImageComponentAspectRatio.Photo"/>
+                                            </div>
+                                        </div>
+                                        <div class="row gx-2">
+                                            <div class="col">
+                                                <div class="border rounded-3" style="height: 30px; background: linear-gradient(45deg, @($"{ColorTranslator.ToHtml(photo.Background!.FirstGradientColor)}, {ColorTranslator.ToHtml(photo.Background!.SecondGradientColor)}")"></div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="button" class="btn btn-secondary btn-sm" disabled="@(_saveLoading)" @onclick="@(async () => await Save(photo.Background.Id))">
+                                                    <LoadingButtonContent LoadingContent="Saving..." Content="Select" IsLoading="@(_saveLoading)"/>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                if (_selectedPhoto is not null)
+                {
+                    <div class="container-grid">
+                        <div class="row gx-3 mb-2">
+                            <div class="col">
+                                <Image Class="w-100" Content="@(_selectedPhoto)" AlternativeText="background" Placeholder="/assets/placeholders/photo.png" AspectRatio="Image.ImageComponentAspectRatio.Photo"/>
+                            </div>
+                            <div class="col">
+                                <div class="rounded-3 border h-100" style="height: 30px; background: linear-gradient(45deg, @($"{ColorTranslator.ToHtml(_selectedPhoto.Background!.FirstGradientColor)}, {ColorTranslator.ToHtml(_selectedPhoto.Background!.SecondGradientColor)}"));"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="d-flex justify-content-center">
+                                    <a class="text-decoration-none text-reset" href="/media/@(_selectedPhotoMedia!.Id)">
+                                        from <span class="fw-bold">@(_selectedPhotoMedia.Title)</span>@(_selectedPhotoMedia.ReleaseDate.HasValue ? $" ({_selectedPhotoMedia.ReleaseDate.Value.Year})" : string.Empty)
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <span class="text-center">You don't have selected background. Click "Edit" to choose one.</span>
+                }
+            }
+        </div>
+    }
+    else
+    {
+        <Loading Color="@(Loading.Colors.Light)"/>
+    }
+</div>

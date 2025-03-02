@@ -1,0 +1,9 @@
+@inherits Component
+
+<div class="d-flex gap-2 align-items-center">
+    <div class="input-group input-group-sm">
+        <InputText class="form-control" placeholder="Search" @bind-Value="@(_searchText)"/>
+    </div>
+    <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(Search)">⌕</button>
+    <button type="button" class="btn btn-sm" @onclick="@(() => OnCloseButtonClicked?.Invoke())">&#10060;&#xFE0E;</button>
+</div>

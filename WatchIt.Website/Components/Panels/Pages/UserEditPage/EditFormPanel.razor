@@ -1,0 +1,50 @@
+@using WatchIt.DTO.Models.Controllers.Genders.Gender
+@using WatchIt.Website.Components.Subcomponents.Common
+@inherits Component
+
+
+
+<div class="panel @(Class)">
+    @if (_loaded)
+    {
+        <div class="vstack gap-3">
+            <h4 class="fw-bold">Basic profile info</h4>
+            <EditForm Model="@(_data)">
+                <AntiforgeryToken/>
+                <div class="container-grid">
+                    <div class="row form-group my-1">
+                        <label for="desc" class="col-2 col-form-label">Description</label>
+                        <div class="col-10">
+                            <InputTextArea id="desc" class="form-control" @bind-Value="_data!.Description"/>
+                        </div>
+                    </div>
+                    <div class="row form-group my-1">
+                        <label for="desc" class="col-2 col-form-label">Gender</label>
+                        <div class="col-10">
+                            <InputSelect TValue="short?" id="desc" class="form-control" @bind-Value="_data!.GenderId">
+                                <option value="">No choice</option>
+                                @foreach (GenderResponse gender in _genders)
+                                {
+                                    <option value="@(gender.Id)">@(gender.Name)</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col">
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-secondary" disabled="@(_saving)" @onclick="@(Save)">
+                                    <LoadingButtonContent IsLoading="@(_saving)" Content="Save" LoadingContent="Saving..."/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    }
+    else
+    {
+        <Loading Color="@(Loading.Colors.Light)"/>
+    }
+</div>

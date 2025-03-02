@@ -1,0 +1,124 @@
+@using System.Net
+@using WatchIt.Website.Components.Subcomponents.Common
+@using Blazorise
+@using Blazorise.Snackbar
+@using Refit
+@using WatchIt.DTO.Models.Controllers.Roles
+@using WatchIt.DTO.Models.Generics.Rating
+
+@inherits Component
+
+@typeparam TRole where TRole : WatchIt.DTO.Models.Controllers.Roles.Role.Response.RoleResponse
+@typeparam TRoleParent
+
+
+
+<div class="panel @(Class)">
+    @if (_loaded)
+    {
+        <div class="vstack gap-3">
+            <span class="panel-text-title">@(Title)</span>
+            @if (RoleParents is null)
+            {
+                <span class="text-center">An error occured. @(ParentName) could not be obtained.</span>
+            }
+            else if (_roles is null)
+            {
+                <span class="text-center">An error occured. Roles could not be obtained.</span>
+            }
+            else if (!_roles.Any())
+            {
+                <span class="text-center">No items found.</span>
+            }
+            else if (_roleTypes is null)
+            {
+                <span class="text-center">An error occured. Role types could not be obtained.</span>
+            }
+            else
+            {
+                <div class="d-flex justify-content-center">
+                    <RadioGroup TValue="short" Color="Color.Default" Buttons Size="Size.Small" @bind-CheckedValue="@(_checkedType)">
+                        @foreach (IRoleTypeResponse roleType in _roleTypes)
+                        {
+                            <Radio Value="@(roleType.Id)">@roleType.Name</Radio>
+                        }
+                    </RadioGroup>
+                </div>
+                <div class="vstack">
+                    @{
+                        IEnumerable<TRole> roles = _roles.Where(x => x.TypeId == _checkedType);
+                    }
+                    @for (int i = 0; i < roles.Count(); i++)
+                    {
+                        TRole role = roles.ElementAt(i);
+                        TRoleParent parent = ParentFunc(role, RoleParents);
+                        if (i > 0)
+                        {
+                            <hr/>
+                        }
+
+                        <VerticalListItem @key="@(role)" 
+                                          Name="@(NameFunc(role, parent))"
+                                          AdditionalInfo="@(AdditionalInfoFunc is not null ? AdditionalInfoFunc(role, parent) : null)"
+                                          PicturePlaceholder="@(PicturePlaceholder)"
+                                          PictureFunc="@(() => PictureFunc(role, parent))"
+                                          GetGlobalRatingMethod="@(async () =>
+                                                                 {
+                                                                     IApiResponse<RatingOverallResponse> response = await RolesClient.GetRoleRating(role.Id);
+                                                                     if (!response.IsSuccessful)
+                                                                     {
+                                                                         await Base.SnackbarStack.PushAsync($"An error occured. Rating for role with id {role.Id} could not be obtained.", SnackbarColor.Danger);
+                                                                     }
+
+                                                                     return response.Content;
+                                                                 })"
+                                          GetYourRatingMethod="@(async userId =>
+                                                               {
+                                                                   IApiResponse<RatingUserResponse> response = await RolesClient.GetRoleUserRating(role.Id, userId);
+                                                                   if (!response.IsSuccessful)
+                                                                   {
+                                                                       if (response.StatusCode != HttpStatusCode.NotFound)
+                                                                       {
+                                                                           await Base.SnackbarStack.PushAsync($"An error occured. User rating for role with id {role.Id} could not be obtained.", SnackbarColor.Danger);
+                                                                       }
+
+                                                                       return null;
+                                                                   }
+                                                                   else
+                                                                   {
+                                                                       return Convert.ToInt32(response.Content.Rating);
+                                                                   }
+                                                               })"
+                                          PutYourRatingMethod="@(async request =>
+                                                               {
+                                                                   string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                                   IApiResponse response = await RolesClient.PutRoleRating(token, role.Id, request);
+                                                                   if (!response.IsSuccessful)
+                                                                   {
+                                                                       await Base.SnackbarStack.PushAsync($"An error occured. Role could not be rated.", SnackbarColor.Danger);
+                                                                   }
+                                                               })"
+                                          DeleteYourRatingMethod="@(async () =>
+                                                                  {
+                                                                      string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                                      IApiResponse response = await RolesClient.DeleteRoleRating(token, role.Id);
+                                                                      if (!response.IsSuccessful)
+                                                                      {
+                                                                          await Base.SnackbarStack.PushAsync($"An error occured. Role could not be rated.", SnackbarColor.Danger);
+                                                                      }
+                                                                  })"
+                                          ItemUrl="@(UrlFunc(role, parent))"
+                                          PictureHeight="110"
+                                          NameSize="20"
+                                          OnRatingChanged="@(OnRatingChanged)"/>
+                    }
+                </div>
+            }
+        </div>
+        
+    }
+    else
+    {
+        <Loading Color="@(Loading.Colors.Light)"/>
+    }
+</div>
