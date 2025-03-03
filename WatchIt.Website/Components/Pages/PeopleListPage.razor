@@ -1,0 +1,57 @@
+@using System.Net
+@using Blazorise.Snackbar
+@using Refit
+@using WatchIt.Database.Model.People
+@using WatchIt.DTO.Models.Controllers.People.Person
+@using WatchIt.DTO.Models.Controllers.People.Person.Query
+@using WatchIt.DTO.Models.Generics.Rating
+@using WatchIt.Website.Components.List
+
+@inherits Page
+
+@page "/people"
+
+<PageTitle>People - WatchIt</PageTitle>
+
+
+
+<List TItem="PersonResponse"
+      TEntity="Person"
+      TQuery="PersonFilterQuery"
+      Title="People database"
+      IdFunc="@(item => item.Id)"
+      NameFunc="@(item => item.Name)"
+      GlobalRatingFunc="@(item => item.Rating)"
+      PictureFunc="@(item => Task.FromResult(item.Picture))"
+      UrlIdTemplate="/people/{0}"
+      PicturePlaceholder="/assets/placeholders/person.png"
+      GetItemsMethod="@(async (filterQuery, orderQuery, pagingQuery) =>
+                      {
+                          IApiResponse<IEnumerable<PersonResponse>> response = await PeopleClient.GetPeople(filterQuery, orderQuery, pagingQuery, true);
+                          if (!response.IsSuccessful)
+                          {
+                              await Base.SnackbarStack.PushAsync("An error occured. People could not be obtained.", SnackbarColor.Danger);
+                          }
+                          return response.Content ?? [];
+                      })"
+      SortingOptions="@(new Dictionary<string, string>
+                      {
+                          { "rating.count", "Number of ratings" },
+                          { "rating.average", "Average rating" },
+                          { "name", "Name" },
+                          { "birth_date", "Birth date" },
+                          { "death_date", "Death date" },
+                      })"
+      GetGlobalRatingMethod="@(async x => (await PeopleClient.GetPersonRating(x.Id)).Content)"
+      SecondaryRatingTitle="Your rating"
+      GetSecondaryRatingMethod="@(Base.AuthorizedAccount is null ? null : async (item) =>
+                                {
+                                    IApiResponse<RatingUserOverallResponse> response = await PeopleClient.GetPersonUserRating(item.Id, Base.AuthorizedAccount.Id);
+                                    if (!response.IsSuccessful && response.StatusCode != HttpStatusCode.NotFound)
+                                    {
+                                        await Base.SnackbarStack.PushAsync($"An error has occured. Your rating for person with id {item.Id} could not be loaded.", SnackbarColor.Danger);
+                                    }
+                                    return response.Content;
+                                })">
+    <PeopleFilter/>
+</List>

@@ -1,0 +1,68 @@
+@using WatchIt.DTO.Models.Controllers.Genders.Gender
+@using WatchIt.Website.Components.Subcomponents.Common
+
+@inherits Component
+
+
+
+<div class="panel @(Class)">
+    @if (_loaded)
+    {
+        <EditForm Model="@(_request)">
+            <AntiforgeryToken/>
+            <div class="container-grid">
+                <div class="row form-group mb-1">
+                    <label for="name" class="col-2 col-form-label">Name*</label>
+                    <div class="col-10">
+                        <InputText id="name" class="form-control" @bind-Value="_request!.Name"/>
+                    </div>
+                </div>
+                <div class="row form-group mb-1">
+                    <label for="fullName" class="col-2 col-form-label">Full name</label>
+                    <div class="col-10">
+                        <InputText id="fullName" class="form-control" @bind-Value="_request!.FullName"/>
+                    </div>
+                </div>
+                <div class="row form-group my-1">
+                    <label for="desc" class="col-2 col-form-label">Description</label>
+                    <div class="col-10">
+                        <InputTextArea id="desc" class="form-control" @bind-Value="_request!.Description"/>
+                    </div>
+                </div>
+                <div class="row form-group mb-1">
+                    <label for="birthDeathDates" class="col-2 col-form-label">Birth and death</label>
+                    <div class="col-10">
+                        <div id="birthDeathDates" class="input-group">
+                            <InputDate TValue="DateOnly?" class="form-control" @bind-Value="_request!.BirthDate"/>
+                            <span class="input-group-text">-</span>
+                            <InputDate TValue="DateOnly?" class="form-control" @bind-Value="_request!.DeathDate"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group my-1">
+                    <label for="desc" class="col-2 col-form-label">Gender</label>
+                    <div class="col-10">
+                        <InputSelect TValue="short?" id="desc" class="form-control" @bind-Value="_request!.GenderId">
+                            <option value="@(default(short?))">No choice</option>
+                            @foreach (GenderResponse gender in _genders)
+                            {
+                                <option value="@(gender.Id)">@(gender.Name)</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col d-flex flex-column align-items-end">
+                        <button type="submit" class="btn btn-secondary" disabled="@(_saving)" @onclick="@(SaveData)">
+                            <LoadingButtonContent IsLoading="@(_saving)" Content="Save" LoadingContent="Saving..."/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </EditForm>
+    }
+    else
+    {
+        <Loading Color="@(Loading.Colors.Light)"/>
+    }
+</div>

@@ -1,0 +1,24 @@
+@using WatchIt.Website.Components.Subcomponents.Common
+
+@inherits Component
+
+<div class="panel panel-background-gold h-100 text-dark">
+    <div class="vstack">
+        <TitledDisplayRating Rating="@(_globalRating)" Title="Global rating:"/>
+        <hr/>
+        <Authorization>
+            <Authorized>
+                <TitledDisplayRating Rating="@(_userRating)" Title="Your rating:"/>
+            </Authorized>
+            <NotAuthorized>
+                <div class="vstack">
+                    <h4 class="fw-bold">Your rating:</h4>
+                    <span>Log in to see your rating</span>
+                </div>
+            </NotAuthorized>
+            <Loading>
+                <LoadingInline/>
+            </Loading>
+        </Authorization>
+    </div>
+</div>

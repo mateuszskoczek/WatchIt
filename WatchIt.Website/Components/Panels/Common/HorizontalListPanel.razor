@@ -1,0 +1,49 @@
+@using WatchIt.Website.Components.Subcomponents.Common
+
+@inherits Component
+@typeparam TItem
+
+
+
+<div class="panel">
+    <div class="vstack gap-3">
+        <span class="panel-text-title">@(Title)</span>
+        @if (_loaded)
+        {
+            <div class="container-grid">
+                <div class="row">
+                    @if (_items.Count() > 0)
+                    {
+                        for (int i = 0; i < Count; i++)
+                        {
+                            <div class="col">
+                                @if (_items.Count() > i)
+                                {
+                                    <a class="text-reset text-decoration-none" href="@(string.Format(ItemUrlFormatString, IdSource(_items.ElementAt(i))))">
+                                        @{ int iCopy = i; }
+                                        <HorizontalListItem Place="@(HidePlace ? null : i + 1)"
+                                                            Name="@(NameSource(_items.ElementAt(iCopy)))"
+                                                            PosterPlaceholder="@(PosterPlaceholder)"
+                                                            GetPosterAction="@(() => GetPictureAction(_items.ElementAt(iCopy)))"/>
+                                    </a>
+                                }
+                            </div>
+                        }
+                    }
+                    else if (!string.IsNullOrWhiteSpace(EmptyListMessage))
+                    {
+                        <div class="col">
+                            <div class="d-flex justify-content-center">
+                                @(EmptyListMessage)
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <Loading Color="@(Loading.Colors.Light)"/>
+        }
+    </div>
+</div>

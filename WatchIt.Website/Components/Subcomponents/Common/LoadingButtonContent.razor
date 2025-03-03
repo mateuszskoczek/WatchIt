@@ -1,0 +1,15 @@
+@if (IsLoading)
+{
+    <LoadingInline Content="@(LoadingContent)"/>
+}
+else
+{
+    if (ChildContent is null)
+    {
+        <span>@Content</span>
+    }
+    else
+    {
+        @(ChildContent)
+    }
+}

@@ -1,0 +1,65 @@
+@using Refit
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Query
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Response
+@using WatchIt.DTO.Models.Controllers.People.Person
+@using WatchIt.DTO.Models.Generics.Image
+@using WatchIt.DTO.Query
+@using WatchIt.Website.Components.Panels.Common
+@inherits Page
+
+@page "/"
+
+<PageTitle>WatchIt</PageTitle>
+
+
+
+<div class="vstack gap-default">
+    <HorizontalListPanel TItem="MediumMovieResponse"
+                         Title="Top 5 movies this week by popularity"
+                         GetItemsAction="@(() => MediaClient.GetMediumMovies(orderQuery: new OrderQuery 
+                                                                             {
+                                                                                 OrderBy = "view_count.last_week",
+                                                                             },
+                                                                             pagingQuery: new PagingQuery
+                                                                             {
+                                                                                 First = 5,
+                                                                             },
+                                                                             includePictures: true))"
+                         ItemUrlFormatString="/media/{0}"
+                         IdSource="@(item => item.Id)"
+                         NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                         PosterPlaceholder="/assets/placeholders/medium.png"
+                         GetPictureAction="@(item => Task.FromResult(item.Picture))"/>
+    <HorizontalListPanel TItem="MediumSeriesResponse"
+                         Title="Top 5 TV series this week by popularity"
+                         GetItemsAction="@(() => MediaClient.GetMediumSeries(orderQuery: new OrderQuery 
+                                                                             {
+                                                                                 OrderBy = "view_count.last_week",
+                                                                             },
+                                                                             pagingQuery: new PagingQuery
+                                                                             {
+                                                                                 First = 5,
+                                                                             },
+                                                                             includePictures: true))"
+                         ItemUrlFormatString="/media/{0}"
+                         IdSource="@(item => item.Id)"
+                         NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                         PosterPlaceholder="/assets/placeholders/medium.png"
+                         GetPictureAction="@(item => Task.FromResult(item.Picture))"/>
+    <HorizontalListPanel TItem="PersonResponse"
+                         Title="Top 5 people this week by popularity"
+                         GetItemsAction="@(() => PeopleClient.GetPeople(orderQuery: new OrderQuery 
+                                                                        {
+                                                                            OrderBy = "view_count.last_week",
+                                                                        },
+                                                                        pagingQuery: new PagingQuery
+                                                                        {
+                                                                            First = 5,
+                                                                        },
+                                                                        includePictures: true))"
+                         ItemUrlFormatString="/people/{0}"
+                         IdSource="@(item => item.Id)"
+                         NameSource="@(item => item.Name)"
+                         PosterPlaceholder="/assets/placeholders/person.png"
+                         GetPictureAction="@(item => Task.FromResult(item.Picture))"/>
+</div>

@@ -1,0 +1,42 @@
+@using WatchIt.Website.Components.Subcomponents.Common
+@using Blazorise
+@inherits Component
+
+
+
+<div class="panel panel-background-gold h-100 text-dark">
+    <div class="container-grid">
+        <div class="row">
+            <div class="col">
+                <TitledDisplayRating Rating="@(_globalRating)" Title="Global rating:"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <hr class="rating-separator"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h4 class="text-dark">
+                    <strong>Your rating:</strong>
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <Authorization>
+                    <Authorized>
+                        <Rating SelectedValue="@(_userRating)" SelectedValueChanged="@(UserRatingChanged)" Color="Color.Dark" MaxValue="10" TextSize="@(TextSize.Large)"/>
+                    </Authorized>
+                    <NotAuthorized>
+                        <p class="text-dark">You must be logged in to add a rating</p>
+                    </NotAuthorized>
+                    <Loading>
+                        <LoadingInline Content="Loading..."/>
+                    </Loading>
+                </Authorization>
+            </div>
+        </div>
+    </div>
+</div>

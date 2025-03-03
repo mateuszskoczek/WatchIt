@@ -1,0 +1,87 @@
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Request
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Response
+@using WatchIt.Website.Components.Subcomponents.Common
+
+@inherits Component
+
+
+
+<div class="panel @(Class)">
+    @if (_loaded)
+    {
+        <EditForm Model="@(_request)">
+            <AntiforgeryToken/>
+            <div class="container-grid">
+                <div class="row form-group mb-1">
+                    <label for="title" class="col-2 col-form-label">Title*</label>
+                    <div class="col-10">
+                        <InputText id="title" class="form-control" @bind-Value="_request!.Title"/>
+                    </div>
+                </div>
+                <div class="row form-group my-1">
+                    <label for="og-title" class="col-2 col-form-label">Original title</label>
+                    <div class="col-10">
+                        <InputText id="og-title" class="form-control" @bind-Value="_request!.OriginalTitle"/>
+                    </div>
+                </div>
+                <div class="row form-group my-1">
+                    <label for="desc" class="col-2 col-form-label">Description</label>
+                    <div class="col-10">
+                        <InputTextArea id="desc" class="form-control" @bind-Value="_request!.Description"/>
+                    </div>
+                </div>
+                <div class="row form-group my-1">
+                    <label for="rel-date" class="col-2 col-form-label">Release date</label>
+                    <div class="col-4">
+                        <InputDate TValue="DateOnly?" id="rel-date" class="form-control" @bind-Value="_request!.ReleaseDate"/>
+                    </div>
+                    <label for="length" class="col-2 col-form-label">Length</label>
+                    <div class="col-4">
+                        <InputNumber TValue="short?" id="length" class="form-control" @bind-Value="_request!.Duration"/>
+                    </div>
+                </div>
+                @switch (_request)
+                {
+                    case MediumMovieRequest movieRequest:
+                        <div class="row form-group mt-1">
+                            <label for="budget" class="col-2 col-form-label">Budget</label>
+                            <div class="col-10">
+                                <InputNumber TValue="decimal?" id="budget" class="form-control" @bind-Value="movieRequest!.Budget"/>
+                            </div>
+                        </div>
+                        break;
+                    case MediumSeriesRequest seriesRequest:
+                        <div class="row form-group mt-1">
+                            <label class="col-2 col-form-label">Has ended</label>
+                            <div class="col-10 col-form-label">
+                                <div class="d-flex gap-3">
+                                    <InputRadioGroup TValue="bool" @bind-Value="seriesRequest!.HasEnded">
+                                        <div class="d-flex gap-2">
+                                            <InputRadio TValue="bool" Value="true"/>
+                                            Yes
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <InputRadio TValue="bool" Value="false"/>
+                                            No
+                                        </div>
+                                    </InputRadioGroup>
+                                </div>
+                            </div>
+                        </div>
+                        break;
+                }
+                <div class="row mt-2">
+                    <div class="col d-flex flex-column align-items-end">
+                        <button type="submit" class="btn btn-secondary" disabled="@(_saving)" @onclick="@(SaveData)">
+                            <LoadingButtonContent IsLoading="@(_saving)" Content="Save" LoadingContent="Saving..."/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </EditForm>
+    }
+    else
+    {
+        <Loading Color="@(Loading.Colors.Light)"/>
+    }
+</div>

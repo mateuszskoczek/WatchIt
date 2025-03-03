@@ -1,0 +1,9 @@
+@inherits Component
+
+<Image Class="@(Class)"
+       Height="Size"
+       Circle="true"
+       Shadow="false"
+       Placeholder="assets/placeholders/user.png"
+       AlternativeText="avatar"
+       Content="@(ProfilePictureIncluded ? Item.ProfilePicture : _picture)"/>

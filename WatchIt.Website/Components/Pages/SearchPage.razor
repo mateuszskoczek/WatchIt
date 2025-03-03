@@ -1,0 +1,154 @@
+@using System.Net
+@using Blazorise.Snackbar
+@using Refit
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Query
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Response
+@using WatchIt.DTO.Models.Controllers.People.Person
+@using WatchIt.DTO.Models.Controllers.People.Person.Query
+@using WatchIt.DTO.Models.Generics.Rating
+@using WatchIt.Website.Components.Panels.Pages.SearchPage
+
+@inherits Page
+
+@page "/search/{query}"
+
+<PageTitle>WatchIt - Searching "@(Query)"</PageTitle>
+
+
+
+<div class="vstack gap-default">
+    <div class="rounded-3 panel panel-regular p-3">
+        <div class="d-flex justify-content-center">
+            <h3 class="m-0">
+                <strong>Search results for phrase:</strong> "@(WebUtility.UrlDecode(Query))"
+            </h3>
+        </div>
+    </div>
+    <StandardSearchResultPanel TItem="MediumMovieResponse"
+                               TQuery="MediumMovieFilterQuery"
+                               Title="Movies"
+                               UrlIdTemplate="/media/{0}"
+                               IdFunc="@(item => item.Id)"
+                               NameFunc="@(item => item.Title)"
+                               AdditionalNameInfoFunc="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                               GlobalRatingFunc="@(item => item.Rating)"
+                               Query="@(new MediumMovieFilterQuery { Title = WebUtility.UrlDecode(Query) })"
+                               GetItemsMethod="@(async (filterQuery, orderQuery, pagingQuery) =>
+                                               {
+                                                   IApiResponse<IEnumerable<MediumMovieResponse>> response = await MediaClient.GetMediumMovies(filterQuery, orderQuery, pagingQuery, true);
+                                                   if (!response.IsSuccessful)
+                                                   {
+                                                       await Base.SnackbarStack.PushAsync("An error has occured. Movies could not be loaded", SnackbarColor.Danger);
+                                                   }
+                                                   return response.Content ?? [];
+                                               })"
+                               PictureFunc="@(x => Task.FromResult(x.Picture))"
+                               PicturePlaceholder="/assets/placeholders/medium.png"
+                               GetGlobalRatingMethod="@(async x => (await MediaClient.GetMediumRating(x.Id)).Content)"
+                               GetYourRatingMethod="@(async (item, userId) =>
+                                                    {
+                                                        IApiResponse<RatingUserResponse> response = await MediaClient.GetMediumUserRating(item.Id, userId);
+                                                        if (!response.IsSuccessful && response.StatusCode != HttpStatusCode.NotFound)
+                                                        {
+                                                            await Base.SnackbarStack.PushAsync($"An error has occured. Your rating for movie with id {item.Id} could not be loaded.", SnackbarColor.Danger);
+                                                        }
+                                                        return response.Content;
+                                                    })"
+                               PutYourRatingMethod="@(async (item, request) =>
+                                                    {
+                                                        string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                        IApiResponse response = await MediaClient.PutMediumRating(token, item.Id, request); 
+                                                        if (!response.IsSuccessful)
+                                                        {
+                                                            await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate movies", SnackbarColor.Danger);
+                                                        }
+                                                    })"
+                               DeleteYourRatingMethod="@(async item =>
+                                                       {
+                                                           string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                           IApiResponse response = await MediaClient.DeleteMediumRating(token, item.Id); 
+                                                           if (!response.IsSuccessful)
+                                                           {
+                                                               await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate movies", SnackbarColor.Danger);
+                                                           }
+                                                       })"/>
+    <StandardSearchResultPanel TItem="MediumSeriesResponse"
+                               TQuery="MediumSeriesFilterQuery"
+                               Title="TV series"
+                               UrlIdTemplate="/media/{0}"
+                               IdFunc="@(item => item.Id)"
+                               NameFunc="@(item => item.Title)"
+                               AdditionalNameInfoFunc="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                               GlobalRatingFunc="@(item => item.Rating)"
+                               Query="@(new MediumSeriesFilterQuery { Title = WebUtility.UrlDecode(Query) })"
+                               GetItemsMethod="@(async (filterQuery, orderQuery, pagingQuery) =>
+                                               {
+                                                   IApiResponse<IEnumerable<MediumSeriesResponse>> response = await MediaClient.GetMediumSeries(filterQuery, orderQuery, pagingQuery, true);
+                                                   if (!response.IsSuccessful)
+                                                   {
+                                                       await Base.SnackbarStack.PushAsync("An error has occured. TV series could not be loaded", SnackbarColor.Danger);
+                                                   }
+                                                   return response.Content ?? [];
+                                               })"
+                               PictureFunc="@(x => Task.FromResult(x.Picture))"
+                               PicturePlaceholder="/assets/placeholders/medium.png"
+                               GetGlobalRatingMethod="@(async x => (await MediaClient.GetMediumRating(x.Id)).Content)"
+                               GetYourRatingMethod="@(async (item, userId) =>
+                                                    {
+                                                        IApiResponse<RatingUserResponse> response = await MediaClient.GetMediumUserRating(item.Id, userId);
+                                                        if (!response.IsSuccessful && response.StatusCode != HttpStatusCode.NotFound)
+                                                        {
+                                                            await Base.SnackbarStack.PushAsync($"An error has occured. Your rating for TV series with id {item.Id} could not be loaded.", SnackbarColor.Danger);
+                                                        }
+                                                        return response.Content;
+                                                    })"
+                               PutYourRatingMethod="@(async (item, request) =>
+                                                    {
+                                                        string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                        IApiResponse response = await MediaClient.PutMediumRating(token, item.Id, request);
+                                                        if (!response.IsSuccessful)
+                                                        {
+                                                            await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate TV series", SnackbarColor.Danger);
+                                                        }
+                                                    })"
+                               DeleteYourRatingMethod="@(async item =>
+                                                       {
+                                                           string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                           IApiResponse response = await MediaClient.DeleteMediumRating(token, item.Id);
+                                                           if (!response.IsSuccessful)
+                                                           {
+                                                               await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate TV series", SnackbarColor.Danger);
+                                                           }
+                                                       })"/>
+    <StandardSearchResultPanel TItem="PersonResponse"
+                               TQuery="PersonFilterQuery"
+                               Title="People"
+                               UrlIdTemplate="/people/{0}"
+                               IdFunc="@(item => item.Id)"
+                               NameFunc="@(item => item.Name)"
+                               GlobalRatingFunc="@(item => item.Rating)"
+                               Query="@(new PersonFilterQuery { Name = WebUtility.UrlDecode(Query) })"
+                               GetItemsMethod="@(async (filterQuery, orderQuery, pagingQuery) =>
+                                               {
+                                                   IApiResponse<IEnumerable<PersonResponse>> response = await PeopleClient.GetPeople(filterQuery, orderQuery, pagingQuery, true);
+                                                   if (!response.IsSuccessful)
+                                                   {
+                                                       await Base.SnackbarStack.PushAsync("An error has occured. People could not be loaded", SnackbarColor.Danger);
+                                                   }
+                                                   return response.Content ?? [];
+                                               })"
+                               PictureFunc="@(x => Task.FromResult(x.Picture))"
+                               PicturePlaceholder="/assets/placeholders/person.png"
+                               GetGlobalRatingMethod="@(async x => (await PeopleClient.GetPersonRating(x.Id)).Content)"
+                               SecondaryRatingTitle="@(Base.AuthorizedAccount is null ? null : "Your rating")"
+                               GetSecondaryRatingMethod="@(Base.AuthorizedAccount is null ? null : async (item) =>
+                                                         {
+                                                             IApiResponse<RatingUserOverallResponse> response = await PeopleClient.GetPersonUserRating(item.Id, Base.AuthorizedAccount.Id);
+                                                             if (!response.IsSuccessful && response.StatusCode != HttpStatusCode.NotFound)
+                                                             {
+                                                                 await Base.SnackbarStack.PushAsync($"An error has occured. Your rating for person with id {item.Id} could not be loaded.", SnackbarColor.Danger);
+                                                             }
+                                                             return response.Content;
+                                                         })"/>
+    <UserSearchResultPanel Query="@(WebUtility.UrlDecode(Query))"/>
+</div>

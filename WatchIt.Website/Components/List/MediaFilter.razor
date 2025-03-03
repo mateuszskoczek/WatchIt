@@ -1,0 +1,63 @@
+@using WatchIt.Database.Model.Media
+@using Blazorise
+
+@inherits Filter<WatchIt.DTO.Models.Controllers.Media.Medium.Response.MediumResponse, WatchIt.Database.Model.Media.Medium, WatchIt.DTO.Models.Controllers.Media.Medium.Query.MediumFilterQuery>
+
+
+
+<EditForm Model="@(Query)">
+    <div class="container-grid">
+        <div class="row mb-1">
+            <div class="input-group input-group-sm">
+                <span class="col-3 input-group-text">Type</span>
+                <InputSelect TValue="MediumType?" class="col form-control" @bind-Value="@(Query.Type)">
+                    <option @onclick="() => Query.Type = null">No choice</option>
+                    <option value="@(MediumType.Movie)">Movies</option>
+                    <option value="@(MediumType.Series)">TV series</option>
+                </InputSelect>
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="input-group input-group-sm">
+                <span class="col-3 input-group-text">Title</span>
+                <InputText class="col form-control" placeholder="Search with regex" @bind-Value="@(Query.Title)"></InputText>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="input-group input-group-sm">
+                <span class="col-3 input-group-text">Original title</span>
+                <InputText class="col form-control" placeholder="Search with regex" @bind-Value="@(Query.OriginalTitle)"/>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="input-group input-group-sm">
+                <span class="col-3 input-group-text">Description</span>
+                <InputText class="col form-control" placeholder="Search with regex" @bind-Value="@(Query.Description)"/>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="input-group input-group-sm">
+                <span class="col-3 input-group-text">Release date</span>
+                <InputDate TValue="DateOnly?" class="col form-control" @bind-Value="@(Query.ReleaseDateFrom)"/>
+                <span class="col-auto input-group-text">-</span>
+                <InputDate TValue="DateOnly?" class="col form-control" @bind-Value="@(Query.ReleaseDateTo)"/>
+            </div>
+        </div>
+        <div class="row my-1">
+            <div class="input-group input-group-sm">
+                <span class="col-3 input-group-text">Rating (count)</span>
+                <NumericEdit TValue="long?" Class="col form-control" Min="0" @bind-Value="@(Query.RatingCountFrom)"/>
+                <span class="col-auto input-group-text">-</span>
+                <NumericEdit TValue="long?" Class="col form-control" Min="0" @bind-Value="@(Query.RatingCountTo)"/>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="input-group input-group-sm">
+                <span class="col-3 input-group-text">Rating (average)</span>
+                <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="@(0.01M)" @bind-Value="@(Query.RatingAverageFrom)"/>
+                <span class="col-auto input-group-text">-</span>
+                <NumericEdit TValue="decimal?" Class="col form-control" Min="0" Max="10" Step="@(0.01M)" @bind-Value="@(Query.RatingAverageTo)"/>
+            </div>
+        </div>
+    </div>
+</EditForm>

@@ -1,0 +1,99 @@
+@using System.Net
+@using System.Text
+@using Blazorise.Snackbar
+@using Refit
+@using WatchIt.Database.Model.Media
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Query
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Response
+@using WatchIt.DTO.Models.Generics.Rating
+@using WatchIt.Website.Components.Subcomponents.Common
+@using WatchIt.Website.Components.Panels.Common
+@using WatchIt.Website.Components.List
+
+@inherits Page
+
+@page "/genres/{id:int}/media"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+
+    if (!_loaded)           sb.Insert(0, "Loading...");
+    else if (_data is null) sb.Insert(0, "Error");
+    else                    sb.Insert(0, $"\"{_data.Name}\" genre");
+
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+@if (!_loaded)
+{
+    <div class="m-5">
+        <Loading/>
+    </div>
+}
+else if (_data is null)
+{
+    <ErrorPanel ErrorMessage="@($"Genre with ID {Id} was not found")"/>
+}
+else
+{
+    <List TItem="MediumResponse"
+          TEntity="Medium"
+          TQuery="MediumFilterQuery"
+          Title="@(_data.Name)"
+          IdFunc="@(item => item.Id)"
+          NameFunc="@(item => item.Title)"
+          AdditionalNameInfoFunc="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+          GlobalRatingFunc="@(item => item.Rating)"
+          PictureFunc="@(item => Task.FromResult(item.Picture))"
+          UrlIdTemplate="/media/{0}"
+          PicturePlaceholder="/assets/placeholders/medium.png"
+          GetItemsMethod="@(async (filterQuery, orderQuery, pagingQuery) =>
+                          {
+                              filterQuery.Genres = [(short)Id];
+                              IApiResponse<IEnumerable<MediumResponse>> response = await MediaClient.GetMedia(filterQuery, orderQuery, pagingQuery, true);
+                              if (!response.IsSuccessful)
+                              {
+                                  await Base.SnackbarStack.PushAsync($"An error occured. Media for genre with id {Id} could not be obtained.", SnackbarColor.Danger);
+                              }
+                              return response.Content ?? [];
+                          })"
+          SortingOptions="@(new Dictionary<string, string>
+                          {
+                              { "rating.count", "Number of ratings" },
+                              { "rating.average", "Average rating" },
+                              { "title", "Title" },
+                              { "release_date", "Release date" },
+                          })"
+          GetGlobalRatingMethod="@(async x => (await MediaClient.GetMediumRating(x.Id)).Content)"
+          GetYourRatingMethod="@(async (item, userId) =>
+                               {
+                                   IApiResponse<RatingUserResponse> response = await MediaClient.GetMediumUserRating(item.Id, userId);
+                                   if (!response.IsSuccessful && response.StatusCode != HttpStatusCode.NotFound)
+                                   {
+                                       await Base.SnackbarStack.PushAsync($"An error has occured. Your rating for medium with id {item.Id} could not be loaded.", SnackbarColor.Danger);
+                                   }
+                                   return response.Content;
+                               })"
+          PutYourRatingMethod="@(async (item, request) =>
+                               {
+                                   string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                   IApiResponse response = await MediaClient.PutMediumRating(token, item.Id, request);
+                                   if (!response.IsSuccessful)
+                                   {
+                                       await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate media", SnackbarColor.Danger);
+                                   }
+                               })"
+          DeleteYourRatingMethod="@(async item =>
+                                  {
+                                      string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                      IApiResponse response = await MediaClient.DeleteMediumRating(token, item.Id);
+                                      if (!response.IsSuccessful)
+                                      {
+                                          await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate media", SnackbarColor.Danger);
+                                      }
+                                  })">
+        <MediaFilter/>
+    </List>
+}

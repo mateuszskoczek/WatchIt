@@ -1,0 +1,64 @@
+﻿@using WatchIt.Website.Components.Subcomponents.Common
+@using WatchIt.Website.Components.Panels.Common
+
+@inherits Page
+
+@page "/admin"
+
+<PageTitle>Administrator panel - WatchIt</PageTitle>
+
+
+
+<Authorization Admin="true">
+    <Loading>
+        <div class="m-5">
+            <Loading/>
+        </div>
+    </Loading>
+    <Authorized>
+        <div class="vstack gap-default">
+            <div class="panel panel-section-header">
+                <h3 class="fw-bold m-0">Add new content</h3>
+            </div>
+            <div class="container-grid">
+                <div class="row gx-default">
+                    <div class="col">
+                        <a class="text-reset text-decoration-none" href="/media/new/movies">
+                            <div class="panel">
+                                <div class="d-flex flex-column align-items-center p-5">
+                                    <img src="assets/icons/movie.png" width="100%" alt="movie"/>
+                                    <span class="text-reset">New movie</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a class="text-reset text-decoration-none" href="/media/new/series">
+                            <div class="panel">
+                                <div class="d-flex flex-column align-items-center p-5">
+                                    <img src="assets/icons/series.png" width="100%" alt="movie"/>
+                                    <span class="text-center">New TV series</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a class="text-reset text-decoration-none" href="/people/new">
+                            <div class="panel">
+                                <div class="d-flex flex-column align-items-center p-5">
+                                    <img src="assets/icons/person.png" width="100%" alt="movie"/>
+                                    <span class="text-center">New person</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="vstack">
+            <ErrorPanel ErrorMessage="You do not have permission to view this site"/>
+        </div>
+    </NotAuthorized>
+</Authorization>

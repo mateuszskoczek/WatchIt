@@ -1,0 +1,18 @@
+@inherits Component
+
+<div class="panel h-100">
+    <div class="d-flex flex-wrap metadata-pill-container">
+        @if (!string.IsNullOrWhiteSpace(Data.Gender?.Name))
+        {
+            <div class="metadata-pill"><strong>Gender:</strong> @(Data.Gender?.Name)</div>
+        }
+        @if (Data.BirthDate.HasValue)
+        {
+            <div class="metadata-pill"><strong>Birth date:</strong> @(Data.BirthDate.Value.ToString())</div>
+        }
+        @if (Data.DeathDate.HasValue)
+        {
+            <div class="metadata-pill"><strong>Death date:</strong> @(Data.DeathDate.Value.ToString())</div>
+        }
+    </div>
+</div>

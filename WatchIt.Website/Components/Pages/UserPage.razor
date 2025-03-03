@@ -1,0 +1,313 @@
+@using System.Net
+@using System.Text
+@using WatchIt.Website.Components.Subcomponents.Common
+@using WatchIt.Website.Components.Panels.Common
+@using WatchIt.Website.Components.Panels.Pages.UserPage
+@using Blazorise
+@using Blazorise.Snackbar
+@using Refit
+@using WatchIt.Database.Model.Media
+@using WatchIt.Database.Model.People
+@using WatchIt.DTO.Models.Controllers.Accounts.Account
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Query
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Response
+@using WatchIt.DTO.Models.Controllers.People.Person
+@using WatchIt.DTO.Models.Controllers.People.Person.Query
+@using WatchIt.DTO.Models.Generics.Rating
+@using WatchIt.DTO.Query
+@using WatchIt.Website.Components.List
+
+@inherits Page
+
+@page "/users/{id:long?}"
+
+@{
+    StringBuilder sb = new StringBuilder(" - WatchIt");
+
+    if (!_loaded)               sb.Insert(0, "Loading...");
+    else if (_data is null)     sb.Insert(0, "Error");
+    else
+    {
+        if (_owner) sb.Insert(0, "Your profile");
+        else        sb.Insert(0, $"\"{_data.Username}\" profile");
+    }
+
+    <PageTitle>@(sb.ToString())</PageTitle>
+}
+
+
+
+@if (!_loaded)
+{
+    <div class="m-5">
+        <Loading/>
+    </div>
+}
+else if (_data is null)
+{
+    <ErrorPanel ErrorMessage="@($"User with ID {Id!.Value} was not found")"/>
+}
+else
+{
+    <div class="vstack mt-header gap-default">
+        <HeaderPanel Data="@(_data)"
+                     Followers="@(_followers)"
+                     LoggedUserData="@(Base.AuthorizedAccount)"/>
+        <Tabs Pills
+              RenderMode="TabsRenderMode.LazyLoad"
+              SelectedTab="summary"
+              Class="panel panel-menu panel-background-menu justify-content-center">
+            <Items>
+                <Tab Name="summary">Summary</Tab>
+                <Tab Name="movies">Movies</Tab>
+                <Tab Name="series">TV Series</Tab>
+                <Tab Name="people">People</Tab>
+                <Tab Name="follows">Follows</Tab>
+                <Tab Name="followers">Followers</Tab>
+            </Items>
+            <Content>
+                <TabPanel Name="summary">
+                    <div class="vstack gap-default">
+                        <HorizontalListPanel TItem="MediumMovieUserRatedResponse"
+                                             Title="Recently rated movies"
+                                             Count="6"
+                                             GetItemsAction="@(() => AccountsClient.GetAccountRatedMediaMovies(_data.Id, orderQuery: new OrderQuery
+                                                                 {
+                                                                     OrderBy = "rating_user.date",
+                                                                 },
+                                                                 pagingQuery: new PagingQuery
+                                                                 {
+                                                                     First = 6,
+                                                                 },
+                                                                 includePictures: true))"
+                                             ItemUrlFormatString="/media/{0}"
+                                             IdSource="@(item => item.Id)"
+                                             NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                                             PosterPlaceholder="/assets/placeholders/medium.png"
+                                             GetPictureAction="@(item => Task.FromResult(item.Picture))"
+                                             HidePlace="@(true)"
+                                             EmptyListMessage="No items"/>
+                        <HorizontalListPanel TItem="MediumSeriesUserRatedResponse"
+                                             Title="Recently rated TV series"
+                                             Count="6"
+                                             GetItemsAction="@(() => AccountsClient.GetAccountRatedMediaSeries(_data.Id, orderQuery: new OrderQuery
+                                                                 {
+                                                                     OrderBy = "rating_user.date",
+                                                                 },
+                                                                 pagingQuery: new PagingQuery
+                                                                 {
+                                                                     First = 6,
+                                                                 },
+                                                                 includePictures: true))"
+                                             ItemUrlFormatString="/media/{0}"
+                                             IdSource="@(item => item.Id)"
+                                             NameSource="@(item => item.ReleaseDate.HasValue ? $"{item.Title} ({item.ReleaseDate.Value.Year})" : item.Title)"
+                                             PosterPlaceholder="/assets/placeholders/medium.png"
+                                             GetPictureAction="@(item => Task.FromResult(item.Picture))"
+                                             HidePlace="@(true)"
+                                             EmptyListMessage="No items"/>
+                        <HorizontalListPanel TItem="PersonUserRatedResponse"
+                                             Title="Recently rated people"
+                                             Count="6"
+                                             GetItemsAction="@(() => AccountsClient.GetAccountRatedPeople(_data.Id, orderQuery: new OrderQuery
+                                                                 {
+                                                                     OrderBy = "rating_user.last_date",
+                                                                 },
+                                                                 pagingQuery: new PagingQuery
+                                                                 {
+                                                                     First = 6,
+                                                                 },
+                                                                 includePictures: true))"
+                                             ItemUrlFormatString="/people/{0}"
+                                             IdSource="@(item => item.Id)"
+                                             NameSource="@(item => item.Name)"
+                                             PosterPlaceholder="/assets/placeholders/person.png"
+                                             GetPictureAction="@(item => Task.FromResult(item.Picture))"
+                                             HidePlace="@(true)"
+                                             EmptyListMessage="No items"/>
+                    </div>
+                </TabPanel>
+                <TabPanel Name="movies">
+                    <List TItem="MediumMovieUserRatedResponse"
+                          TEntity="MediumMovie"
+                          TQuery="MediumMovieFilterQuery"
+                          Title="Rated movies"
+                          IdFunc="@(item => item.Id)"
+                          NameFunc="@(item => item.Title)"
+                          AdditionalNameInfoFunc="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                          GlobalRatingFunc="@(item => item.Rating)"
+                          PictureFunc="@(item => Task.FromResult(item.Picture))"
+                          UrlIdTemplate="/media/{0}"
+                          PicturePlaceholder="/assets/placeholders/medium.png"
+                          GetItemsMethod="@(async (filterQuery, orderQuery, pagingQuery) =>
+                                          {
+                                              IApiResponse<IEnumerable<MediumMovieUserRatedResponse>> response = await AccountsClient.GetAccountRatedMediaMovies(_data.Id, filterQuery, null, orderQuery, pagingQuery, true);
+                                              if (!response.IsSuccessful)
+                                              {
+                                                  await Base.SnackbarStack.PushAsync($"An error occured. Movies could not be obtained.", SnackbarColor.Danger);
+                                              }
+                                              return response.Content ?? [];
+                                          })"
+                          SortingOptions="@(new Dictionary<string, string>
+                                          {
+                                              { "rating_user.date", "User rating date" },
+                                              { "rating_user.rating", "User rating" },
+                                              { "rating.count", "Number of ratings" },
+                                              { "rating.average", "Average rating" },
+                                              { "title", "Title" },
+                                              { "release_date", "Release date" },
+                                          })"
+                          GetGlobalRatingMethod="@(async x => (await MediaClient.GetMediumRating(x.Id)).Content)"
+                          GetYourRatingMethod="@(async (item, userId) =>
+                                               {
+                                                   IApiResponse<RatingUserResponse> response = await MediaClient.GetMediumUserRating(item.Id, userId);
+                                                   if (!response.IsSuccessful && response.StatusCode != HttpStatusCode.NotFound)
+                                                   {
+                                                       await Base.SnackbarStack.PushAsync($"An error has occured. Your rating for movie with id {item.Id} could not be loaded.", SnackbarColor.Danger);
+                                                   }
+                                                   return response.Content;
+                                               })"
+                          PutYourRatingMethod="@(async (item, request) =>
+                                               {
+                                                   string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                   IApiResponse response = await MediaClient.PutMediumRating(token, item.Id, request);
+                                                   if (!response.IsSuccessful)
+                                                   {
+                                                       await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate movies", SnackbarColor.Danger);
+                                                   }
+                                               })"
+                          DeleteYourRatingMethod="@(async item =>
+                                                  {
+                                                      string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                      IApiResponse response = await MediaClient.DeleteMediumRating(token, item.Id);
+                                                      if (!response.IsSuccessful)
+                                                      {
+                                                          await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate movies", SnackbarColor.Danger);
+                                                      }
+                                                  })">
+                        <MediumMoviesUserRatedFilter/>
+                    </List>
+                </TabPanel>
+                <TabPanel Name="series">
+                    <List TItem="MediumSeriesUserRatedResponse"
+                          TEntity="MediumSeries"
+                          TQuery="MediumSeriesFilterQuery"
+                          Title="Rated TV series"
+                          IdFunc="@(item => item.Id)"
+                          NameFunc="@(item => item.Title)"
+                          AdditionalNameInfoFunc="@(item => item.ReleaseDate.HasValue ? $" ({item.ReleaseDate.Value.Year})" : null)"
+                          GlobalRatingFunc="@(item => item.Rating)"
+                          PictureFunc="@(item => Task.FromResult(item.Picture))"
+                          UrlIdTemplate="/media/{0}"
+                          PicturePlaceholder="/assets/placeholders/medium.png"
+                          GetItemsMethod="@(async (filterQuery, orderQuery, pagingQuery) =>
+                                          {
+                                              IApiResponse<IEnumerable<MediumSeriesUserRatedResponse>> response = await AccountsClient.GetAccountRatedMediaSeries(_data.Id, filterQuery, null, orderQuery, pagingQuery, true);
+                                              if (!response.IsSuccessful)
+                                              {
+                                                  await Base.SnackbarStack.PushAsync($"An error occured. TV series could not be obtained.", SnackbarColor.Danger);
+                                              }
+                                              return response.Content ?? [];
+                                          })"
+                          SortingOptions="@(new Dictionary<string, string>
+                                          {
+                                              { "rating_user.date", "User rating date" },
+                                              { "rating_user.rating", "User rating" },
+                                              { "rating.count", "Number of ratings" },
+                                              { "rating.average", "Average rating" },
+                                              { "title", "Title" },
+                                              { "release_date", "Release date" },
+                                          })"
+                          GetGlobalRatingMethod="@(async x => (await MediaClient.GetMediumRating(x.Id)).Content)"
+                          GetYourRatingMethod="@(async (item, userId) =>
+                                               {
+                                                   IApiResponse<RatingUserResponse> response = await MediaClient.GetMediumUserRating(item.Id, userId);
+                                                   if (!response.IsSuccessful && response.StatusCode != HttpStatusCode.NotFound)
+                                                   {
+                                                       await Base.SnackbarStack.PushAsync($"An error has occured. Your rating for TV series with id {item.Id} could not be loaded.", SnackbarColor.Danger);
+                                                   }
+                                                   return response.Content;
+                                               })"
+                          PutYourRatingMethod="@(async (item, request) =>
+                                               {
+                                                   string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                   IApiResponse response = await MediaClient.PutMediumRating(token, item.Id, request);
+                                                   if (!response.IsSuccessful)
+                                                   {
+                                                       await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate TV series", SnackbarColor.Danger);
+                                                   }
+                                               })"
+                          DeleteYourRatingMethod="@(async item =>
+                                                  {
+                                                      string token = await AuthenticationService.GetRawAccessTokenAsync() ?? string.Empty;
+                                                      IApiResponse response = await MediaClient.DeleteMediumRating(token, item.Id);
+                                                      if (!response.IsSuccessful)
+                                                      {
+                                                          await Base.SnackbarStack.PushAsync("An error has occured. You are not authorized to rate TV series", SnackbarColor.Danger);
+                                                      }
+                                                  })">
+                        <MediumSeriesUserRatedFilter/>
+                    </List>
+                </TabPanel>
+                <TabPanel Name="people">
+                    <List TItem="PersonUserRatedResponse"
+                          TEntity="Person"
+                          TQuery="PersonFilterQuery"
+                          Title="Rated people"
+                          IdFunc="@(item => item.Id)"
+                          NameFunc="@(item => item.Name)"
+                          GlobalRatingFunc="@(item => item.Rating)"
+                          PictureFunc="@(item => Task.FromResult(item.Picture))"
+                          UrlIdTemplate="/people/{0}"
+                          PicturePlaceholder="/assets/placeholders/person.png"
+                          GetItemsMethod="@(async (filterQuery, orderQuery, pagingQuery) =>
+                                          {
+                                              IApiResponse<IEnumerable<PersonUserRatedResponse>> response = await AccountsClient.GetAccountRatedPeople(_data.Id, filterQuery, null, orderQuery, pagingQuery, true);
+                                              if (!response.IsSuccessful)
+                                              {
+                                                  await Base.SnackbarStack.PushAsync($"An error occured. People could not be obtained.", SnackbarColor.Danger);
+                                              }
+                                              return response.Content ?? [];
+                                          })"
+                          SortingOptions="@(new Dictionary<string, string>
+                                          {
+                                              { "rating_user.last_date", "Last user rating date" },
+                                              { "rating_user.count", "Number of roles user ratings" },
+                                              { "rating_user.average", "User rating" },
+                                              { "rating.count", "Number of ratings" },
+                                              { "rating.average", "Average rating" },
+                                              { "name", "Name" },
+                                              { "birth_date", "Birth date" },
+                                          })"
+                          GetGlobalRatingMethod="@(async x => (await PeopleClient.GetPersonRating(x.Id)).Content)">
+                        <PeopleUserRatedFilter/>
+                    </List>
+                </TabPanel>
+                <TabPanel Name="follows">
+                    <FollowListPanel Title="Follows"
+                                     GetItemsMethod="@(async () =>
+                                                     {
+                                                         IApiResponse<IEnumerable<AccountResponse>> response = await AccountsClient.GetAccountFollows(_data.Id);
+                                                         if (!response.IsSuccessful)
+                                                         {
+                                                             await Base.SnackbarStack.PushAsync($"An error occured. Follows could not be obtained.", SnackbarColor.Danger);
+                                                         }
+                                                         return response.Content ?? [];
+                                                     })"/>
+                </TabPanel>
+                <TabPanel Name="followers">
+                    <FollowListPanel Title="Followers"
+                                     GetItemsMethod="@(async () =>
+                                                     {
+                                                         IApiResponse<IEnumerable<AccountResponse>> response = await AccountsClient.GetAccountFollowers(_data.Id);
+                                                         if (!response.IsSuccessful)
+                                                         {
+                                                             await Base.SnackbarStack.PushAsync($"An error occured. Followers could not be obtained.", SnackbarColor.Danger);
+                                                         }
+                                                         return response.Content ?? [];
+                                                     })"/>
+                </TabPanel>
+            </Content>
+        </Tabs>
+    </div>
+}

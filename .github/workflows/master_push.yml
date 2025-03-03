@@ -33,7 +33,7 @@ jobs:
       uses: microsoft/variable-substitution@v1
       if: ${{ matrix.app == 'WatchIt.WebAPI' }}
       with:
-        files: ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/appsettings.json
+        files: ${{ github.workspace }}/${{ matrix.app }}/appsettings.json
       env:
         ConnectionStrings.Default: ${{ secrets.CONNECTION_STRING }}
         RootUser.Email: ${{ secrets.ROOT_EMAIL }}
@@ -43,7 +43,7 @@ jobs:
       uses: microsoft/variable-substitution@v1
       if: ${{ matrix.app == 'WatchIt.Website' }}
       with:
-        files: ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/appsettings.json
+        files: ${{ github.workspace }}/${{ matrix.app }}/appsettings.json
       env:
         Endpoints.Base: ${{ secrets.API_URL }}
     - name: Set up Docker Buildx
@@ -60,7 +60,7 @@ jobs:
       with:
         string: ${{ matrix.app }}
     - name: Build image
-      run: docker build ${{ github.workspace }} -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:${{steps.gitversion.outputs.SemVer}} -f ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile
+      run: docker build ${{ github.workspace }} -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:latest -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:${{steps.gitversion.outputs.SemVer}} -f ${{ github.workspace }}/${{ matrix.app }}/Dockerfile
     - name: Publish image
       run: docker push ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }} --all-tags
     outputs: 
@@ -83,6 +83,7 @@ jobs:
     name: Deploy
     runs-on: watchit
     needs: publish
+    if: false
     steps:
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1

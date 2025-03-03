@@ -1,0 +1,148 @@
+@using Blazorise.Extensions
+@using WatchIt.DTO.Models.Controllers.Media.Medium.Response
+@using WatchIt.DTO.Models.Controllers.Roles.Role.Response
+@using WatchIt.Website.Components.Subcomponents.Common
+@using Blazorise.Components
+@using WatchIt.DTO.Models.Controllers.People.Person
+
+@inherits Component
+
+
+
+<div class="panel @(Class)">
+    @if (_loaded)
+    {
+        <div class="vstack gap-3">
+            <div class="container-grid">
+                <div class="row gx-2">
+                    <div class="col align-self-center">
+                        <h4 class="m-0"><strong>Actor roles</strong></h4>
+                    </div>
+                    @if (!_editingMode)
+                    {
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary" disabled="@(Disabled)" @onclick="@(() => ActivateEditData())">Add</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary" @onclick="@(CancelEditData)">Cancel</button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-secondary" disabled="@(_saving)" @onclick="@(SaveData)">
+                                <LoadingButtonContent IsLoading="@(_saving)" Content="Save" LoadingContent="Saving..."/>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+            @if (!_editingMode)
+            {
+                if (_roles.IsNullOrEmpty())
+                {
+                    <span class="text-center">No items</span>
+                }
+                else
+                {
+                    <table class="table table-sm table-transparent">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    Person
+                                </th>
+                                <th scope="col">
+                                    Role type
+                                </th>
+                                <th scope="col">
+                                    Role name
+                                </th>
+                                <th class="table-cell-fit" scope="col">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @foreach (Guid roleId in _roles.Keys)
+                            {
+                                RoleActorResponse role = _roles[roleId].Data;
+                                PersonResponse person = _peopleDict[role.PersonId];
+                                <tr>
+                                    <td class="align-middle">
+                                        @(person.Name)
+                                    </td>
+                                    <td class="align-middle">
+                                        @(_roleTypes[role.TypeId])
+                                    </td>
+                                    <td class="align-middle">
+                                        @(role.Name)
+                                    </td>
+                                    <td class="align-middle table-cell-fit">
+                                        <div class="hstack gap-1">
+                                            <button class="btn btn-outline-secondary btn-sm" type="button" disabled="@(Disabled || _roles[roleId].Deleting)" @onclick="@(() => ActivateEditData(roleId))"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-outline-danger btn-sm" type="button" disabled="@(Disabled || _roles[roleId].Deleting)" @onclick="@(() => DeleteData(roleId))">
+                                                @if (_roles[roleId].Deleting)
+                                                {
+                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa-solid fa-trash"></i>
+                                                }
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+            else
+            {
+                <EditForm Model="@(_roleRequest)">
+                    <AntiforgeryToken/>
+                    <div class="container-grid">
+                        <div class="row form-group mb-1">
+                            <label for="actorFormPeople" class="col-1 col-form-label">People:</label>
+                            <div class="col">
+                                <Autocomplete ElementId="actorFormPeople" 
+                                              TItem="PersonResponse"
+                                              TValue="long"
+                                              Data="@(_peopleDict.Values)"
+                                              TextField="@(item => item.Name)"
+                                              ValueField="@(item => item.Id)"
+                                              @bind-SelectedValue="@(_roleRequest.PersonId)"
+                                              Placeholder="Search..."
+                                              Filter="AutocompleteFilter.Contains">
+                                    <NotFoundContent Context="not_found_context"> Sorry... @not_found_context was not found</NotFoundContent>
+                                </Autocomplete>
+                            </div>
+                        </div>
+                        <div class="row form-group my-1">
+                            <label for="actorFormType" class="col-1 col-form-label">Type:</label>
+                            <div class="col">
+                                <InputSelect id="actorFormType" class="form-control" TValue="short" @bind-Value="@(_roleRequest.TypeId)">
+                                    @foreach (KeyValuePair<short, string> type in _roleTypes)
+                                    {
+                                        <option value="@(type.Key)">@(type.Value)</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="row form-group my-1">
+                            <label for="actorFormName" class="col-1 col-form-label">Name:</label>
+                            <div class="col">
+                                <InputText id="actorFormName" class="form-control" @bind-Value="@(_roleRequest.Name)"/>
+                            </div>
+                        </div>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    }
+    else
+    {
+        <Loading Color="@(Loading.Colors.Light)"/>
+    }
+</div>
