@@ -83,6 +83,7 @@ jobs:
     name: Deploy
     runs-on: watchit
     needs: publish
+    if: false
     steps:
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
