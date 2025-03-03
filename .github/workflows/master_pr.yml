@@ -42,4 +42,4 @@ jobs:
       with:
         string: ${{ matrix.app }}
     - name: Build image
-      run: docker build ${{ github.workspace }} -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:build-test -f ${{ github.workspace }}/${{ matrix.app }}/${{ matrix.app }}/Dockerfile
+      run: docker build ${{ github.workspace }} -t ghcr.io/${{github.actor}}/${{ steps.name.outputs.lowercase }}:build-test -f ${{ github.workspace }}/${{ matrix.app }}/Dockerfile
