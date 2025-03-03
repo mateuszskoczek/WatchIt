@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,6 +28,21 @@
     <ItemGroup>
       <ProjectReference Include="..\WatchIt.Database\WatchIt.Database.csproj" />
       <ProjectReference Include="..\WatchIt.DTO\WatchIt.DTO.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="WatchIt.WebAPI.Controllers\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.WebAPI.Controllers\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.WebAPI.Controllers\obj\WatchIt.WebAPI.Controllers.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.WebAPI.Validators\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.WebAPI.Validators\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.WebAPI.Validators\obj\WatchIt.WebAPI.Validators.csproj.nuget.dgspec.json" />
     </ItemGroup>
 
 </Project>

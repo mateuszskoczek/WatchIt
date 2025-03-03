@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>13</LangVersion>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -72,6 +73,24 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Authentication\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Authentication\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Authentication\obj\WatchIt.Website.Services.Authentication.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Client\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Client\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Client\obj\WatchIt.Website.Services.Client.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Configuration\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Configuration\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Configuration\obj\WatchIt.Website.Services.Configuration.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Tokens\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Tokens\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Tokens\obj\WatchIt.Website.Services.Tokens.csproj.nuget.dgspec.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>
