@@ -35,17 +35,15 @@ jobs:
       with:
         files: ${{ github.workspace }}/${{ matrix.app }}/appsettings.json
       env:
-        ConnectionStrings.Default: ${{ secrets.CONNECTION_STRING }}
-        RootUser.Email: ${{ secrets.ROOT_EMAIL }}
-        RootUser.Password: ${{ secrets.ROOT_PASSWORD }}
-        Authentication.Key: ${{ secrets.KEY }}
+        ConnectionStrings.Database: ${{ secrets.CONNECTION_STRING }}
+        Authentication.JWT.Key: ${{ secrets.KEY }}
     - name: App Settings Variable Substitution for WatchIt.Website
       uses: microsoft/variable-substitution@v1
       if: ${{ matrix.app == 'WatchIt.Website' }}
       with:
         files: ${{ github.workspace }}/${{ matrix.app }}/appsettings.json
       env:
-        Endpoints.Base: ${{ secrets.API_URL }}
+        Clients.BaseAddress: ${{ secrets.API_URL }}
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     - name: Login to GitHub Container Registry
