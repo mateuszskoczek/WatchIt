@@ -31,12 +31,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <_ContentIncludedByDefault Remove="WatchIt.WebAPI.Controllers\obj\project.assets.json" />
       <_ContentIncludedByDefault Remove="WatchIt.WebAPI.Controllers\obj\project.packagespec.json" />
       <_ContentIncludedByDefault Remove="WatchIt.WebAPI.Controllers\obj\WatchIt.WebAPI.Controllers.csproj.nuget.dgspec.json" />

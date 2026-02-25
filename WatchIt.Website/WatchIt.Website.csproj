@@ -86,11 +86,4 @@
       <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Tokens\obj\project.packagespec.json" />
       <_ContentIncludedByDefault Remove="WatchIt.Website.Services\WatchIt.Website.Services.Tokens\obj\WatchIt.Website.Services.Tokens.csproj.nuget.dgspec.json" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
 </Project>
