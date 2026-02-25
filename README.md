@@ -45,7 +45,7 @@ You should now be able to run both projects and use the website. You can create 
 
 ## Attribution
 
-This project is open source on MIT License, so you can just copy and upload again to your repository. But according to the license, you must include information about the original author. You can find license <a href="https://repos.mateuszskoczek.com/MateuszSkoczek/VDownload/src/branch/main/LICENSE">here</a>.
+This project is open source on MIT License, so you can just copy and upload again to your repository. But according to the license, you must include information about the original author. You can find license <a href="https://repos.mateuszskoczek.com/MateuszSkoczek/WatchIt/src/branch/main/LICENSE">here</a>.
 
 **Other sources:**
 
