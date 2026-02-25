@@ -22,14 +22,26 @@
 
 ## Features
 
-- bc
+- Browse lists of films, series, and people, as well as perform basic filtering and sorting of these lists.
+- View detailed information about productions and people.
+- Register an account and log in.
+- Rate a given production or role, provided you have an account on the website.
+- Basic personalization of your profile.
+- Follow other users and view their profiles.
+- Ability to add, delete, and edit information in the database from the website, provided you have administrator privileges.
 
 ## Usage
 
 **Requirements:**
 
-- .NET SDK 8.0
-- C# IDE, e.g. JetBrains Rider or Visual Studio (optional, but recommended)"VDownload.exe". You may need to accept the SmartScreen filter warning.
+- .NET SDK 9.0
+- PostgreSQL server with *track_commit_timestamp* option turned on
+- C# IDE, e.g. JetBrains Rider or Visual Studio (optional, but recommended)
+- pgAdmin (optional, but recommended)
+
+To be able to start application you have to change some settings in appsettings.json file both in WatchIt.WebAPI and WatchIt.Website projects. In WatchIt.WebAPI you have to set connection string (*ConnectionStrings.Database*) to point to your database server. In WatchIt.Website you have to change base address (*Clients.BaseAddress*) to API (i.e. to the API launched from the WatchIt.WebAPI project). For testing purposes it will probably be "http://localhost:5128".
+
+You should now be able to run both projects and use the website. You can create new account. This account will not have the administrator privileges, needed to add movies and other data, by default. To add administrator privileges you have to edit account record in "Account" table in database (you can do it for example with pgAdmin software).
 
 ## Attribution
 
