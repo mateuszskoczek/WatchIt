@@ -1,6 +1,6 @@
 using Ardalis.Result;
 using Microsoft.EntityFrameworkCore;
-using SimpleToolkit.Extensions;
+using MSEssentials.Extensions;
 using WatchIt.Database.Model.Accounts;
 using WatchIt.Database.Model.Genres;
 using WatchIt.Database.Model.Media;

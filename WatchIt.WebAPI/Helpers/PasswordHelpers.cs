@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using SimpleToolkit.Extensions;
+using MSEssentials.Extensions;
 using WatchIt.DTO.Models.Controllers.Accounts;
 
 namespace WatchIt.WebAPI.Helpers;
